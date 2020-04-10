@@ -129,3 +129,22 @@ How are the group meetings held? And how can I join them?
 
 Cheers,  
 Fabian  
+
+
+#### Stefanos presentation, 10-04.2020  
+Papers:  
+[1] “On the dynamical interplay between awareness and epidemic spreading in multiplex networks”, C. Granell, S. Gomez, A. Arenas.  
+[2] “Competing memes propagation on Networks: A case study on composite networks”, X. Wei, N. Valler, B. Parkash,I. Neamitu, M.
+Faloutsus, C. Faloutsus.  
+[3] “Reducing spreading processes on Networks to Markov Population Models”, G. Grossmann, L. Bortolussi  
+
+Brief summary:  
+- Modelling in MLN: Microscopic MC vs. Mean field approaches  
+- Alex Arenas as good reference in the MLN community, Manilo De Domenico as reference for multi-dimensional data on biological neuron networks    
+- Lumpability & minimisation probabily better topic than general formalisms on network topology and modelling  
+- Check papers from survey for lumpability/minimisation/model reduction methods
+- ODEs can model all non-linear dynamics, DAEs introduce constraints (e.g. Ohms and Kirchoffs law in EE, preservation laws)  
+- PDEs reducible to DAEs up to a certain index, PDAEs, BDF as numerical solver for all sorts of DE  
+- Book: Stochastic chemical reactions  
+- MC state space for CRNs only theoretically unlimited, in practice one can't have unlimited molecules  
+- ODE and stochastic procs: stochastic model should converge to ODE model in the limit (law of large numbers?/ Monte Carlo?)  
