@@ -28,13 +28,13 @@ Proceed to explore novel directions for the thesis. For instance, we can extend 
 - [Kolloquium admission](https://dokumente.uni-konstanz.de/share/proxy/alfresco-noauth/api/internal/shared/node/R_Lsa-J4SImfw8rcIDTrfw/content/?a=true)  
 
 ## TODOs  
-[x] Check neccessary forms  
-[ ] Finish Schützenberger
-[ ] Check ERODE  
-[ ] Read literature list of Stefano  
-[ ] Proposal draft  
-[ ] Requirements for implementation  
-[ ] Design of Implementation  
+- [x] Check neccessary forms  
+- [ ] Finish Schützenberger  
+- [ ] Check ERODE  
+- [ ] Read literature list of Stefano  
+- [ ] Proposal draft  
+- [ ] Requirements for implementation  
+- [ ] Design of Implementation  
 
 #### Questions  
 - Project Presentation or Report?  
