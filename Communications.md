@@ -255,3 +255,31 @@ I added you to the GitHub project.
 
 Cheers,
 Fabian
+
+#### Project and potential presentation Friday, by Stefano, April 17th 2020
+Dear Fabian,
+
+I hope this message finds you well.
+We were thinking that it might be a good idea if in the next unit meeting (Friday 24th of April at 10:30) you could give a presentation about your project. We don't expect many new contents in the presentation, ideally the presentation would be a 15mins high-level explanation on the project: what are the goals, what is the relevant literature, motivations and timeline. Basically, it would be a slideshow of the project proposal.
+It will be good for everybody to at least have an overview of what will be done in the following months.
+
+Moreover, we were thinking to have something similar within the seminar course of advanced topics for probabilistic modelling, but there is still time to think about this.
+
+Let us know if this is feasible,
+have a nice weekend,
+Stefano.
+
+#### Vodafone cuts off internet connection, by Fabian, April 17th 2020
+Hey Stefano, 
+
+yeah this sounds reasonable. 
+Sorry for the silence this week. 
+Since Tuesday I have no proper Internet connection (started with 200kB/s max speed, stopped working entirely yesterday after a Vodafone technician fiddled with the house switch...). On Monday another technician appointment is scheduled and I hope this s--- will be resolved. 
+
+If the connection is still down after that I'm going to get a prepaid SIM and connect via Hotspot so that the presentation/meeting will not get interrupted. 
+I try to send you the slides latest on Wednesday evening next week (via email & pdf). 
+
+Will the presentation be on Zoom like 2 weeks ago? 
+
+You too & thanks for the guidance, 
+Fabian

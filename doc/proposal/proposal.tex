@@ -1,0 +1,65 @@
+\documentclass[11pt, rgb]{scrartcl}
+\usepackage{themeKonstanzDBIS} % Muss immer verwendet werden (Standardpaket)
+\format{a4}
+
+% Thesis information        %
+\date{\today}
+\year{2020}
+\author{Fabian Klopfer}
+
+\title{Minimization of Stochastic Dynamical Systems}
+\subtitle{A Comparison of Models \& Methods}
+\unisection{Faculty of Sciences}
+\department{Department of Computer and Information Science}
+\group{Modelling of Complex Self-Organizing Systems Group}
+\supervisorOne{Dr. Stefano Tognazzi}
+\supervisorTwo{Prof. Dr. Tatjana Petrov}
+
+\headFoot{14}
+\bibliography{resources} 
+
+\begin{document}
+
+\newgeometry{left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}
+\thesistitlepage[language=english]{M.Sc. Project Proposal}
+\restoregeometry
+
+
+\section{Introduction} Stochastic dynamical systems are present in many natural phenomenon. Different methods of modelling these yields different advantages when it comes to composition, minimization, executability, expressiveness, succintness and granularity. \\
+The two predominant representations may be subdivided resulting in further distinct properties e.g. an automaton-oriented approach allows for degrees of freedom when defining the transition function, while a differential equivalence-based approach differs in the constraints and assumptions the concrete form can make. \\
+ Chemical reaction networks~\autocite{mc_agg_crn}, quantum computing~\autocite{moore2000quantum} and brownian motion~\autocite{einstein1906theory} are just some examples where the first example may be described by ordinary differential equations (ODEs), stochastic process algebras, stochastic Petri nets, stochiometric equations, guarded commands and continuous-time Markov chains~\cite{wolf}, the second one using differential equations~\autocite{von2018mathematical}, automata and grammars~\autocite{moore2000quantum}, whereas the thrid example was proven to exist as phenomenologically described using stochastic differential equations~\autocite{einstein1906theory}. \\
+ 
+
+\section{Problem Statement \& Objectives of Study}
+The mentioned models may quickly reach the boarder to the computationally feasible, if one wants to extract exact results matching the real world. \\
+Especially required are not only careful implementations --- no matter if it's numercial solvers, sampling techniques, simulations or even physical hardware --- but also appropriate minimization techniques with feasible computational complexity. \\
+Another desired trait is to reduce the system further to only answer the question under consideration exactly, ignoring other aspects that are irrelevant to the examiner. \\
+During the project and the subsequent thesis those methods and their properties shall be the subject of my studies. \\
+
+Explicitly the following topics shall be investigated
+\begin{itemize}
+ \item automata-based \& differential equivalence-based modelling and the properties the different approaches have,
+ \item minimization of both models without and with simplifying assumptions (e.g. only a specific information is relevant),
+ \item connections and discords between the approaches, their properties and the results of minimizations of each under varying assumptions and conditions.
+\end{itemize}
+This induces the following goals:
+\begin{enumerate}
+ \item Implement the minimization algorithm for weighted automata proposed by \autocite{Kiefer2013OnTC}.
+ \item Implement the minimization algorithm for ODEs proposed by \autocite{Cardelli2017MaximalAO}.
+ \item Develop several reference examples serving as reproducible benchmarks in terms of qualitative and quantitative results regarding the properties of the models and the minimizations performable on each.
+ \item Write a report including a formal description of the models, their properties, implications by refinements and extensions, connection \& discords, as well as comparisons of the results of the minimization.
+\end{enumerate}
+
+
+\section{Related Work}
+
+\section{Methods}
+
+\nocite{*}
+\printbibliography
+
+\appendix
+
+\section{Timeline \& Milestones}
+
+\end{document}
