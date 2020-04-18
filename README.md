@@ -1,16 +1,6 @@
 # Repository containing materials for the Master's project & thesis
  
-## Project
-The project will involve some more hands-on, implementation tasks on various literature notions along with some complemental reading.   
-### Tasks
-1. Implement the polynomial minimisation of weighted automata (Schützenberger, 1961; Kiefer & Wachter, 2014)  
-2. Implement different notions of Differential Equivalence (forward and backward) on weighted automata (ERODE)  
-3. Compare the methods and the results: do both reduction output the same minimal WA? (Tzeng, 1992)  
-### Goals  
-During the project it would be nice to implement the first two parts, to think about a suitable way of producing some benchmarks WA that can be used throughout the whole project and to become familiar with the notions of Differential Equivalence and Weighted Automata.
-
-## Thesis  
-Proceed to explore novel directions for the thesis. For instance, we can extend such reductions to weighted networks, multilayer networks or Probabilistc Automata. Which will be the best direction to follow shall be decided once the first part of the project is underway.
+see ![Proposal](doc/proposal/proposal.pdf)
 
 
 
@@ -29,14 +19,9 @@ Proceed to explore novel directions for the thesis. For instance, we can extend 
 
 ## TODOs  
 - [x] Check neccessary forms  
-- [-] Finish Schützenberger  
+- [x] Finish Schützenberger  
 - [x] Check ERODE  
-- [-] Read literature list of Stefano  
-- [-] Proposal draft  
+- [ ] Read all papers from the literature list by Stefano [WIP] 
+- [ ] Proposal draft [WIP]  
 - [ ] Requirements for implementation  
 - [ ] Design of Implementation  
-
-#### Questions  
-- Project Presentation or Report?  
-- What is the input format/coding of the PAs?  
-
