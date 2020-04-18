@@ -29,10 +29,10 @@ Proceed to explore novel directions for the thesis. For instance, we can extend 
 
 ## TODOs  
 - [x] Check neccessary forms  
-- [ ] Finish Schützenberger  
-- [ ] Check ERODE  
-- [ ] Read literature list of Stefano  
-- [ ] Proposal draft  
+- [-] Finish Schützenberger  
+- [x] Check ERODE  
+- [-] Read literature list of Stefano  
+- [-] Proposal draft  
 - [ ] Requirements for implementation  
 - [ ] Design of Implementation  
 
