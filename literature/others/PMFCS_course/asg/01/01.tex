@@ -1,0 +1,96 @@
+%%
+%% Author: Fabian Klopfer (fabian.klopfer@ieee.org) 
+%%
+
+% Preamble
+\documentclass[a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{float}
+
+\setlength{\headheight}{24pt}
+
+\pagestyle{fancy}
+\lhead{Fabian Klopfer (956507)}
+\rhead{Probabilistic Modelling\\Assignment 1}
+
+% Document
+\begin{document}
+	\section*{Exercise 1: $\sigma$-Algebra}\label{sec:exercise1}
+   \begin{enumerate}[a)]
+       \item Let $\Omega = \mathbb{N}$. Then the subset of even numbers $A_0 = \{2, 4, 6, \dots \}$ is not contained in $\mathcal{F}_{\Omega}$ as $A_0$ is not finite and it's complement $A_1$ is also not finite $A_1 = \{1, 3, 5, \dots \}$.  So $\mathcal{F}_{\Omega} \neq 2^{\Omega}.          \hfill \square$
+   
+       \item No. the definition says:
+       \[\forall A \subseteq \Omega: ((|A| < \infty \Rightarrow A \in \mathcal{F}_{\Omega}) \wedge (A \in \mathcal{F}_{\Omega} \Rightarrow (\Omega \setminus A) \in \mathcal{F}_{\Omega})) \]
+        i.e. (i) means a finite subset is in  $\mathcal{F}_{ \Omega}$. (ii) means if the complement of a subset is finite, the subset is in  $\mathcal{F}_{ \Omega}$ . Thus if neither the set is finite nor it's complement, none of them is a member of  $\mathcal{F}_{ \Omega}$ .
+   To summarize: Even if the largest class of subsets is considered the definition is non-trivial and the example from a) still holds i.e.  it may still be that $\mathcal{F}_{\Omega} \neq 2^{\Omega}.          \hfill \square$
+        \item (Proof or) disproof that $(\Omega, \mathcal{F}_{ \Omega})$ is a $\sigma$-Algebra. \\
+            Consider $A_i = \{2i\}. \ A_i \in \mathcal{F}_{ \Omega}$ as it's finite, but $\cup_i A_i \not \in \mathcal{F}_{ \Omega}$ as it's not finite and it's complement is also not finite (see a)). So $\mathcal{F}_{ \Omega}$ not a $\sigma$-Algebra $\hfill \square$
+            
+   \end{enumerate}
+
+	\section*{Exercise 2: }\label{sec:exercise2}
+        \begin{enumerate}[a.]
+            \item Given from slides: \\
+                 $E[X] = \sum_{i=0}^{n}x_i \cdot Pr_X(X=x_i)$, \\
+                 $Var[X] = E[X^2] - E[X]^2 = E[X(X-1)] + E[X] - E[X^2]$, \\
+                 Given from Analysis I (Geometric series, first \& second derivative): \\
+                 $\sum_{k=0}^{\infty} q^k = \frac{1}{1-q}$, \\
+                 $\sum_{k=0}^{\infty} k \cdot q^{k-1} = \frac{1}{(1-q)^2}$. \\
+                 $\sum_{k=0}^{\infty} k(k - 1) \cdot q^{k-2} = \frac{-2}{(1-q)^3}$. \\
+                
+                With X geometrically distributed and $q = 1-p$ \\
+                Expected Value:
+                \[ E[X] = \sum_{k=1}^{\infty} k \cdot (q)^{k-1} \cdot p  \]
+                \[ \Leftrightarrow p \sum_{k=1}^{\infty} k \cdot q^{k-1} \]
+                \[ \Leftrightarrow p \frac{1}{(1-q)^2} = \frac{p}{(1-1-p)(1-1-p)} \]
+                \[ \Leftrightarrow \frac{p}{p^2} = \frac{1}{p}  \] $\hfill \square$ \\
+                \newpage
+                
+                Variance: 
+                \[ Var[X] =  E[X(X-1)] + E[X] - E[X^2] = \sum_{k=1}^{\infty} k(k-1) \cdot q^{k-1} \cdot p + \frac{1}{p}- \frac{1}{p^2} \]
+                \[ \Leftrightarrow p \sum_{k=1}^{\infty} k(k-1) \cdot q^{k-1} + \frac{1}{p}- \frac{1}{p^2} \]
+                \[ \Leftrightarrow p \sum_{k=1}^{\infty} k(k-1) \cdot q^{k-1}q^{-1} q^1+ \frac{1}{p}- \frac{1}{p^2}  \]
+                 \[ \Leftrightarrow pq \sum_{k=1}^{\infty} k(k-1) \cdot q^{k-2} + \frac{1}{p}- \frac{1}{p^2}  \]
+                  \[ \Leftrightarrow pq \frac{-2}{(1-q)^3} + \frac{1}{p}- \frac{1}{p^2}  \]
+                   \[ \Leftrightarrow  \frac{-2p(1-p)}{(1-1-p)^3} + \frac{1}{p}- \frac{1}{p^2}  \]
+                   \[ \Leftrightarrow  \frac{-2(1-p)}{-p^2} + \frac{1}{p}- \frac{1}{p^2}  \]
+                    \[ \Leftrightarrow  \frac{2(1-p)}{p^2} - \frac{1}{p^2} + \frac{p}{p^2}  \]
+                    \[ \Leftrightarrow  \frac{2(1-p) + p - 1}{p^2} = \frac{ 2- 2p + p - 1}{p^2} \]
+                    \[ \Leftrightarrow \frac{ 1- p}{p^2}\] $\hfill \square$ \\ 
+            \item Prove that Pr$(X = k+m | X > m) = $Pr$(X = k)$ for any $m,k \in \mathbb{N}$ \\
+                \[ \text{Pr}(X = k + m|X > m) = \frac{\text{Pr}(X = k + m \cap X > m)}{\text{Pr}(X > m)} \]
+                 \[  \frac{\text{Pr}(X = k + m | X > m)\text{Pr}( X > m)}{\text{Pr}(X > m)} = \frac{\text{Pr}(X > m | X = k + m)\text{Pr}(X = k + m)}{\text{Pr}(X > m)}  \]
+                \[ \frac{ 1 \cdot (1-p)^{k+m-1} p}{(1-p)^m} = (1-p)^{k-1} p \]
+                Regarding $\text{Pr}( X > m| X = k +m ) = 1$ is trivial as $k, m \in \mathbb{N} \wedge k+m > m \hfill \square$.
+                
+        \end{enumerate}
+    \newpage
+    
+	\section*{Exercise 3: }\label{sec:exercise3}
+    \begin{itemize}
+        \item Given: \\
+            $\text{Pr}(D) = 0.01$, $\text{Pr}(T|D) = \text{Pr}(Tc|Dc) = 0.95$ accuracy of T 
+            \item Wanted: $\text{Pr}(D|T)$
+            \item Ansatz:  Conditional Probability, Bayes rule and true positives + false positives for the denominator. \\
+            \[ \text{Pr}(D|T) = \frac{\text{Pr}(T|D) \text{Pr}(D)}{\text{Pr}(T)} = \frac{\text{Pr}(T|D) \text{Pr}(D)}{\text{Pr}(T|D) \text{Pr}(D) + \text{Pr}(T|\overline{D}) \text{Pr}(\overline{D})} \]
+            \[ = \frac{0.95 \cdot 0.01}{0.95 \cdot 0.01 + 0.05 \cdot 0.99} = \frac{0.0095}{0.0095 + 0.0495} =  \frac{0.0095}{0.059} \] 
+            \[ = 0.161016949153 = 16.1016949153\% \]
+    \end{itemize}
+\end{document}
