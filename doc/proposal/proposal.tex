@@ -20,16 +20,23 @@
 \begin{document}
 
 \newgeometry{left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}
-\thesistitlepage[language=english]{M.Sc. Project Proposal}
+\thesistitlepage[language=english]{M.Sc. Topic Proposal}
 \restoregeometry
 
 
-\section{Introduction} Stochastic dynamical systems are present in many natural phenomenon. Different methods of modelling these yields different advantages when it comes to composition, minimization, executability, expressiveness, succintness and granularity. The two predominant representations may be subdivided resulting in further distinct properties e.g. an automaton-oriented approach allows for degrees of freedom when defining the transition function, while a differential equivalence-based approach differs in the constraints and assumptions the concrete form can make.
- Chemical reaction networks~\autocite{mc_agg_crn}, quantum computing~\autocite{moore2000quantum} and brownian motion~\autocite{einstein1906theory} are just some examples where the first example may be described by ordinary differential equations (ODEs), stochastic process algebras, stochastic Petri nets, stochiometric equations, guarded commands and continuous-time Markov chains~\cite{wolf}, the second one using differential equations~\autocite{von2018mathematical}, automata and grammars~\autocite{moore2000quantum}, whereas the thrid example was proven to exist as phenomenologically described using stochastic differential equations~\autocite{einstein1906theory}. \\
+\section{Introduction} Stochastic dynamical systems are present in many natural phenomenon. 
+Different methods of modelling these yields different advantages when it comes to composition, minimization, executability, expressiveness, succintness and granularity. 
+The two predominant representations may be subdivided resulting in further distinct properties e.g. an automaton-oriented approach allows for degrees of freedom when defining the transition function, while a differential equivalence-based approach differs in the constraints and assumptions the concrete form can make.
+ Chemical reaction networks~\autocite{mc_agg_crn}, quantum computing~\autocite{moore2000quantum} and brownian motion~\autocite{einstein1906theory} are just some examples.
+ The first one may be described using ordinary differential equations (ODEs), stochastic process algebras, stochastic Petri nets, stochiometric equations, guarded commands and continuous-time Markov chains~\cite{wolf}, the second example using differential equations~\autocite{von2018mathematical}, automata and grammars~\autocite{moore2000quantum}, whereas the thrid example was proven to exist as phenomenologically described using stochastic differential equations~\autocite{einstein1906theory}.
  
 
 \section{Problem Statement \& Objectives of Study}
-The mentioned models may quickly reach the boarder to the computationally feasible, if one wants to extract exact results matching the real world. Especially required are not only careful implementations --- no matter if it's numercial solvers, sampling techniques, simulations or even physical hardware --- but also appropriate minimization techniques with feasible computational complexity. Another desired trait is to reduce the system further to only answer the question under consideration exactly, ignoring other aspects that are irrelevant to the examiner. During the project and the subsequent thesis those methods and their properties shall be the subject of my studies. Explicitly I want to investigate automata-based \& differential equivalence-based modelling and the properties the different approaches have, the minimization of both models without and with simplifying assumptions (e.g. only a specific information is relevant), the connections and discords between the approaches, their properties and the results of minimizations of each under varying assumptions and conditions.
+The mentioned models may quickly reach the boarder to the computationally feasible, if one wants to extract exact results matching the real world. 
+Especially required are not only careful implementations --- no matter if it's numercial solvers, sampling techniques, simulations or even physical hardware --- but also appropriate minimization techniques with feasible computational complexity. 
+Another desired trait is to reduce the system further to only answer the question under consideration exactly, ignoring other aspects that are irrelevant to the examiner. 
+During the project and the subsequent thesis those methods and their properties shall be the subject of my studies.
+Explicitly I want to investigate automata-based \& differential equivalence-based modelling and the properties the different approaches have, the minimization of both models without and with simplifying assumptions (e.g. only a specific information is relevant), the connections and discords between the approaches, their properties and the results of minimizations of each under varying assumptions and conditions.
 
 This induces the following goals:
 \begin{enumerate}
@@ -42,19 +49,91 @@ This induces the following goals:
 
 
 \section{Methods \& Literature}
-As project and thesis contain mainly two aspects namely self-directed learning and some sort of contribution, the related literature may be divided into two categories: First educational textbooks \& references containing general definitions, theorems and second application or research-oriented references \& papers containing theorems and algorithms on the topic where the contribution shall be made. For this scope the literature from the first category is on differential equations, weighted automata and additional topics that are relevant due to usage in the second category. The literature for the second category will be discussed in the next section. \\
-\subsection{Differential Equations} (DE) is an equation relating functions with their derivatives. Those equations are called ordinary if the unknown functions are functions of one independent variable, while they're called partial if the function depends on more than one variable and contains partial derivatives. A differential equation is called linear if it is linear in the unkown function and non-linear if the equation is not expressable as linear in the unknown function. The coefficients of differential equations may be arbitrary, that is e.g. non-linear even when the differential equation is linear. Differential equations can also be homogenous or heterogenous. They're homogenous if all functions in the equation are of the same degree and homogenous, that is if you multiply all parameters of the function by a scaling factor, the value of the function is also multiplied by the scaling factor to the power of the function degree. If a DE is not homogenous it is called heterogenous. There are some extensions to the framework: Fractional differential equations generalize to non-integer derivatives, integro-differential equations is a generalization to relate funtions not only to their derivatives but also to integrals of themselves, functional differential equations allow to consider the derivatives with varying argument avlues (e.g. $x+1$, $x-3$ instead of $x$) what is widely used in electrical engineering e.g. derivatives a previous or future points in time~\autocite{richard}, differential-algebraic equations that allow defining constraints on the solution space by algebraic terms in the differential equation e.g. in electrodynamics when Kirchoffs law is to be preserved. This list is not complete not comprehensive, but finally there is one more important extension to DEs: Stochastic differential equations allow for modelling stochastic processes using differential equations with additional stochastic terms. As the field is rather broad, a lot of different references are required, which are mentioned here and listed in the bibliography:~\autocite{dae, ode_dae, dtsp, fde, handbook_de, ide, nlc, simmons_de, sde}. Minimization of DEs is a broad field that is an active research topic for several decades. An example of a current approach aggregates variables whose dynamics can explicilty be described when aggregated and variables with equivalent dynamics~\autocite{Cardelli2017MaximalAO}. \\
+As project and thesis contain mainly two aspects namely self-directed learning and some sort of contribution, the related literature may be divided into two categories: First educational textbooks \& references containing general definitions, theorems and second application or research-oriented references \& papers containing theorems and algorithms on the topic where the contribution shall be made. 
+For this scope the literature from the first category is on differential equations, weighted automata and additional topics that are relevant due to usage in the second category. 
+The literature for the second category will be discussed in the next section. 
 
-\subsection{Automata} are defined by Tuples of different length depending on the concrete subtype but always consist of a set of states, and a transition function. Those models differ in the type of memory, the transition and acceptance semantics. Automata define implicitly languages that follow certain construction rules called grammar. The expressiveness \& complexity of the grammar and the automaton model are directly coupled as the transitions and productions of automata and grammars are. Automata may either be deterministic or non-deterministic meaning that there is only one or many different choices per input when making a transition. If the environment decides what transition is taken (e.g. when making a typo and the spell checker marks it so that you correct it) it is called external non-determinism. If the automaton decides which transition is taken (e.g. when you make a typo, notice it by visual inspection and correct it) it's called internal non-determinism. Important is that for the same input character you have different transition and that either factors outside of the system or inside the system decide what transitions are to be taken. Finite State automata are memoryless and are equivalent to regular languages. Pushdown automata have a stack and are equivalent to context-free languages while Turing machines have unlimited, adressable can express context-sensitive and arbitrary languages. An extension to this basic framework are weighted automata, where each transition is assigned a number that specifies how likely it is to take the transition. A special case of that are probabilistic automata where certain transitions' weights have to fullfill the Kolmogorov axioms. The concrete rules and semantics depend on the model that is chosen and there is quite a zoo of models~\autocite{sokolova}. There are also probabilistic extensions of automata with memory but overall there is no clear hierarchy like in the non-probabilistic case. \autocite{sokolova} attempted to order the chaos a bit but only covered memoryless automata and ordered them by the generality of the transition function. The implications of different memory models in the probabilistic context has not been studied yet to the best of the authors knowledge. As the field of probabilistic automata is relatively new compared to the field of DEs --- Probabilistic Automata were first defined in 1956~\autocite{automatastudies} in contrast to DEs which were developed in the 17th century by Newton~\autocite{newton} --- there are less sophisticated textebooks to rely on so more papers are used. Namely the references are~\cite{sokolova, automatastudies, ppat, ata, hwa, paz, wolf, stoelinga, survey, patypes, pg, rpga, stochsysI, stochsysII, rabin}. Minimization techniques for automata often rely on linear algebra, that is minimization of the transition matrix combined with unreachable state elimination~\autocite{schutz}.
+\subsection{Differential Equations} (DE) is an equation relating functions with their derivatives. 
+Those equations are called ordinary if the unknown functions are functions of one independent variable, while they're called partial if the function depends on more than one variable and contains partial derivatives. 
+A differential equation is called linear if it is linear in the unkown function and non-linear if the equation is not expressable as linear in the unknown function. 
+The coefficients of differential equations may be arbitrary, that is e.g. non-linear even when the differential equation is linear. 
+Differential equations can also be homogenous or heterogenous. 
+They're homogenous if all functions in the equation are of the same degree and homogenous, that is if you multiply all parameters of the function by a scaling factor, the value of the function is also multiplied by the scaling factor to the power of the function degree. 
+If a DE is not homogenous it is called heterogenous. 
+There are some extensions to the framework: 
+Fractional differential equations generalize to non-integer derivatives, integro-differential equations is a generalization to relate funtions not only to their derivatives but also to integrals of themselves, functional differential equations allow to consider the derivatives with varying argument avlues (e.g. $x+1$, $x-3$ instead of $x$) what is widely used in electrical engineering e.g. derivatives a previous or future points in time~\autocite{richard}, differential-algebraic equations that allow defining constraints on the solution space by algebraic terms in the differential equation e.g. in electrodynamics when Kirchoffs law is to be preserved. 
+This list is not complete not comprehensive, but finally there is one more important extension to DEs: 
+Stochastic differential equations allow for modelling stochastic processes using differential equations with additional stochastic terms. 
+
+As the field is rather broad, a lot of different references are required, which are mentioned here and listed in the bibliography:~\autocite{dae, ode_dae, dtsp, fde, handbook_de, ide, nlc, simmons_de, sde}. 
+
+
+\subsection{Automata} are defined by Tuples of different length depending on the concrete subtype but always consist of a set of states, and a transition function. 
+Those models differ in the type of memory, the transition and acceptance semantics.
+Automata define implicitly languages that follow certain construction rules called grammar. 
+Automata theory is closely related to Algebraic structures: 
+The set of all input characters with the empty string $\varepsilon$ can be seen as a Monoid with the concatenation operator.
+Transition systems are sometimes specified using matrix notations, often a sparse representation is more succinct,
+For instance for Finite State Automata one matrix would be necessary for each input character, specifying weather there is a transition between states for this character.
+The expressiveness \& complexity of the grammar and the automaton model are directly coupled as the transitions and productions of automata and grammars are. 
+Automata may either be deterministic or non-deterministic meaning that there is only one or many different choices per input respectively when making a transition. 
+If the environment decides what transition is taken (e.g. when making a typo and the spell checker marks it so that you correct it) it is called external non-determinism. 
+If the automaton decides which transition is taken (e.g. when you make a typo, notice it by visual inspection and correct it) it's called internal non-determinism. 
+Important is that for the same input character you have different transition and that either factors outside of the system or inside the system decide what transitions are to be taken. 
+Finite State automata are memoryless and are equivalent to regular languages. 
+Pushdown automata have a stack and are equivalent to context-free languages while Turing machines have unlimited, adressable can express context-sensitive and arbitrary languages.
+An extension to this basic framework are probabilistic automata where certain transitions' are assigned weights that have to fullfill the Kolmogorov axioms.
+The concrete rules and semantics depend on the model that is chosen and there is quite a zoo of models~\autocite{sokolova}.
+There are also probabilistic extensions of automata with memory but overall there is no clear hierarchy like in the non-probabilistic case. 
+\autocite{sokolova} attempted to order the chaos a bit but only covered memoryless automata and ordered them by the generality of the transition function. 
+The implications of different memory models in the probabilistic context has not been studied yet to the best of the authors knowledge. 
+A generalization of classical and probabilistic automata are weighted automata (WA), introduced by Schützenberger~\autocite{schutz} in 1961. 
+Each transition is associated with a certain weight, cost or more abstract quantity, thus assigning words quantities when the WA is executed with the word as input. 
+Weights are often modelled using a semiring $SR = (S, +, \cdot, 0, 1)$, that is a ring with out additive inverse elements (or simply put without subtraction), while words are described by the monoid $\sum^*$.
+A function $\sum^* \rightarrow SR$ is called a formal power series.
+While classical automata define a power series over $\sum^*$ and the boolean semiring (basically the Boolean algebra but with $1+1 = 1$, i.e. without subtraction).
+An important aspect of weighted automata is that they generalize the classical automata and therefore formal languages to formal power series, which are seen as weighted languages.
+
+As the field of automata --- especially weighted and probabilistic ones --- is relatively new compared to the field of DEs --- Probabilistic Automata were first defined in 1956~\autocite{automatastudies} in contrast to DEs which were developed in the 17th century by Newton~\autocite{newton} --- there are less sophisticated textebooks to rely on so more papers are used. 
+Namely the references are~\cite{sokolova, automatastudies, ppat, ata, hwa, paz, wolf, stoelinga, survey, patypes, pg, rpga, stochsysI, stochsysII, rabin, schoning}.  
 
 \section{Related Work on Minimization}
+\subsection{Automata}
+Minimization of DFAs is solvable in $\mathcal{O}(ns \log n)$ where n is the number of states and s the number of characters in the input alphabet using Hopcroft's algorithm~\autocite{hopcroft1971n} which is an extensions to a previouly developed algorithm by Moore~\autocite{automatastudies}. 
+Another method reverses the edges to get an NFA, which can be converted to a DFA using the power set construction. 
+Reversing the edges again yields the minimal DFA for the language~\autocite{brzozowski}. 
+
+NFAs can be converted to DFAs and then minimized using the algorithms referenced above, but the standard conversion algorithm --- namely power set construction --- has exponential runtime and is thus infeasible for large state spaces. 
+There are also algorithms for minimizing NFAs also exponential wrt runtime~\autocite{kameda}. 
+Jiang and Ravikumar prove that explicit NFA minimization is PSPACE-complete~\autocite{jiang}. 
+Tarjan provides an efficient algorithm for minimizing NFAs using bisimulation resulting in $\mathcal{O}(m \log n)$ runtime complexity.
+
+Regarding probabilistic automata, Kiefer and Wachter provide an algorithm with polynomial runime ($\mathcal{O}(|\sum|n^3)$). 
+For more specific probabilisitc automata models for example Markov chains there are various exact~\autocite{mc_agg_crn, buchholz, kate} and approximate algorithms~\autocite{geiger, bacci} of different complexity. 
+The most efficient procedure to the best of the authors knowledge is in $\mathcal{O}(m \log n)$ with m the number of edges and n the number of states~\autocite{valmari, wissmann}. Buchholz proposes methods for forward and backward bisimulation also resulting in $\mathcal{O}(m \log n)$ runtime~\autocite{buchholz2008bisimulation}
+
+A promising direction of research with respect to minimization of automata is the minimization of weighted automata. 
+Kiefer et al. provide an algorithm that is in NC complexity (i.e. decideable in polylogarithmic time with a polynomial number of processors)~\autocite{Kiefer2013OnTC}. Mohri combines moving the weights close to the initial states with the Hopcroft algorithm for deterministic underlying automata and multiplicatively cancellative semirings to acheive $\mathcal{O}(m \log n)$ runtime. 
+
+Last but not least Wißmann et al. provide a generic method that minimizes various different automata types with a maximal runtime of $\mathcal{O}(m \log m \log n)$ (preprint uploaded on April 2nd, 2020)~\autocite{wissmann}. The reported runtime are equivalent to the state-of-the-art methods for all types of automata.
 
 
-\nocite{*}
+\subsection{Differential Equations}
+Unlike with automata, there are many points and aspects where one can start thinking about model reduction for differential equations. 
+An example of a current approach in chemical reaction networks aggregates variables whose dynamics can still explicilty be described when aggregated and variables with equivalent dynamics~\autocite{Cardelli2017MaximalAO}.
+Another approach is to separate fast from slow dynamical components, calling the fast components radical, making their dynamics immediate and thus forming a differential algebraic equation with only slow dynamics modelled as differentials while the fast ones are modelled by algebraic constraints. 
+This method is called Quasi-Steady State Approximation (QSSA)~\autocite{briggs1925note}.
+There are several concrete algorithms to perform improved versions of QSSA~\autocite{boulier2009towards} and theoretically extended approximation which diminish the error have been developed~\autocite{deuflhard1996dynamic}.
+A more often applied technique for reducing the complexity of differential equations is numerical is numerical integration~\autocite{curtiss1952integration, kutta1901beitrag, orszag1969numerical}. 
+
+
+\subsection{Combinations}
+An open question is how the two models relate and how the minimization or reduction in one model affects the properties in the other. There are approximate methods for automata based models~\autocite{bobbio1986aggregation, geiger}, how do these relate to the numerical approximations of DEs in terms of errors and complexity reductions? \autocite{mc_agg_crn} has shown that differential equation based fragments provide more comprehensive minimization techniques, is this always the case? Which of the models has advantages in reduction, which one in execution? Are the two equivalent or is there a special subtype unifying both frameworks, like (probabilistic) cellular automata\autocite{von1966theory, olariu2005cellular, grinstein1985statistical}?
+
 \printbibliography
 
 \appendix
 
 \section{Timeline \& Milestones}
-
+%% TODO Thursday/Friday
 \end{document}

@@ -44,8 +44,8 @@ open=true
 order=0
 
 [item:resources.bib]
-open=false
-order=2
+open=true
+order=1
 
 [item:slides.tex]
 open=false
@@ -56,20 +56,20 @@ open=false
 order=1
 
 [view-settings,view=0,item:proposal.tex]
-CursorColumn=403
-CursorLine=44
+CursorColumn=23
+CursorLine=137
 Dynamic Word Wrap=true
 JumpList=
 TextFolding=[]
-ViMarks=.,44,402,<,28,1,>,28,1,[,44,402,],44,402,^,38,212
+ViMarks=.,137,22,<,31,1,>,31,1,[,137,17,],137,22,^,45,212
 
 [view-settings,view=0,item:resources.bib]
-CursorColumn=14
-CursorLine=313
+CursorColumn=33
+CursorLine=557
 Dynamic Word Wrap=false
 JumpList=
 TextFolding=[]
-ViMarks=.,313,14,<,62,9,>,62,30,[,313,14,],313,14,^,62,30
+ViMarks=.,566,1,<,62,9,>,62,30,[,557,0,],-1,-1,^,62,30
 
 [view-settings,view=0,item:themeKonstanzDBIS.sty]
 CursorColumn=23
