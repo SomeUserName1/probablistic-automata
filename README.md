@@ -21,7 +21,9 @@ see ![Proposal](doc/proposal/proposal.pdf)
 - [x] Check neccessary forms  
 - [x] Finish Schützenberger  
 - [x] Check ERODE  
-- [ ] Read all papers from the literature list by Stefano [WIP] 
-- [ ] Proposal draft [WIP]  
+- [x] Read all papers from the literature list by Stefano  
+- [x] Proposal draft  
+- [ ] Presentation  
+- [ ] Fill forms  
 - [ ] Requirements for implementation  
 - [ ] Design of Implementation  

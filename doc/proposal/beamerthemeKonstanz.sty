@@ -19,7 +19,6 @@
 \geometry{paperheight=14.3cm, paperwidth=24.4cm, left=1cm, right=1cm, headheight=1cm, headsep=1cm, top=1cm}
 
 \usepackage[english]{babel}
-\usepackage[T1]{fontenc}
 
 % Absolute Positionierung des Uni Konstanz Logos
 \usepackage[absolute, overlay]{textpos}
@@ -49,6 +48,14 @@
 \usepackage{soul}
 \usepackage{ulem}
 
+\usepackage{lmodern}
+\usepackage[backend=biber, style=ieee]{biblatex}
+\usepackage{csquotes}
+\usepackage[format=plain, justification=justified, labelfont=bf, textfont=it, font=small, labelsep=space]{caption}
+\usepackage{appendixnumberbeamer}
+
+
+
 % http://www.techques.com/question/31-48501/soul:-broken-highlighting-with-xcolor-when-using-%5Cselectcolormodel
 % Problem von soul beheben, da Farben in RGB konvertiert werden. Konvertierung ist notwendig, da z.b. tcolorbox
 % kein HSB Model unterstuetzt.
@@ -72,10 +79,13 @@
 \usepackage{calc}
 
 % Schriften 1. Teil
-\usepackage{cmbright}
-\usefonttheme{professionalfonts}
 \usepackage{fontspec}
 \defaultfontfeatures{Mapping=tex-text}
+
+
+
+% Schriften 2. Teil - Arial
+\newfontfamily\arialfamily{Arial}
 
 
 % Farben Definition des CD der Uni Konstanz mit dem HSB Modell
@@ -88,16 +98,6 @@
 \xdefinecolor{schwarz40}{hsb}{0.0, 0.0, 0.6}
 \xdefinecolor{schwarz20}{hsb}{0.0, 0.0, 0.8}
 \xdefinecolor{schwarz10}{hsb}{0.0, 0.0, 0.9}
-
-% rgb für tcolorbox - Nur im Notfall verwenden
-%\xdefinecolor{seeblau100rgb}{RGB}{0, 154, 209}
-%\xdefinecolor{seeblau65rgb}{RGB}{89, 182, 220}
-%\xdefinecolor{seeblau35rgb}{RGB}{160, 211, 230}
-%\xdefinecolor{seeblau20rgb}{RGB}{200, 229, 239}
-
-% Schriften 2. Teil - Arial
-\newfontfamily\arialfamily{Arial}
-
 
 % Anpassung der Schrift der einzelnen Beamer Elemente
 \setbeamerfont{frametitle}{family=\arialfamily, series=\normalfont, size*={20.00}{20.00}}
@@ -1341,12 +1341,13 @@
 %%%%%%%%% Dadurch bekommt das Uni Logo eine Hoehe von 20mm und besitzt den optimalen Schutzraum 	
 		\hfill\includegraphics[height=45mm]{img/UniKonstanz_Logo_Optimum.pdf}%
 	\end{textblock*}%
-	%
+	\vskip 1.4cm
 	\titleCDHelp%
+	\vskip 2cm
 	\vfill%
 	\usebeamerfont{titlepageauthor}\seeblauunder{\insertauthor}%
-		\\[4pt]%
-	\usebeamerfont{titlepagenormal}\insertinstitute, \insertdate
+		\\[0.3cm]%
+	\usebeamerfont{normalfont}\insertinstitute, \insertdate
 	\vfill%
 }
 
