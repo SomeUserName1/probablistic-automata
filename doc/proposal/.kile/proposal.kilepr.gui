@@ -40,6 +40,15 @@ Indentation Mode=normal
 Mode=LaTeX
 Mode Set By User=false
 
+[document-settings,item:themeKonstanz.sty]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
 [document-settings,item:themeKonstanzDBIS.sty]
 Bookmarks=
 Encoding=UTF-8
@@ -58,12 +67,12 @@ open=false
 order=-1
 
 [item:proposal.tex]
-open=false
-order=0
+open=true
+order=2
 
 [item:resources.bib]
-open=false
-order=0
+open=true
+order=3
 
 [item:slides.tex]
 open=true
@@ -86,28 +95,36 @@ TextFolding=[]
 ViMarks=.,1343,10,[,1343,10,],1343,10
 
 [view-settings,view=0,item:proposal.tex]
-CursorColumn=0
-CursorLine=40
+CursorColumn=189
+CursorLine=126
 Dynamic Word Wrap=true
 JumpList=
 TextFolding=[]
-ViMarks=.,137,22,<,31,1,>,31,1,[,137,17,],137,22,^,45,212
+ViMarks=.,138,23,<,31,1,>,31,1,[,138,23,],138,23,^,45,212
 
 [view-settings,view=0,item:resources.bib]
-CursorColumn=95
-CursorLine=578
+CursorColumn=25
+CursorLine=14
 Dynamic Word Wrap=false
 JumpList=
 TextFolding=[]
 ViMarks=.,578,95,<,62,9,>,62,30,[,578,95,],578,95,^,62,30
 
 [view-settings,view=0,item:slides.tex]
-CursorColumn=7
-CursorLine=118
+CursorColumn=48
+CursorLine=84
 Dynamic Word Wrap=true
 JumpList=
 TextFolding=[]
-ViMarks=.,131,52,[,131,38,],131,52
+ViMarks=.,25,54,[,25,54,],25,54
+
+[view-settings,view=0,item:themeKonstanz.sty]
+CursorColumn=0
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=
 
 [view-settings,view=0,item:themeKonstanzDBIS.sty]
 CursorColumn=0

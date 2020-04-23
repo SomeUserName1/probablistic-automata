@@ -17,17 +17,59 @@
     \begin{frame}
         \titlepage
     \end{frame}
-    
 
-    \begin{frame}{Research Questions}
-        \begin{enumerate}
-            \item How to model stochastic dynamics universally and exactly?
-            \item How do automata and DE models relate? 
-            \item How do reduction, approximation and minimization methods relate?
-            \item Is possible to automatically combine bounded-error approximations, minimizations, reductions of order, $\dots$ to achieve minimal computational effort?
-        \end{enumerate}
-        \vfill
-        \textbf{TL;DR:} What's the most exact, interpretable, computationally fastest and memory-greediest approach of modelling arbitrary stochastic dynamical systems and \alert{why} is that so?
+    \begin{frame}{Motivation}
+     \begin{itemize}
+      \item Dynamical processes describe everything that changes
+      \item DEs are the most common modelling tool in natural sciences
+      \item Automata are the underlying computational model in current hardware and software systems
+      \item Automata also describe dynamical processes
+      \item Continuous time Markov chains e.g. for chemical reaction networks, quantum automata, $\dots$
+     \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Motivation}
+        Differential Equations (DE) are omni-present in natural science:
+        \begin{columns}
+            \begin{column}{0.3\textwidth}
+            Phisics \& Chemistry
+                \begin{itemize}
+                    \item electrodynamics
+                    \item thermodynamics \& diffusion
+                    \item fluid dynamics \& plasma physics
+                    \item classical mechanics
+                    \item celestial motion \& general relativity
+                    \item nuclear physics \& quantum mechanics
+                    \item Chemical reactions
+                \end{itemize}
+            \end{column}
+            \begin{column}{0.3\textwidth}  %%<--- here
+                Biology
+                \begin{itemize}
+                 \item Population dynamics
+                 \item wound healing
+                 \item epidemology
+                \item blood flow
+                \item reaction-diffusion equations
+                \item Hodgkin Huxley model
+                \item capiliary pressure
+                 \end{itemize}
+            \end{column}
+            \begin{column}{0.3\textwidth}  %%<--- here
+                Engineering \& Economics
+                \begin{itemize}
+                 \item optimal control
+                 \item optimization techniques
+                 \item electrial engineering
+                \item signal processing
+                \item trafic flow
+                \item mean field game theory
+                \item advertising effects
+                \item economic growth
+                \item price evolution
+                 \end{itemize}
+            \end{column}
+        \end{columns}
     \end{frame}
     
     \begin{frame}{Why \alert{Stochastic} Dynamical Sytems?}
@@ -43,7 +85,17 @@
             \item Chaos Theory: Butterfly effect
         \end{itemize}
     \end{frame}
-
+    
+    \begin{frame}{Research Questions}
+        \begin{enumerate}
+            \item How to model stochastic dynamics universally and exactly?
+            \item How do automata and DE models relate? 
+            \item How do reduction, approximation and minimization methods relate?
+            \item Is it possible to automatically combine bounded-error approximations, minimizations, reductions of order, $\dots$ to achieve minimal computational effort?
+        \end{enumerate}
+        \vfill
+        \textbf{TL;DR:} What's the most exact, interpretable, computationally fastest and memory-greediest approach of modelling arbitrary stochastic dynamical systems and \alert{why} is that so?
+    \end{frame}
     
     
     \begin{frame}{Example: Chemical Reaction Networks}
