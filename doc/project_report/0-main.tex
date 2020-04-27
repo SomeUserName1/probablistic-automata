@@ -1,0 +1,38 @@
+\documentclass[11pt, rgb]{scrreprt}
+\usepackage{themeKonstanz} % Muss immer verwendet werden (Standardpaket)
+\format{a4}
+
+% Thesis information        %
+\date{\today}
+\year{2020}
+\author{Fabian Klopfer}
+
+\title{Minimization of Stochastic Dynamical Systems}
+\subtitle{A Comparison of Models \& Methods}
+\unisection{Faculty of Sciences}
+\department{Department of Computer and Information Science}
+\group{Modelling of Complex Self-Organizing Systems Group}
+\supervisorOne{Dr. Stefano Tognazzi}
+\supervisorTwo{Prof. Dr. Tatjana Petrov}
+
+\bibliography{resources} 
+
+\begin{document}
+    \newgeometry{left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}
+    \thesistitlepage[language=english]{M.Sc. Project Report}
+    \restoregeometry
+    \tableofcontents
+    
+    
+    \include{01-introduction}
+    \include{02-models} 
+    \include{03-red_min}
+    \include{04-eval}
+
+    \nocite{*}
+    \printbibliography
+
+    \appendix
+    \include{05-srs}
+    \include{06-sdd}
+\end{document}

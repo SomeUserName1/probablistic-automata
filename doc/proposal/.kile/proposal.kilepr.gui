@@ -2,7 +2,7 @@
 kile_livePreviewEnabled=false
 kile_livePreviewStatusUserSpecified=true
 kile_livePreviewTool=LivePreview-PDFLaTeX
-lastDocument=slides.tex
+lastDocument=proposal.tex
 
 [document-settings,item:beamerthemeKonstanz.sty]
 Bookmarks=
@@ -59,23 +59,23 @@ Mode=LaTeX
 Mode Set By User=false
 
 [item:beamerthemeKonstanz.sty]
-open=true
-order=1
+open=false
+order=0
 
 [item:proposal.kilepr]
 open=false
 order=-1
 
 [item:proposal.tex]
-open=true
-order=2
+open=false
+order=0
 
 [item:resources.bib]
-open=true
-order=3
+open=false
+order=1
 
 [item:slides.tex]
-open=true
+open=false
 order=0
 
 [item:themeKonstanz.sty]
@@ -87,20 +87,20 @@ open=false
 order=1
 
 [view-settings,view=0,item:beamerthemeKonstanz.sty]
-CursorColumn=11
-CursorLine=1343
+CursorColumn=1
+CursorLine=1314
 Dynamic Word Wrap=false
 JumpList=
 TextFolding=[]
 ViMarks=.,1343,10,[,1343,10,],1343,10
 
 [view-settings,view=0,item:proposal.tex]
-CursorColumn=189
-CursorLine=126
+CursorColumn=0
+CursorLine=42
 Dynamic Word Wrap=true
 JumpList=
 TextFolding=[]
-ViMarks=.,138,23,<,31,1,>,31,1,[,138,23,],138,23,^,45,212
+ViMarks=.,150,0,<,34,1,>,34,1,[,150,0,],150,0,^,50,208
 
 [view-settings,view=0,item:resources.bib]
 CursorColumn=25
