@@ -283,3 +283,108 @@ Will the presentation be on Zoom like 2 weeks ago?
 
 You too & thanks for the guidance, 
 Fabian
+
+#### Proposal & slides ready, by Fabian April 22nd/23rd 2020
+Hey,
+
+just wanted to let you know that I'm working on the slides and will sent them to you this night as I haven't quite finished yet.
+
+The proposal draft is finished, the last things that lack are the roadmap for the project and the forms necessary to register the project. Will do those tomorrow.
+
+Do you have time tomorrow to have a look at the slides and give feedback on them?
+
+Cheers,
+
+Fabian 
+
+Attached are the slides for Friday, i hope they're okay.
+
+Regards,
+
+F.
+
+#### Feedback on slides, by Stefano, 23rd April 2020
+I'll write you the comments here:
+1. Don't use DE as an acronym right from the start (although everybody in the audience should get it you should not give it for granted), so it is good practice, the first time to use the full "Differential Equations (DE)" name and then use the acronym
+2. the question in the first slide "is it...."
+
+the rest seems fine, maybe during the presentation (like you did in the introduction of the proposal) you can stress why these models and these techniques are useful/needed for the analysis of these systems
+
+#### Group meeting, by Tanja, 24th April 2020
+Dear All,
+
+here information for today's meeting at 10.30. I created two consecutive Zoom meetings - details below the text of this message.
+
+Agenda:
+
+- admin 
+- courses 
+- CASCB Monday seminar 
+- CMSB 
+- research: Fabian Klopfer will present his Master project proposal ‘Minimisation of Stochastic Dynamical Systems’
+
+
+Cheers, 
+  Tanja
+
+
+
+Part A:
+Tatjana Petrov is inviting you to a scheduled Zoom meeting.
+
+Topic: MCSS Smart Meeting 6A
+Time: Apr 24, 2020 10:30 AM Rome
+
+Join Zoom Meeting
+https://us04web.zoom.us/j/2599919707?pwd=OVhHU1FNTE1pSC9TSnVoNzdaVkY0dz09
+
+Meeting ID: 259 991 9707
+Password: mcss
+
+Part B:
+Tatjana Petrov is inviting you to a scheduled Zoom meeting.
+
+Topic: MCSS Smart Meeting 6B
+Time: Apr 24, 2020 11:15 AM Rome
+
+Join Zoom Meeting
+https://us04web.zoom.us/j/2599919707?pwd=OVhHU1FNTE1pSC9TSnVoNzdaVkY0dz09
+
+Meeting ID: 259 991 9707
+Password: mcss
+
+#### Forms, by Fabian Monday, 27th April 2020
+Dear Tanja,
+
+
+attached are the prefilled forms necessary to register the project.
+
+The project registration is self-explanatory i guess.
+
+Regarding the mentoring sheet:
+
+I filled it out as I have taken those courses already and have checked it with both Prof. Grossniklaus and Martin Brunner (4 weeks before all the trouble when he didn't want to sign the colloquium registration form, even tough it was correct according to the central examination office... whatever, it's not going to be such a mess this time).
+
+Is that okay for you?
+
+If so I'd be happy if you could sign it so that I can submit it to Maria Hesse & Kris Rellstab respectively when you sent it back.
+
+Cheers,
+
+Fabian 
+
+#### Re: Forms, by Tanja, 27th April 2020
+Hi Fabian, I signed and put in a shared folder on Dropbox. Did you find it? 
+
+One comment on the proposal, Section 2:
+Point 2 should be 'reduction' rather than 'minimisation' - it is a question which we will assess with this study, whether the bi-simulation found by algorithm [10] gives the minimal property-preserving system.
+
+Cheers, 
+  Tanja
+  
+#### Re:Re: Forms, by Fabian, 27th April 2020
+Thanks for the quick response! Just setting up Dropbox on my computer
+
+Gonna correct it, as well as the dozens of typos in the proposal, sorry for that.
+
+F.

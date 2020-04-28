@@ -1,9 +1,414 @@
 [General]
-kile_livePreviewEnabled=true
-kile_livePreviewStatusUserSpecified=false
-kile_livePreviewTool=LivePreview-PDFLaTeX
-lastDocument=
+kile_livePreviewEnabled=false
+kile_livePreviewStatusUserSpecified=true
+kile_livePreviewTool=LivePreview-XeLaTeX
+lastDocument=05-srs.tex
+
+[document-settings,item:0-main.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:00-title.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=None
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:01-introduction.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:02-architecture.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:02-models.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:03-discussion.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:03-red_min.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:04-eval.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:04-future-work.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:05-roadmap.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:05-srs.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:05-srsdd.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:06-sdd.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:06-srs.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:07-sdd.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:09-eval.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:de_slides.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:preamble.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:resources.bib]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=BibTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=BibTeX
+Mode Set By User=false
+
+[document-settings,item:themeKonstanz.sty]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:wa_slides.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[item:0-main.tex]
+open=false
+order=0
+
+[item:01-introduction.tex]
+open=false
+order=-1
+
+[item:02-models.tex]
+open=false
+order=-1
+
+[item:03-red_min.tex]
+open=false
+order=-1
+
+[item:04-eval.tex]
+open=false
+order=-1
+
+[item:05-srs.tex]
+open=false
+order=1
+
+[item:05-srsdd.tex]
+open=false
+order=-1
+
+[item:06-sdd.tex]
+open=false
+order=-1
+
+[item:de_slides.tex]
+open=false
+order=-1
 
 [item:project_report.kilepr]
 open=false
 order=-1
+
+[item:resources.bib]
+open=false
+order=2
+
+[item:themeKonstanz.sty]
+open=false
+order=-1
+
+[item:wa_slides.tex]
+open=false
+order=-1
+
+[view-settings,view=0,item:0-main.tex]
+CursorColumn=32
+CursorLine=11
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,35,20,[,35,19,],35,20
+
+[view-settings,view=0,item:00-title.tex]
+CursorColumn=0
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,0,0,[,0,0,],0,0
+
+[view-settings,view=0,item:01-introduction.tex]
+CursorColumn=0
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,0,7,[,0,1,],0,7
+
+[view-settings,view=0,item:02-architecture.tex]
+CursorColumn=15
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,0,14,[,0,9,],0,14
+
+[view-settings,view=0,item:02-models.tex]
+CursorColumn=44
+CursorLine=9
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,9,43,[,9,38,],9,43
+
+[view-settings,view=0,item:03-discussion.tex]
+CursorColumn=35
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,0,34,[,0,24,],0,34
+
+[view-settings,view=0,item:03-red_min.tex]
+CursorColumn=8
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,0,7,[,0,0,],0,7
+
+[view-settings,view=0,item:04-eval.tex]
+CursorColumn=32
+CursorLine=1
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,1,31,[,1,31,],1,31
+
+[view-settings,view=0,item:04-future-work.tex]
+CursorColumn=0
+CursorLine=1
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,0,18,[,0,9,],0,18
+
+[view-settings,view=0,item:05-roadmap.tex]
+CursorColumn=28
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,0,28,[,0,28,],0,28
+
+[view-settings,view=0,item:05-srs.tex]
+CursorColumn=33
+CursorLine=10
+Dynamic Word Wrap=true
+JumpList=
+TextFolding=[]
+ViMarks=.,10,32,[,10,32,],10,32
+
+[view-settings,view=0,item:05-srsdd.tex]
+CursorColumn=55
+CursorLine=177
+Dynamic Word Wrap=true
+JumpList=
+TextFolding=[]
+ViMarks=.,204,0,[,204,0,],204,7
+
+[view-settings,view=0,item:06-sdd.tex]
+CursorColumn=1
+CursorLine=1
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,1,0,[,1,0,],1,0
+
+[view-settings,view=0,item:06-srs.tex]
+CursorColumn=0
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=
+
+[view-settings,view=0,item:07-sdd.tex]
+CursorColumn=0
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=
+
+[view-settings,view=0,item:09-eval.tex]
+CursorColumn=0
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=
+
+[view-settings,view=0,item:de_slides.tex]
+CursorColumn=14
+CursorLine=8
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,8,13,[,8,6,],8,13
+
+[view-settings,view=0,item:preamble.tex]
+CursorColumn=0
+CursorLine=0
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=
+
+[view-settings,view=0,item:resources.bib]
+CursorColumn=30
+CursorLine=62
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,426,13,[,426,12,],426,13
+
+[view-settings,view=0,item:themeKonstanz.sty]
+CursorColumn=6
+CursorLine=569
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,569,6,[,569,6,],569,6
+
+[view-settings,view=0,item:wa_slides.tex]
+CursorColumn=17
+CursorLine=16
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,8,13,[,8,6,],8,13

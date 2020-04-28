@@ -1,40 +1,33 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                     %
-% ThemeKonstanz für die Verwendung beim Erstellen von %
-% PDF-Dokumenten und Abschlussarbeiten mit dem        % 
-% Corporate Design der Universität Konstanz           %
-%                                                     %
-% Stand: 14.09.2016 - Michael Brendle (Version 0.4)   %
-%                                                     %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                       %
+% Beamer Theme Uni Konstanz                             %
+% Stand: 10.07.2015 - Michael Brendle <--- Vergewaltigt gerne beamerslides...    %
+%                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\NeedsTeXFormat{LaTeX2e}
-\usepackage{scrhack}
-% Farben
+
+\mode<presentation>
+
+% Sollte bereits durch Beamer importiert werden
 \usepackage{xcolor}
-\usepackage{nameref}
-\usepackage{enumerate}
 
-% Seiten-Einrichtung
-\usepackage{geometry}
-\usepackage{changepage}
-% DinA4 Initialisierung
+%%%%%%%% Wird seit Version 0.3 nicht mehr benötigt
+% \usepackage{tcolorbox}
+
+% 16:9 Initialisierung
 % Benutzer kann es mittels \format aendern (siehe unten)
-\geometry{paperheight=29.7cm, paperwidth=21.0cm, left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}%
+\geometry{paperheight=14.3cm, paperwidth=24.4cm, left=1cm, right=1cm, headheight=1cm, headsep=1cm, top=1cm}
 
-% Codierung
 \usepackage[english]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{wrapfig}
 
-% Absolute Positionierung der Textfelder inkl. Uni Konstanz Logo
+% Absolute Positionierung des Uni Konstanz Logos
 \usepackage[absolute, overlay]{textpos}
-\usepackage{ragged2e}
 
-% Unterstreichungen (Anpassen der Dicke und der Farbe)
-\usepackage{soul}
+% Unicode XeTeX
+\usepackage{xunicode}
 
-% Fuer das Merken und Markieren Element, sowie Überschriften
+%%%%%%%% NEU: Wird seit Version 0.3 benötigt
+% Fuer das Merken und Markieren Element
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.16}
@@ -43,15 +36,28 @@
 \usetikzlibrary{backgrounds,matrix,fadings,calc,positioning,decorations.pathreplacing,arrows.meta,shapes,shapes.multipart, plotmarks}
 \usepackage{longtable}
 
-
+%%%%%%%% NEU: Wird seit Version 0.3 benötigt
 % Fuer If-Then-Else
 \usepackage{ifthen}
 
+%%%%%%%% NEU: Wird seit Version 0.3 benötigt
 % Fur Makros mit Key-Value-Pairs
 \usepackage{keycommand}
 
+% Unterstreichungen (Anpassen der Dicke und der Farbe)
+\usepackage{soul}
+\usepackage{ulem}
+
+\usepackage{lmodern}
+\usepackage[backend=biber, style=ieee]{biblatex}
+\usepackage{csquotes}
+\usepackage[format=plain, justification=justified, labelfont=bf, textfont=it, font=small, labelsep=space]{caption}
+\usepackage{appendixnumberbeamer}
+
+
+
 % http://www.techques.com/question/31-48501/soul:-broken-highlighting-with-xcolor-when-using-%5Cselectcolormodel
-% Problem von soul beheben, da Farben in RGB konvertiert werden. Konvertierung ist notwendig, da einige Pakete
+% Problem von soul beheben, da Farben in RGB konvertiert werden. Konvertierung ist notwendig, da z.b. tcolorbox
 % kein HSB Model unterstuetzt.
 \newdimen\SOUL@dimen %new
 \def\SOUL@ulunderline#1{{%
@@ -71,55 +77,16 @@
 
 % Laengenberechnung
 \usepackage{calc}
-\usepackage{float}
 
-% Schriften
-\usepackage{cmbright}
+% Schriften 1. Teil
+\usepackage{fontspec}
+\defaultfontfeatures{Mapping=tex-text}
 
-% Paket für Unter- und Überschrift für Abbildungen und Tabellen
-% Möchte man eine andere Unter- und / oder Überschrift können hier
-% Anpassungen vorgenommen werden. Siehe dazu auch die Paketdokumentation:
-%
-%     http://ftp.gwdg.de/pub/ctan/macros/latex/contrib/caption/caption-eng.pdf
-%
-\usepackage[format=plain, justification=justified, labelfont=bf, textfont=it, font=small, labelsep=space]{caption}
 
-% Paket für Tabellen im Corporate Design der Universität Konstanz
-\usepackage{tabu}
-\usepackage{booktabs}
 
-% Referenzierung
-\usepackage[bookmarksopen,bookmarksdepth=5]{hyperref}
+% Schriften 2. Teil - Arial
+\newfontfamily\arialfamily{Arial}
 
-% Code listings
-\usepackage[newfloat]{minted}
-
-% Zitatieren
-\usepackage{csquotes}
-\usepackage[backend=biber,style=numeric,
-citestyle=numeric]{biblatex}
-
-% Mathe und algos
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage[algoruled,boxed,vlined]{algorithm2e}
-\SetKwInOut{Parameters}{Parameters}
-\SetKwFor{For}{for}{do}{}
-\SetKwIF{If}{ElseIf}{Else}{if}{then}{else if}{else}{} 
-\newcommand{\hrulealg}[0]{\vspace{1mm} \hrule \vspace{1mm}}
-\usepackage{forest}
-\usepackage{multirow}
-
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
-
-% Randnotizen und Bilder für tufte style
-%\usepackage[side]{footmisc}
-%\usepackage{marginnote}
-
-% Bilder einbinden
-\usepackage{graphicx}
-\usepackage{cleveref}
 
 % Farben Definition des CD der Uni Konstanz mit dem HSB Modell
 % Dadurch direkte Repraesentation der Saettigung
@@ -132,11 +99,111 @@ citestyle=numeric]{biblatex}
 \xdefinecolor{schwarz20}{hsb}{0.0, 0.0, 0.8}
 \xdefinecolor{schwarz10}{hsb}{0.0, 0.0, 0.9}
 
-% rgb - Nur im Notfall verwenden
-%\xdefinecolor{seeblau100rgb}{RGB}{0, 154, 209}
-%\xdefinecolor{seeblau65rgb}{RGB}{89, 182, 220}
-%\xdefinecolor{seeblau35rgb}{RGB}{160, 211, 230}
-%\xdefinecolor{seeblau20rgb}{RGB}{200, 229, 239}
+% Anpassung der Schrift der einzelnen Beamer Elemente
+\setbeamerfont{frametitle}{family=\arialfamily, series=\normalfont, size*={20.00}{20.00}}
+
+\setbeamerfont{headline}{family=\arialfamily, series=\normalfont, size*={10.00}{10.00}}
+\setbeamerfont{footline}{family=\arialfamily, series=\normalfont,size*={8.00}{8.00}}
+
+\setbeamerfont{normalfont}{family=\arialfamily, series=\normalfont,size*={16.00}{20.00}}
+
+\setbeamerfont{title page}{family=\arialfamily, series=\bfseries, size*={35.00}{35.00}}
+\setbeamerfont{section page}{family=\arialfamily, series=\normalfont, size*={30.00}{45.00}}
+\setbeamerfont{subsection page}{family=\arialfamily, series=\normalfont, size*={20.00}{20.00}}
+
+\setbeamerfont{titlepageauthor}{family=\arialfamily, series=\bfseries, size*={20.00}{24.00}}
+\setbeamerfont{titlepagenormal}{family=\arialfamily, series=\normalfont, size*={20.00}{24.00}}
+\setbeamerfont{default}{family=\arialfamily, series=\normalfont,size*={16.00}{16.00}}
+\setbeamerfont{abstract}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{projected text}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+\setbeamerfont{section in toc}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{subsection in toc}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{subsubsection in toc}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+\setbeamerfont{block title}{family=\arialfamily, series=\bfseries,size*={16.00}{18.00}}
+\setbeamerfont{block body}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+\setbeamerfont{itemize item}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{itemize subitem}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{itemize subsubitem}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+\setbeamerfont{enumerate item}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{enumerate subitem}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{enumerate subsubitem}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+\setbeamerfont{itemize/enumerate body}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{itemize/enumerate subbody}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{itemize/enumerate subsubbody}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+\setbeamerfont{item}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{subitem}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{subsubitem}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+\setbeamerfont{item projected}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{subitem projected}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+\setbeamerfont{subsubitem projected}{family=\arialfamily, series=\normalfont,size*={16.00}{18.00}}
+
+
+\setbeamerfont{testfont}{family=\arialfamily, series=\normalfont,size*={16.00}{16.00}}
+\setbeamerfont{testfont2}{family=\arialfamily, series=\normalfont,size*={16.00}{20.00}}
+\setbeamerfont{testfont3}{family=\arialfamily, series=\normalfont,size*={16.00}{32.00}}
+
+
+% Anpassung der Farben an das CD der Uni Konstanz
+\setbeamercolor*{seeblau100}{fg=black, bg=seeblau100}
+\setbeamercolor*{seeblau65}{fg=black, bg=seeblau65}
+\setbeamercolor*{seeblau35}{fg=black, bg=seeblau35}
+\setbeamercolor*{seeblau20}{fg=black, bg=seeblau20}
+
+\setbeamercolor*{schwarz60}{fg=black, bg=schwarz60}
+\setbeamercolor*{schwarz40}{fg=black, bg=schwarz40}
+\setbeamercolor*{schwarz20}{fg=black, bg=schwarz20}
+\setbeamercolor*{schwarz10}{fg=black, bg=schwarz10}
+
+\setbeamercolor*{section in toc}{fg=black,bg=white}
+\setbeamercolor*{subsection in toc}{fg=black,bg=white}
+\setbeamercolor*{subsubsection in toc}{fg=black,bg=white}
+\setbeamercolor*{section in toc shaded}{fg=schwarz60,bg=white}
+\setbeamercolor*{subsection in toc shaded}{fg=schwarz60,bg=white}
+\setbeamercolor*{subsubsection in toc shaded}{fg=schwarz60,bg=white}
+
+\setbeamercolor*{itemize item}{fg=seeblau100,bg=seeblau100}
+\setbeamercolor*{itemize subitem}{fg=seeblau100,bg=seeblau100}
+\setbeamercolor*{itemize subsubitem}{fg=seeblau100,bg=seeblau100}
+
+\setbeamercolor*{item}{fg=seeblau100,bg=seeblau100}
+\setbeamercolor*{subitem}{fg=seeblau100,bg=seeblau100}
+\setbeamercolor*{subsubitem}{fg=seeblau100,bg=seeblau100}
+
+\setbeamercolor*{enumerate item}{fg=black,bg=white}
+\setbeamercolor*{enumerate subitem}{fg=black,bg=white}
+\setbeamercolor*{enumerate subsubitem}{fg=black,bg=white}
+
+\setbeamercolor*{item projected}{fg=black,bg=white}
+\setbeamercolor*{subitem projected}{fg=black,bg=white}
+\setbeamercolor*{subsubitem projected}{fg=black,bg=white}
+
+\setbeamercolor*{itemize/enumerate body}{fg=black,bg=white}
+\setbeamercolor*{itemize/enumerate subbody}{fg=black,bg=white}
+\setbeamercolor*{itemize/enumerate subsubbody}{fg=black,bg=white}
+
+\setbeamercolor*{block title}{fg=black,bg=seeblau100}
+\setbeamercolor*{block body}{fg=black,bg=seeblau20}
+
+\setbeamercolor*{block title example}{fg=black,bg=seeblau100}
+\setbeamercolor*{block body example}{fg=black,bg=seeblau20}
+
+\setbeamercolor*{block title alerted}{fg=white,bg=seeblau100}
+\setbeamercolor*{block body alerted}{fg=black,bg=seeblau20}
+
+%\setbeamercolor*{subsection page}{fg=seeblau100,bg=white}
+
+\setbeamercolor{normal text}{fg=black, bg=white}
+\setbeamercolor{titlelike}{fg=black, bg=seeblau100}
+
+% ToDo: Noch an die restlichen Beamer Elemente anpassen
+
 
 % Laengendefinitionen
 \newlength{\mylengthwidth}%
@@ -160,7 +227,10 @@ citestyle=numeric]{biblatex}
 \newlength{\lengthfourth}%
 \newlength{\blskip}%
 \newlength{\underlinewidth}%
-\newlength{\bluelinewidth}%
+% Setzen von Laengen
+\setlength{\footspace}{\paperwidth - \textwidth}
+\setlength{\heightspace}{\paperheight - \textheight}
+\setlength{\currentfontsize}{\f@size pt}
 
 \newlength{\blockcolumnwidth}%
 \newlength{\spacewidth}%
@@ -174,465 +244,41 @@ citestyle=numeric]{biblatex}
 \newlength{\argfivelength}%
 
 \newlength{\boxlinewidth}%
-
-\newlength{\kapitelwidth}%
-\newlength{\linestart}%
-\newlength{\lineend}%
-\newlength{\textstart}%
-\newlength{\textwidthnew}%
-
-\newlength{\mylengthwidthfirst}%
-\newlength{\mylengthwidthsecond}%
-\newlength{\mylengthwidththird}%
-\newlength{\mylengthwidthfourth}%
-\newlength{\mylengthwidthfifth}%
-\newlength{\mylengthwidthsixth}%
-
-\newcounter{columnnumber}%
-\newcounter{tempnumber}%
-\newcounter{argonecounter}%
-\newcounter{argtwocounter}%
-\newcounter{argthreecounter}%
-\newcounter{argfourcounter}%
-\newcounter{argfivecounter}%
-
-% Initialisierung - DinA4 Standard
-\setlength{\logoheight}{20mm}
-\setlength{\boxlinewidth}{1pt}
-
-% Setzen von Laengen
-\setlength{\footspace}{\paperwidth - \textwidth}
-\setlength{\heightspace}{\paperheight - \textheight}
-\setlength{\currentfontsize}{\f@size pt}
+\setlength{\boxlinewidth}{1.5pt}
 
 \newcommand{\getfontsize}{\setlength{\currentfontsize}{\f@size pt}\the\currentfontsize}
 
-% Setze die Nummerierungstiefe
-\setcounter{secnumdepth}{3}
-\setcounter{tocdepth}{3}
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Tabellenzusatzpezifikationen                          %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
-\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
-
-% Abstand zwischen Text und Linie
-\tabulinesep = 1.5ex
-
-% Standard: durchgezogene Linie im Seeblau
-\tabulinestyle{0.2ex seeblau100}
-
-% durchgezogene Linie im Seeblau
-\def\unitoprule{\tabucline[0.2ex seeblau100]}
-
-% gestrichelte Linie im Seeblau (halbe Dicke der durchgezogenen Linie)
-\def\unimidrule{\tabucline[0.1ex seeblau100 on 4pt off 3.5pt]}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Seitenformat / Foliengroesse %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\def\dinafuenf{a5}
-\def\dinavier{a4}
-\def\dinadrei{a3}
-\def\dinafuenfquer{a5quer}
-\def\dinavierquer{a4quer}
-\def\dinadreiquer{a3quer}
-\def\dinaviertufte{a4tufte}
-
-% Anpassung des Papierformates:
-% Zur Auswahl stehen:
-%
-%   Schlüssel  Beschreibung      Höhe      Breite
-%   -----------------------------------------------
-%   a3         DinA3 Hochformat  42.0  cm  29.7  cm
-%   a3quer     DinA3 Querformat  29.7  cm  42.0  cm
-%   a4         DinA4 Hochformat  29.7  cm  21.0  cm
-%   a4quer     DinA4 Querformat  21.0  cm  29.7  cm
-%   a5         DinA5 Hochformat  21.0  cm  14.8  cm
-%   a5quer     DinA5 Querformat  14.8  cm  21.0  cm
-%
-%
-% Falls keiner der unterstützten Schlüssel übergeben wird,
-% ist DinA4 Hochformat der Standard.
-
-% Zusätzlich wird auch gleich die Höhe des Logos anhand
-% des Corporate Design definiert.
-
+% Einstellungen des Formates inklusive Foliengroesse.
+% Dadurch koennen die exkaten Schriftgroessen des Corporate Designs verwendet werden
+% Werte aus der Power Point Praesentation uebernommen.
+%    169 (16:9)
+%    43 (4:3)
+%    1610 (16:10)
+%    sonst: wird 16:9 eingestellt
 \newcommand{\format}[1]{%
- 	\def\dinformat{#1}%
-	\ifx\dinformat\dinafuenf%
-		\geometry{paperheight=21.0cm, paperwidth=14.8cm, left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}%
-		\setlength{\logoheight}{15mm}
-		\setlength{\boxlinewidth}{1pt}
+	\ifnum #1=169%
+		\geometry{paperheight=14.3cm, paperwidth=24.4cm, left=1cm, right=1cm, headheight=1cm, headsep=1cm, top=1cm}%
 	\else%
-	\ifx\dinformat\dinafuenfquer%
-		\geometry{paperheight=14.8cm, paperwidth=21.0cm, left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}%
-		\setlength{\logoheight}{15mm}
-		\setlength{\boxlinewidth}{1pt}
-	\else%
-	\ifx\dinformat\dinavier%
-		\geometry{paperheight=29.7cm, paperwidth=21.0cm, inner=2.5cm, outer=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}%
-		\setlength{\logoheight}{20mm}
-		\setlength{\boxlinewidth}{1pt}
-	\else%
-	\ifx\dinformat\dinavierquer%
-		\geometry{paperheight=21.0cm, paperwidth=29.7cm, left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}%
-		\setlength{\logoheight}{20mm}
-		\setlength{\boxlinewidth}{1pt}
-	\else%	
-	\ifx\dinformat\dinadrei%
-		\geometry{paperheight=42.0cm, paperwidth=29.7cm, left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}%
-		\setlength{\logoheight}{30mm}
-		\setlength{\boxlinewidth}{1.5pt}
-	\else%
-	\ifx\dinformat\dinadreiquer%
-		\geometry{paperheight=29.7cm, paperwidth=42.0cm, left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}%
-		\setlength{\logoheight}{30mm}
-		\setlength{\boxlinewidth}{1.5pt}
-	\else%
-	\ifx\dinformat\dinaviertufte%
-		\geometry{paperheight=29.7cm, paperwidth=21.0cm, inner=2.5cm, outer=6.5cm, bottom=3cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=1.5cm, marginparwidth=5cm}%
-		\setlength{\logoheight}{20mm}
-		\setlength{\boxlinewidth}{1pt}
-	\fi%
-	\fi%
-	\fi%
-	\fi%
-	\fi%
-	\fi%
+		\ifnum #1=43%
+			\geometry{paperheight=19.05cm, paperwidth=24.4cm, left=1cm, right=1cm, headheight=1cm, headsep=1cm, top=1cm}%
+		\else%
+			\ifnum #1=1610%
+				\geometry{paperheight=15.87cm, paperwidth=24.4cm, left=1cm, right=1cm, headheight=1cm, headsep=1cm, top=1cm}%
+			\else%
+				\geometry{paperheight=14.3cm, paperwidth=24.4cm, left=1cm, right=1cm, headheight=1cm, headsep=1cm, top=1cm}%
+			\fi%		
+		\fi%
 	\fi%
 }%
 
-\newcommand{\positionnumber}{%
-  \ifnum\c@section=0 %
-  \thechapter
-  \else
-  \ifnum\c@subsection=0 %
-  \thesection
-  \else
-  \ifnum\c@subsubsection=0 %
-  \thesubsection
-  \else
-  \thesubsubsection
-  \fi
-  \fi
-  \fi
-}
-\newcommand*{\fullref}[1]{\hyperref[{#1}]{\Cref{#1}}}
+% ToDo: An Aaspect Ratio anpassen
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
-% Datum, Autor, etc.    %
-%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\def\datum{}
-\renewcommand{\date}[1]{
-\def\datum{#1}
-}
-
-\def\jahr{}
-\renewcommand{\year}[1]{
-\def\jahr{#1}
-}
-
-\def\autor{}
-\renewcommand{\author}[1]{
-\def\autor{#1}
-}
-
-\def\docTitle{}
-\renewcommand{\title}[1]{
-\def\docTitle{#1}
-}
-
-\def\docSubtitle{}
-\renewcommand{\subtitle}[1]{
-\def\docSubtitle{#1}
-}
-
-\def\docUnisection{}
-\newcommand{\unisection}[1]{
-\def\docUnisection{#1}
-}
-
-\def\docDepartment{}
-\newcommand{\department}[1]{
-\def\docDepartment{#1}
-}
-
-\def\docSupervisorOne{}
-\newcommand{\supervisorOne}[1]{
-\def\docSupervisorOne{#1}
-}
-
-\def\docSupervisorTwo{}
-\newcommand{\supervisorTwo}[1]{
-\def\docSupervisorTwo{#1}
-}
-
-\def\docGroup{}
-\newcommand{\group}[1]{
-\def\docGroup{#1}
-}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Uni-Titelseite               %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Mit Hilfe des Makros
-%
-%    \unititlepage
-%
-% kann die Titleseite des Dokumentes im Corporate Design der
-% Universität Konstanz erstellt werden.
-%
-% Das Makro besitzt drei optionale Argumente, die mit
-% Key-Value-Pairs eingesetzt werden können:
-%
-%    \unititlepage[Optionen mit Key-Value-Pairs]
-%
-% Dabei stehen folgende Optionen zur Verfügung:
-%
-%    graphic      Möchte man ein Bild, Grafik, o.ä. auf der
-%                 Titelseite platzieren, so muss nur der Pfad
-%                 dieser Grafik eingesetzt werden (Beispiel siehe
-%                 unten).
-%
-%                 Wird kein Grafikpfad angegeben oder wird dieses
-%                 optionale Argument weggelassen, so wird ein
-%                 leeres graues Rechteck entsprechend CD-Richtlinien
-%                 erstellt.
-%
-%    partnerlogo  Möchte man ein Partner- bzw. Zweitlogo auf der
-%                 Titelseite platzieren, so muss auch hier der
-%                 Pfad angegeben werden, und es wird in der linken
-%                 oberen Ecke platziert (Beispiel siehe unten).
-%
-%                 Wird dieses optionale Argument weggelassen, so wird
-%                 an dieser Stelle natürlich kein Logo präsentiert.
-%
-%    unilogo      Standardmäßig wird in der rechten oberen Ecke auf 
-%                 der Titelseite das Unilogo platziert.
-%
-%                 Möchte man an dieser Stelle ein anderes Logo, so muss
-%                 auch hier der Pfad angegeben werden. Dies sollte jedoch
-%                 nur in besonderen Fällen erfolgen, da das Uni-Logo nach
-%                 CD Richtlinien i.d.R. in der oberen rechten Ecke
-%                 platziert werden sollte.
-%
-%                 Wird das optionale Argument verwendet, jedoch kein Pfad
-%                 angegeben, so wird auch kein Logo in der rechten oberen
-%                 Ecke angezeigt.
-%
-%                 Wird das optionale Argument weggelassen, so wird
-%                 standardmäßig das Uni-Logo in der rechten oberen
-%                 Ecke präsentiert.
-
-\newkeycommand{\unititlepage}[unilogo=logo, partnerlogo=, graphic=][0]{%
-\thispagestyle{empty}%
-\begin{sffamily}%
-% Setze das Uni Logo nach oben rechts auf der Titelseite
-\begin{textblock*}{\paperwidth}(0pt, 0pt)%
-\hfill\includegraphics[height=\logoheight * 9/4]{\commandkey{unilogo}}%
-\end{textblock*}%
-%
-\def\keynone{}%
-\def\partner{\commandkey{partnerlogo}}%
-\def\titlegraphic{\commandkey{graphic}}%
-% Setze das Partnerlogo oben links, falls es einen Pfad gibt.
-\ifthenelse{\equal{\keynone}{\partner}}%
-{}{%
-	\begin{textblock*}{\paperwidth}(0.75\logoheight, 0.5\logoheight)%
-	\includegraphics[height=\logoheight]{\commandkey{partnerlogo}}\hfill%
-	\end{textblock*}%
-}% Setze die Tielgrafik an die entsprechende Position, falls es einen Pfad gibt.
-% Ansonsten wird ein grauer Platzhalter platziert.
-\ifthenelse{\equal{\keynone}{\titlegraphic}}%
-{%
-	\begin{textblock*}{\paperwidth}(-0.5cm, \paperheight * 1/4 + 0.6cm)%
-	\begin{tikzpicture}%
-	\draw [schwarz10, fill=schwarz10, line width=0mm] (0,0) -- (\paperwidth-2.5cm,0) -- (\paperwidth-2.5cm,\paperheight - 12.2cm) -- (0,\paperheight - 12.2cm) -- (0,0);%
-	\end{tikzpicture}%
-	\end{textblock*}%
-}%
-{%
-	\begin{textblock*}{\paperwidth}(-0.5cm, \paperheight * 1/4 + 0.6cm)%
-	\includegraphics[width=\paperwidth - 2.5cm]{\commandkey{graphic}}\hfill%
-	\end{textblock*}%
-}%
-% Ertelle das Merken Objekt über der Grafik enstprechend in der
-% CD Richtlinien.
-\begin{textblock*}{\paperwidth}(2cm, \paperheight * 1/5)%
-\selectfontsize{25pt}%
-\merken{\paperheight * 1/4}{\selectfontsize{16pt}\datum}{\docTitle}%
-\end{textblock*}%
-% Erstelle ein Textfeld mit dem Autor des Dokumentes unterhalb der Grafik
-\begin{textblock*}{\paperwidth}(2cm, \paperheight - 3.2cm)%
-\selectfontsize{16pt}%
-\seeblauunderline{\textbf{\autor}}%
-\end{textblock*}%
-% Erstelle ein Textfeld mit dem Untertitel des Dokumentes unterhalb
-% des Autors.
-\begin{textblock*}{\paperwidth}(2cm, \paperheight - 2.8cm)%
-\selectfontsize{16pt}%
-\docSubtitle%
-\end{textblock*}%
-\newpage%
-\thispagestyle{empty} $ $%
-\newpage%
-\end{sffamily}
-}%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Thesis-Titelseite            %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Mit Hilfe des Makros
-%
-%    \thesistitlepage
-%
-% kann die Titleseite des Dokumentes an die Vorgaben 
-% einer Arbeit (Bachelorarbeit, Masterarbeit, ... ) des
-% Fachbereichs Informatik und Informationswissenschaft
-% angepasst werden.
-%
-% Das Makro besitzt ein festes und ein optionales Argument.
-%
-%    \unititlepage[language=<language>]{<Art der Arbeit>}
-%
-% Dabei stehen folgende Optionen zur Verfügung:
-%
-%    language        Mit diesem Optionalen Argument kann die
-%                    Sprache der Titelseite angepasst werden.
-%       
-%                    Mögliche Werte sind
-%
-%                        german
-%                        english
-%
-%                    Je nach dem übergebenen Wert, wird die Titelseite
-%                    entweder auf Deutsch oder English erstellt.
-%
-%                    Sollte diese Option weggelassen werden, wird
-%                    die Titelseite auf Deutsch erstellt.
-%
-%    Art der Arbeit  Hier kann die Art der Arbeit übergeben werden,
-%                    welche auf der Titelseite erscheint.
-%
-%                    Hier kann alles übergeben werden. Normalerweise
-%                    wird hier Bachelorarbeit, Masterarbeit, o.ä.
-%                    angegeben.
-%
-% Diese Thesis-Titelseite ist auf DinA4 optimiert!
-
-\newkeycommand{\thesistitlepage}[language=german][1]{%
-% Definiere Deutsch, English und Benutzereingabe
-%\def\lanGerman{german}%
-\def\lanEnglish{english}%
-\def\lanUser{\commandkey{language}}%
-% Verwende Serifenlose Schrift auf der Titelseite
-\begin{sffamily}%
-% Dokumenten Titel
-\begin{textblock*}{\textwidth}(0.5\footspace, 4cm)%
-\selectfontsize{18pt}\centering\textbf{\docTitle}\\
-\vskip 4pt
-\selectfontsize{14pt}\docSubtitle
-\end{textblock*}%
-% Art der Arbeit, z.b. Bachelorarbeit, Masterarbeit, ...
-\begin{textblock*}{\textwidth}(0.5\footspace, 8cm)%
-\selectfontsize{18pt}\centering\textbf{#1}%
-\end{textblock*}%
-% Autor (Deutsch, English)
-\ifthenelse{\equal{\lanUser}{\lanEnglish}}%
-{%
-\begin{textblock*}{\textwidth}(0.5\footspace, 10cm)%
-\selectfontsize{14pt}\centering%
-by\\%
-\vskip 2pt
-\autor%
-\end{textblock*}%
-}%
-{%
-\begin{textblock*}{\textwidth}(0.5\footspace, 10cm)%
-\selectfontsize{14pt}\centering%
-vorgelegt von\\%
-\vskip 2pt%
-\autor%
-\end{textblock*}%
-}%
-% at the / an der
-\ifthenelse{\equal{\lanUser}{\lanEnglish}}%
-{%
-
-}%
-{%
-\begin{textblock*}{\textwidth}(0.5\footspace, 12.5cm)%
-\selectfontsize{14pt}\centering%
-an der%
-\end{textblock*}%
-}%
-% Unversität Konstanz Logo
-\begin{textblock*}{\textwidth}(0.5\footspace, 11.5cm)%
-\centering\includegraphics[width=0.75\textwidth]{img/logo.pdf}
-\end{textblock*}%
-% Uni-Sektion und Fachebereich
-\begin{textblock*}{\textwidth}(0.5\footspace, 18cm)%
-\selectfontsize{14pt}\centering%
-\docUnisection\\%
-\vskip 2pt%
-\docDepartment%\\
-\vskip 2pt%
-\docGroup
-\end{textblock*}%
-% Gutachter (Deutsch, English)
-\ifthenelse{\equal{\lanUser}{\lanEnglish}}%
-{%
-\begin{textblock*}{\textwidth}(0.5\footspace, 22.5cm)%
-\selectfontsize{14pt}\centering%
-\begin{tabular}{lL{0.5cm}l}%
- \textbf{Supervisor:} & & \docSupervisorOne\\[2pt]%
- \textbf{Professor:} & & \docSupervisorTwo%
-\end{tabular}%
-\end{textblock*}%
-}%
-{%
-\begin{textblock*}{\textwidth}(0.5\footspace, 22.5cm)%
-\selectfontsize{14pt}\centering%
-\begin{tabular}{lL{0.5cm}l}%
-Erstgutachter: & & \docSupervisorOne\\[2pt]%
-Zweitgutachter: & & \docSupervisorTwo%
-\end{tabular}%
-\end{textblock*}%
-}%
-% Konstanz, Jahr (Deutsch, English)
-\ifthenelse{\equal{\lanUser}{\lanEnglish}}%
-{%
-\begin{textblock*}{\textwidth}(0.5\footspace, 26cm)%
-\selectfontsize{14pt}\centering%
-Konstanz, \jahr%
-\end{textblock*}%
-}%
-{%
-\begin{textblock*}{\textwidth}(0.5\footspace, 26cm)%
-\selectfontsize{14pt}\centering%
-Konstanz, \jahr%
-\end{textblock*}%
-}%
-\newpage%
-\thispagestyle{empty} $ $%
-\newpage%
-\end{sffamily}%
-}%
 
 
 
@@ -689,9 +335,21 @@ Konstanz, \jahr%
 %                        gestellt, wobei "center" primär verwendet werden soll, und "base" eher wenn
 %                        Buchstaben mit einer Tiefe in den Zeilen enthalten sind.
 
-
+%%%%%%%% UPDATE: Seit Version 0.3 geändert
 \newkeycommand{\markieren}[align=left, vertical=center][4]{\headline{\commandkey{align}}{\commandkey{vertical}}{#1}{#2}{#3}{#4}}%
 
+
+%%%%%%%% UPDATE: Seit Version 0.3 geändert
+\newcommand{\titleCDHelp}{\headline{}{}{}{}{}{}}%
+\newkeycommand{\titleCorporateDesign}[align=left, vertical=center][4]{\renewcommand{\titleCDHelp}[0]{\headline{\commandkey{align}}{\commandkey{vertical}}{#1}{#2}{#3}{#4}}}%
+
+
+%%%%%%%% UPDATE: Seit Version 0.3 geändert
+\newcommand{\sectionCorporateDesignHelp}{\headline{}{}{}{}{}{}}%
+\newkeycommand{\sectionCorporateDesign}[align=left, vertical=center][4]{\renewcommand{\sectionCorporateDesignHelp}[0]{\headline{\commandkey{align}}{\commandkey{vertical}}{\insertsectionnumber\hspace*{0.5ex}#1}{#2}{#3}{#4}}}%
+
+
+%%%%%%%% UPDATE: Seit Version 0.3 geändert
 \newcommand{\headline}[6]{%
 \def\markierenalign{#1}%
 \def\markierenanchor{#2}%
@@ -707,6 +365,7 @@ Konstanz, \jahr%
 \settowidth{\lengthfourth}{#6}%
 %%%%% Verwendet wird nun tikz um die Makrierten Zeilen zu erstellen, sowie anhand
 %%%%% der Argumente die Andordnung der Elemente innerhalb der Zeilen zu realisieren.
+
 % WICHTIG:
 %
 % EINE KOMMENTIERUNG DER FOLGENDEN ZEILEN FOLGT AUS ZEITLICHEN GRÜNDEN
@@ -850,27 +509,26 @@ Konstanz, \jahr%
 		\draw [seeblau20, fill=seeblau20, line width=0mm] (0,4.5\mylengthheigthl) -- (\lengthfirst + 2 * \mylengthwidthl,4.5\mylengthheigthl) -- (\lengthfirst + 2 * \mylengthwidthl, 6\mylengthheigthl) -- (0, 6\mylengthheigthl) -- (0,4.5\mylengthheigthl);
 		\node [nodestylenormal] at (\mylengthwidthl,5.25\mylengthheigthl) {#3};
 \fi}}%
-\end{tikzpicture}
+\end{tikzpicture}%
 }%
+
+
+
 
 
 
 %%%%%%%%%%%%%%%%&%%%%%%%%%%%%%%
 % CD Element: Unterstreichung %
-%%%%%%%%%%%%%%%%%&%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Spezielle Unterstreichung bei Überschriften, da diese vom soul Paket 
-% nicht unterstützt werden, sofern der Text nicht unmittelbar übergeben
-% wird.
-%
-% Hier erfolgt eine Unterstreichung mittels TikZ.
-
-\newcommand{\seeblauunderline}[1]{%
-\settowidth{\bluelinewidth}{#1}%
-\begin{tikzpicture}[remember picture,overlay]%
-\draw [seeblau100, fill=seeblau100, line width=0.10\currentfontsize] (0,-0.62ex) -- (\bluelinewidth,-0.62ex);%
-\node [anchor=base west] at (-0.8ex,0) {#1};%
-\end{tikzpicture}%
+% Definition der Unterstreichung beim Frame und Section Title mittels des Paketes ulem
+\newcommand{\seeblauuline}[1]{%
+\setlength{\currentfontsize}{\f@size pt}%
+\bgroup\markoverwith{\textcolor{seeblau100}{\rule[-0.62ex]{#1}{0.08\currentfontsize}}}\ULon%
+}%
+\newcommand{\seeblauunder}[1]{%
+\settowidth{\headlength}{#1}%
+\seeblauuline{\headlength}{#1}%
 }%
 
 
@@ -975,13 +633,15 @@ Konstanz, \jahr%
 }%
 
 
+%%%%%%%% NEU: Seit Version 0.3
+
 %%%%%%%%%%%%%%%%%%%%%%
 % CD Element: Block  %
 %%%%%%%%%%%%%%%%%%%%%%
 
 % Mit dem Makro
 %
-%     \cdblock[Optionen per Key-Value Pair]{<Headline>}{<Spalte 1>}{<Spalte 2>}{<Spalte 3>}{<Spalte 4>}{<Spalte 5>}{<Spalte 6>}{<Spalte 7>}{<Spalte 8>}
+%     \block[Optionen per Key-Value Pair]{<Headline>}{<Spalte 1>}{<Spalte 2>}{<Spalte 3>}{<Spalte 4>}{<Spalte 5>}{<Spalte 6>}{<Spalte 7>}{<Spalte 8>}
 %
 % können Block-Elemente für z.B. wisschenschaftliche Inhalte erstellt werden.
 %
@@ -1135,6 +795,17 @@ Konstanz, \jahr%
 \newlength{\headlinesep}
 \newlength{\argheadlinesep}
 \newlength{\tempboxthick}
+
+
+
+
+\newcounter{columnnumber}%
+\newcounter{tempnumber}%
+\newcounter{argonecounter}%
+\newcounter{argtwocounter}%
+\newcounter{argthreecounter}%
+\newcounter{argfourcounter}%
+\newcounter{argfivecounter}%
 
 \def\argtrue{true}
 \def\argfalse{false}
@@ -1407,8 +1078,10 @@ Konstanz, \jahr%
 \draw (0,0) -- (0,0);%
 \draw (\blockwidth,0) -- (\blockwidth,0);%
 \end{tikzpicture}%
-}
+}%
 
+
+%%%%%%%% NEU: Seit Version 0.3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CD Element: Linie (mit optionalen Pfeilen) %
@@ -1492,6 +1165,7 @@ Konstanz, \jahr%
 }%
 
 
+%%%%%%%% NEU: Seit Version 0.3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CD Element: Klammer (mit optionalen Pfeilen) %
@@ -1653,113 +1327,125 @@ Konstanz, \jahr%
 \fontsize{#1}{\blskip}\selectfont}}%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Anpassung der einzelnen Beamer Templates %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%
-% Textfeld           %
-%%%%%%%%%%%%%%%%%%%%%%
+% Keine Navigationssymbole
+\setbeamertemplate{navigation symbols}{}%
 
-% Damit ein problemloses Anordnen der Elemente auf dem Plakat möglich ist,
-% steht ein neue Umgebeung mit dem Namen
-%
-%     textfeld
-%
-% zur Verfügung.
-%
-% Diese Umgebung besteht aus zwei unbedingt notwendigen Argumenten und einem
-% optionalen Argument.
-%
-%     \begin{textfeld}[optionales Argument]{1. Argument}{2. Argument}
-%          ...
-%     \end{textfeld}
-%
-% Innerhalb der Umgebung kann dann der Inhalt des Textfeldes hinterlegt werden.
-%
-% Die Argumente haben dabei folgende Bedeutung:
-% 
-%   Optionales Argument: Hier wird die Breite des Textfeldes festgelegt.
-%                        Wird dies Weggelassen wird einfach die Papierbreite
-%                        als Breite des Textfeldes angegeben. Dies kann nützlich sein
-%                        wenn man nicht weiß, wie breit der Inhalt werden kann.
-%                        Dringend verwenden sollte man dieses Argument, wenn man
-%                        beispielsweise Textumbrüche erzeugen will anhand der vorgegebenen
-%                        Breite.
-%
-%   1. Argument:         Hier wird die x-Koordinate der linken oberen Ecke des Textfeldes
-%                        angegeben.
-%
-%   2. Argument:         Hier wird die y-Koordinate der linken oberen Ecke des Textfeldes
-%                        angegeben.
-%
-% Für die beiden Argumente, ist noch wichtig zu wissen, wie die Koordinaten verstanden
-% werden sollten:
-%
-%                x-Achse
-%
-%                0                         \paperwidth
-%           y  0 -------------------------------------
-%           -    |                                   |
-%           A    |                                   |
-%           c    |                                   |
-%           h    |                                   |
-%           s    |                                   |
-%           e    |                                   |
-%                |                                   |
-%                |               ...                 |
-%                |                                   |
-%                |                                   |
-%                |                                   |
-%                |                                   |
-%                |                                   |
-%                |                                   |
-%                |                                   |
-%                |                                   |
-%   \paperheight -------------------------------------
-%
-%   - Dabei handelt es sich überall um positive Werte und um absolute Koordinaten.
-%
-%   - Zudem muss immer die jeweilige Einheit an den Wert hinzuegfügt werden, damit der
-%     Wert richtig interpretiert werden kann. Möchte man vorher beispielsweise eine Skizze
-%     machen, dann empfiehlt es sich hier cm als Einheit zu verwenden.
-%
-%   - Mittles \paperwidth und \paperheight können auch Koordinaten angegeben werden,
-%     die relativ zum Papierformat sind. Durch das calc Paket ist es zudem möglich
-%     Rechnungen innerhalb der Argumente vorzunehmen.
-%     
-%     Möchte man beispielsweise fünf Zentimeter sowohl vom linken als auch unteren Ende
-%     ein Textfeld beginnen, so würde der Befehl wie folgt aussehen:
-%
-%         \begin{textfeld}{\paperwidth - 5cm}{\paperheight - 5cm}
-%             ...
-%         \end{textfeld}
-%
-%
-% Zudem sollte man noch wissen, dass alle neueren Textfelder, also jene die weiter unten
-% stehen, die älteren überdecken. Dadurch sollte das Plakat von hinten nach vorne aufgebaut
-% werden.
 
-\newenvironment{textfeld}[3][\paperwidth]{%
-\begin{textblock*}{#1}(#2, #3)%
-\noindent%
-}{\end{textblock*}}%
+% Titel Seite mit Logo, Titel, Autor, Institut und Datum
+\setbeamertemplate{title page}{
+	\begin{textblock*}{\paperwidth}(0pt, 0pt)%
+%%%%%%%%% Dadurch bekommt das Uni Logo eine Hoehe von 20mm und besitzt den optimalen Schutzraum 	
+		\hfill\includegraphics[height=45mm]{img/UniKonstanz_Logo_Optimum.pdf}%
+	\end{textblock*}%
+	\vskip 1.4cm
+	\titleCDHelp%
+	\vskip 2cm
+	\vfill%
+	\usebeamerfont{titlepageauthor}\seeblauunder{\insertauthor}%
+		\\[0.3cm]%
+	\usebeamerfont{normalfont}\insertinstitute, \insertdate
+	\vfill%
+}
+
+
+%% Section Seite mit Titel
+%\setbeamertemplate{section page}{%
+%	\sectionCorporateDesignHelp%
+%	\vskip 18pt%
+%}%
+
+% Section Seite mit Titel
+\setbeamertemplate{section page}{%
+\vskip -50pt\seeblauunder{\insertsection}%	
+\vskip 18pt%
+}%
+
+
+% Subsection Seite mit Titel
+\setbeamertemplate{subsection page}{%
+	\vskip -30pt\seeblauunder{\insertsubsection}%
+	\vskip 18pt%
+}%
+
+
+% Frametitle einfuegen (Unterstreichung mittels \seeblauunder)
+\setbeamertemplate{frametitle}{%
+	\seeblauunder{\insertframetitle}%
+}%
+
+
+% Headline: Wenn vorhanden: Section (mit Nummer) - Subsection (mit Nummer) - Subsubsection
+\setbeamertemplate{headline}{%
+	\ifx \insertsection\@empty%
+	\else%
+		\hspace*{0.5\footspace}\textbf{\insertsectionnumber\hspace*{0.5ex}\insertsection}%
+		\ifx \insertsubsection\@empty%
+		\else%
+			\textcolor{schwarz60}{\textbf{\hspace*{1ex}-\hspace*{1ex}\insertsectionnumber.\insertsubsectionnumber\hspace*{0.5ex}\insertsubsection}}%
+			\ifx \insertsubsubsection\@empty%
+			\else%
+				\textcolor{schwarz40}{\textbf{\hspace*{1ex}-\hspace*{1ex}\insertsubsubsection}}%
+			\fi%
+		\fi%
+	\fi%
+}%
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%
-% Sonstiges          %
-%%%%%%%%%%%%%%%%%%%%%%
+% Footline:
+% TitelSeite: Nur die seeblaue Linie
+% Rest: Seite / Gesamtanzahl    Datum    Titel der Praesentation    Autor
+\setbeamertemplate{footline}{%
+	\vskip 3.5cm%
+	\ifnum \insertpagenumber=1%
+		\begin{textblock*}{\linewidth}(0.5\footspace, \paperheight - 1cm)%
+		\textcolor{seeblau100}{\rule{\linewidth}{1pt}}%
+		\end{textblock*}%
+	\else%
+		\begin{textblock*}{\linewidth}(0.5\footspace, \paperheight - 1cm)%
+			\textcolor{seeblau100}{\rule{\linewidth}{1pt}}%
+			\vskip 6pt%
+			\leavevmode%
+			\hbox{%
+  				\begin{beamercolorbox}[wd=0.1\textwidth, left]{footline}%
+    					\insertframenumber{} / \inserttotalframenumber%
+  				\end{beamercolorbox}%
+  				\begin{beamercolorbox}[wd=0.1\textwidth ,left]{footline}%
+    					\insertdate%
+  				\end{beamercolorbox}%
+  				\begin{beamercolorbox}[wd=0.6\textwidth, center]{footline}%
+   					\inserttitle%
+  				\end{beamercolorbox}%
+  				\begin{beamercolorbox}[wd=0.2\textwidth, right]{footline}%
+   					\insertauthor%
+  				\end{beamercolorbox}%
+  			}%
+		\end{textblock*}%
+\fi%
+}
 
-\pagestyle{empty}%
 
-% Aufzählungen, Listen, etc.
-\renewcommand*\labelitemi{\textcolor{seeblau100}{-}}
-\renewcommand*\labelitemii{\textcolor{seeblau100}{-}}
-\renewcommand*\labelitemiii{\textcolor{seeblau100}{-}}
+% Table of Contents
+\setbeamertemplate{section in toc}{\leavevmode\leftskip=2em\rlap{\hskip-2em\inserttocsectionnumber}\inserttocsection\par}%
+\setbeamertemplate{subsection in toc}{\leavevmode\leftskip=5em\rlap{\hskip-3em\inserttocsectionnumber.\inserttocsubsectionnumber}\inserttocsubsection\par}%
+\setbeamertemplate{subsubsection in toc}{\leavevmode\leftskip=9em\rlap{\hskip-4em\inserttocsectionnumber.\inserttocsubsectionnumber.\inserttocsubsubsectionnumber}\inserttocsubsubsection\par}%
 
-\setlength\leftmargini{2.5em}
-\setlength\leftmarginii{3.8em}
-\setlength\leftmarginiii{5.1em}
-\setlength\labelsep{1em}
-\setlength\labelwidth{3em}
+
+% Items
+
+\setbeamertemplate{itemize item}{\leavevmode -}
+\setbeamertemplate{itemize subitem}{\leavevmode -}
+\setbeamertemplate{itemize subsubitem}{\leavevmode -}
+
+\setlength\leftmargini  {0.5\footspace}
+\setlength\leftmarginii  {3.8em}
+\setlength\leftmarginiii  {5.1em}
+\setlength \labelsep  {1.5em}
+\setlength \labelwidth{4em}
 
 
 \def\@listi{\leftmargin\leftmargini
@@ -1777,65 +1463,15 @@ Konstanz, \jahr%
               \parsep    3\p@
               \itemsep   0\p@}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Fußnotenzeile                                         %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Anpasung der Farbe der Fußnotenzeile bei Verwendung einer Fußnote
-
-\renewcommand\footnoterule{{\color{seeblau100}\kern-3pt \hrule width 2in \kern 2.6pt}}
+\mode%
+<all>%
 
 
-%%%% Figure command
-
-\newcommand{\fig}[4]{
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=#4\textwidth, keepaspectratio]{#1}
-    \caption{#3}
-    \label{fig:#2}
-\end{figure}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Tufte-style Sidenotes and images
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newcommand{\marginfigure}[4]{
-    \ifthispageodd{
-        \marginnote{
-            \captionsetup{type=figure, justification=raggedright}
-            \begin{figure}[H]
-                \includegraphics[width=\marginparwidth,keepaspectratio]{#1}
-            \end{figure}
-            \captionof{figure}{#3}\label{fig:#2}
-        }[#4]
-    }{
-        \marginnote{
-        %\begin{flushright}
-            \begin{minipage}[H]{0.99\marginparwidth}
-                \captionsetup{type=figure, justification=raggedright}
-                \begin{figure}[H]
-                       \includegraphics[width=\linewidth,keepaspectratio]{#1}
-                \end{figure}
-                \captionof{figure}{#3}\label{fig:#2}
-            \end{minipage}
-        }[#4]
-        %\end{flushright}
-    }
-}
-
-\newcommand{\margincode}[5]{
-    \marginnote{
-        \begin{minipage}[H]{0.99\marginparwidth}
-        \captionsetup{type=listing, justification=raggedright}
-            \inputminted[fontsize=\tiny]{#4}{#1}
-            \captionof{listing}{#3}\label{lst:#2}
-        \end{minipage}
-    }[#5]
-}
-
-\renewcommand{\thefootnote}{\fnsymbol{footnote}} 
-\newcommand{\note}[1]{\footnote{\noindent\textit{#1}}}
-
+% TODO
+% - oversize bei proofs, exmaples, ... - Überschreiben durch neues CD Block-Element
+% - Zweitlogo bzw. Unterlogo etc.
+% - Foliennummern angeben in denen keinen Fusszeile vorkommen soll
+% - Biblography
+% - Beispiel mit textcolor in der Farbe
+% - Tabellenbeispiel bzw. Umgebung setzen
+% - Anpassung der geometry an aspectratio

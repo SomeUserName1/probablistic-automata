@@ -1,9 +1,14 @@
 # Repository containing materials for the Master's project & thesis
  
-see ![Proposal](doc/proposal/proposal.pdf) and  ![Presentation](doc/proposal/presentation.pdf)
+see ![Proposal](doc/proposal/proposal.pdf) and  ![Presentation](doc/proposal/presentation.pdf)  
+For requirements and software design see the appendix of the ![report draft](doc/project_report/0-main.pdf)  
 
 ## TODOs  
 - [x] Fill forms  
+- [x] Requirements for implementation  
+- [ ] Design of Implementation (WIP)  
 - [ ] Re-Read implementation papers carefully (WIP)  
-- [ ] Requirements for implementation (WIP)  
-- [ ] Design of Implementation  
+- [ ] Presentation on WA paper  
+- [ ] Presentation on DE paper  
+- [ ] Implementation of WA algorithm  
+- [ ] Implementation of DE algorithm  
