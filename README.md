@@ -4,9 +4,6 @@ see ![Proposal](doc/proposal/proposal.pdf) and  ![Presentation](doc/proposal/pre
 For requirements and software design see the appendix of the ![report draft](doc/project_report/0-main.pdf)  
 
 ## TODOs  
-- [x] Fill forms  
-- [x] Requirements for implementation  
-- [ ] Design of Implementation (WIP)  
 - [ ] Re-Read implementation papers carefully (WIP)  
 - [ ] Presentation on WA paper  
 - [ ] Presentation on DE paper  

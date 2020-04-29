@@ -38,7 +38,8 @@
 
         \subsection{Assumptions and Dependencies}
             %TODO: Find C LA library (alternatively C++) and other necessary or helpful high quality libraries to be used
-            to be set when dependencies are fixed
+            to be set when dependencies are fixed \\
+            Boost, C/C++, maybe Qt
     \newpage       
     
     
@@ -139,7 +140,11 @@
 				\item[Benchmark Module] Defines benchmark examples and generation processes for those.
 			\end{description}
 			
-			%TODO Component diagram
+			\begin{center}
+			 \includegraphics[keepaspectratio, width=0.8\textwidth]{img/components.pdf}
+			\end{center}
+
+			
 			
 		\subsection{Subsystem decomposition}
 			\paragraph{Main Module}
@@ -152,59 +157,116 @@
 
 			\paragraph{User Interface}
 				The User Interface let's the user control the main module, provides means of input to the main module and displays the output from the main module. Also contains usage information. \\
-				A text-based user interface is to be implemented (also called command-line interface). The user interface must contain a menu letting the user specify what control flow is to be executed, thus what task the user wants to perform. It must be able to either read the data from file or from the standard input of the terminal and display the input, output and summary on the standard output of the terminal, aswell as possible errors.
-				
+				A text-based user interface is to be implemented (also called command-line interface). The user interface must contain a menu letting the user specify what control flow is to be executed, thus what task the user wants to perform. It must be able to either read the data from file or from the standard input of the terminal and display the input, output and summary on the standard output of the terminal, aswell as possible errors. \\
+				The UserInterface provides functionality to control the program and to deliver outputs to the user. Therefore most functions are parameterless and take their input from the user, so those must ensure the validity of the user input. The only special case is the actual input data which is validated by a model specific function and the output functions which do not take user input. \\
+\begin{verbatim}
+Interface UserInterface {
+    public Task select_task() {
+        ensure Task exists
+    }
+
+    public ModelInterface select_model() {
+        ensure model exists
+    }
+    
+    public ReductionMethodInterface select_method(ModelInterface model) {
+        require model not null
+        ensure method exists && method compatible to model
+    }
+    
+    public IOMethod select_input_method() {
+        ensure input method exists
+    }
+    
+    public FILE* file_input() {
+        ensure file exists && file is closed after read
+    }
+    
+    public char* stdin_input() {
+        require limited input
+        ensure input is read completely or rejected
+    }
+    
+    public IOMethod select_output_method() {
+        ensure output method exists
+    }
+    
+    public FILE* set_output_location() {
+        ensure file exists or create new file && containing directory exists
+    }
+    
+    public void display_exec_file(FILE* output_destination) {
+        require output_destination not null
+        assure file is closed after write
+    }
+    
+    public void display_exec_stdout(char* output) {
+        require output not null && output limited
+        ensure output is less than default terminal buffer size || output is paged
+    }
+}
+\end{verbatim}				
 			
 			\paragraph{Model Interface}
-                The model interface specifies the details of a model including the format, input validation functionality, concrete instances will hold an array of function pointers of the reduction method interface type for the concrete model. Depending on the task that the user wants to perform either one or another instance is used to execute the control flow. The data flow from the user via the main module is passed to the model interface instance which does the actual processing using the defined functions and one of the functions from the array holding the model reduction method pointers. Instances of this interface must also specify how to summarize and compute statistics over the result, i.e. the differences in the model and in model complexity. To be implemented are instances for DEs and WAs.
+                The model interface specifies the details of a model including the representation format, input validation functionality, concrete instances will hold an array of function pointers of the reduction method interface type for the concrete model. Depending on the task that the user wants to perform either one or another instance is used to execute the control flow. The data flow from the user via the main module is passed to the model interface instance which does the actual processing using the defined functions and one of the functions from the array holding the model reduction method pointers. Instances of this interface must also specify how to summarize and compute statistics over the result, i.e. the differences in the model and in model complexity. To be implemented are instances for DEs and WAs.
+\begin{verbatim}
+ Interface ModelInterface {
+    ModelRepresentation representation require not null
+    ReductionInterface*[] ReductionMethodInterface[]
+    ConversionMethodInterface*[] conversions
+    
+    public ModelRepresentation validate_model_instance(char* input) {
+        require input not null
+        ensure model is valid wrt. representation
+        
+    }
+
+    public char* summarize_reduction(ModelRepresentation input, ModelRepresentation reduced) {
+        require input not null && reduced not null
+    }
+ }
+\end{verbatim}
+
+            \paragraph{Model Representation Interface}
+                As the data needs to be validated, this interface shall specify a structure for holding an instance of the model.
+\begin{verbatim}
+ Interface ModelRepresentationInterface {
+    struct ModelRepresentation require not null
+ }
+\end{verbatim}
+
 			
 			\paragraph{Reduction Method Interface}
                 This interface is used to implement concrete reduction methods for a specific model. For each models there may be multiple reduction methods. To be implemented are the reduction methods specified in~\autocite{Cardelli2017MaximalAO, Kiefer2013OnTC}. 
-			
-			\paragraph{Conversion/Equivalence Interface}
-                Using the model interfaces, implementations of this interface shall provide a method to convert an instance of a model to another model or to prove the equivalence of two instances of different models. As of now this is a question to be further investigated in terms of theory. One open question is if there exists an isomorphism between the to be implemented methods and if so how to do the conversion or equivalence check without also transforming the model complexity (e.g. from DEs to WAs, how not to produce more or less states than there are implicitly in the DE representation). Two options are viable for implementation structurally: 
-                \begin{enumerate}
-                 \item Attach the conversions to the model interface as function pointer holding one function for each convertable model
-                 \item Use a struct holding function pointers for equivalence/conversion in both directions
-                \end{enumerate}
-            
-            % TODO Class diagramm
-
-		\subsection{Interfaces}
-			The \verb|AccessWebService| interface provides three functions: \emph{getAccessToken}, \emph{accessValid} and \emph{access}. \emph{getAccessToken} is used to obtain access tokens. \emph{accessValid} checks, if the provided access token is valid. This function is used by the MSS to authenticate users. The function \emph{access} is used to execute operations on the database. In before a authentification check is made and it is tested if the user is allowed to execute the given operation.
 \begin{verbatim}
-Interface AccessWebService {
-public string accesstoken getAccessToken(string username, string password) {
-    require username.length > 0 && password.length > 0;
-    ensure database.getUser(username).accesstoken == accesstoken &&
-    database.getUser(username).expirationDate;
-    ensure containsLogEntry(user, system.getCurrentDate());
-}
-
-public boolean valid accessValid(string username, string accesstoken) {
-    require database.existsEntry(username);
-    ensure valid == database.getUser(username).isIsValidToken(accesstoken);
-}
-
-public Response r access(string username,
-                            string accesstoken, Operation op) {
-    require database.entryExists(username);
-    ensure iff accessValid(username, accesstoken) then
-    iff database.getUser(username).isLocked() then
-        operation == new PasswordChangeRequiredResponse();
-    else
-        iff database.getUser().getPrivilegeLvl() > getPrivilegeLvl(operation) then
-        operation is executed and r is the response of the operation;
-        else
-        r == new AccessDeniedResponse();
-    ensure if accesstoken is not valid operation is not executed and r is null;
-}
-}
+ Interface ReductionMethodInterface {
+    public ModelRepresentation reduce(ModelRepresentation input) {
+        require input not null
+        ensure return value valid and not null
+    }
+ }
 \end{verbatim}
 
-        \subsection{Data and Control Flow}
-        % TODO sequence diagramm (one for each of the 2 possible flows)
-
-		\subsection{Boundary conditions}
 			
-        
+			\paragraph{Conversion/Equivalence Interface}
+                Using the model interfaces, implementations of this interface shall provide a method to convert an instance of a model to another model or to prove the equivalence of two instances of different models. As of now this is a question to be further investigated in terms of theory. One open question is if there exists an isomorphism between the to be implemented methods and if so how to do the conversion or equivalence check without also transforming the model complexity (e.g. from DEs to WAs, how not to produce more or less states than there are implicitly in the DE representation). The interface should optimally provide methods for conversion in both direction, i.e. a programatically equivalence proof and shall be attached to both models that it converts as pointer.
+\begin{verbatim}
+ Interface ModelConversionInterface {
+    public ModelRepresentation convert_left_to_right(ModelRepresentation left) {
+        require left not null
+        ensure output is valid in rights's representation
+    }
+    
+    ModelRepresentation convert_right_to_left(ModelRepresentation right) {
+        require right not null
+        ensure output is valid in left's representation
+    }
+ }
+\end{verbatim}
+
+                
+            \begin{center}
+            \includegraphics[keepaspectratio, width=0.5\textwidth]{img/sequence_simple.pdf} \\
+            \noindent\includegraphics[keepaspectratio, width=1.1\textwidth]{img/class.pdf}
+            
+            \end{center}

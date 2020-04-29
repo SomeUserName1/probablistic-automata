@@ -388,3 +388,17 @@ Thanks for the quick response! Just setting up Dropbox on my computer
 Gonna correct it, as well as the dozens of typos in the proposal, sorry for that.
 
 F.
+
+
+#### To: Maria Hesse, Kris Rellstab, by Fabian, 27th April 2020 
+Dear Mrs. Hesse, dear Mrs. Rellstab,
+
+attached are the respective forms for mentoring and project registration.
+
+Are those okay like this?
+
+@Mrs. Hesse:
+Just to be sure: If i understood it correctly from the slides and forum posts by you, one does not have to fill a form to transfer the extra courses and credits from the bachelor if one graduated at the university of konstanz, right?
+
+Kind regards,
+Fabian
