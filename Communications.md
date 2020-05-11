@@ -1,16 +1,3 @@
-#### Questions  
-- Is a combination of the topics possible? E.g. How do DAE/ODE related to different PA models and and the application of dynamic processes to MLNs with respect to optimal traits (executability, succintness, expressiveness)    
-- Would a neuro-oriented example be suitable for the MLNs (layers imposed by temporal ordering, spatial scale, histology)  
-- Do PA capture all possible stochastic semantics? Do ODEs/DAEs/SDEs capture all possible dynamics?  
-- Are the goals filled in (and not provided by Tanja) above suitable? what would better ones be?  
-- What other relevant stochastic processes exist besides the Markovian and the Wiener process (brownian motion)?  
-- Are all Systems reducible to fullfill the markov property if one has an infinite mount of memory?  
-- Can non-linear systems be modelled by ODEs or does one need DAEs? When are ODEs insufficient and one needs DAEs? When is the determinant of the Jacobi-M. 0 and when is it not (intuitively)? Is a DAE a PDE where at least one variable's derivative is not used/free?  
-- When using Markov chains to model CRN dynamics one ends up with an infinite state space. In non-stochastic automata one would switch from FAs to PDAs. Why still using the MC model with states instead of memory configurations?  
-- Is PA minimisation feasible with an infinite state space?  
-- Missing piece in MC aggregation/ fragments?  
-
-
 #### Mail by Tanja, March 31th, 2020  
 Hi Fabian,
 
@@ -402,3 +389,21 @@ Just to be sure: If i understood it correctly from the slides and forum posts by
 
 Kind regards,
 Fabian
+
+
+#### From Krispina Rellstab, 6th of May 2020  
+Lieber Herr Klopfer,    
+
+leider wurde der 1jährige-Master durch das zuständige ZEuS-Team noch nicht ins ZEuS überführt, d.h. diese MA-Leistungen werden noch im alten System administriert. Die Anmeldung für Prüfungsleistungen erfolgt für Sie zwar in ZEuS , aber die Leistungen abfragen müssen Sie in StudIS.  
+
+Da ich im Homeoffice keinen Zugriff auf das alte System habe, erfolgt die Verbuchung, wenn ich - zumindest teilweise - wieder an der Uni sein kann.  
+
+Die vier unter "Konto für späteren Masterstudiengang" verbuchten Leistungen werde ich zu gegebener Zeit ebenfalls in den MA umbuchen. Sie müssen dazu kein Anrechnungsformular einreichen.  
+
+Freundliche Grüße  
+K. Rellstab  
+ 
+ 
+ Summary: The 1-year master has not been ported to Zeus, so that it's still administrated in the Studis, which is only accessible in the university.  
+ The courses and the registration will be done when the uni is accessible again.
+ 

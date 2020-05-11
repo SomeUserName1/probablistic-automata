@@ -4,8 +4,9 @@ see ![Proposal](doc/proposal/proposal.pdf) and  ![Presentation](doc/proposal/pre
 For requirements and software design see the appendix of the ![report draft](doc/project_report/0-main.pdf)  
 
 ## TODOs  
-- [ ] Re-Read implementation papers carefully (WIP)  
-- [ ] Presentation on WA paper  
-- [ ] Presentation on DE paper  
-- [ ] Implementation of WA algorithm  
+- [ ] Execute algorithm with minimal example on paper (WA) (WIP)  
+- [ ] Implementation of WA algorithm (WIP)  
+- [ ] Presentation on WA paper & implementation  
+- [ ] Execute algorithm with minimal example on paper (DE)  
 - [ ] Implementation of DE algorithm  
+- [ ] Presentation on DE paper & implementation  
