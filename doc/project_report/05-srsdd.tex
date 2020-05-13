@@ -39,7 +39,8 @@
         \subsection{Assumptions and Dependencies}
             %TODO: Find C LA library (alternatively C++) and other necessary or helpful high quality libraries to be used
             to be set when dependencies are fixed \\
-            Boost, C/C++, maybe Qt
+            CMake, C++, \\
+            one of OpenCL \& cuda, \textbf{ViennaCL}, LAPACK, BLAS, libflame, BLIS, Eigen, Boost, Amardillo, SuiteSparse, CSparse, Blaze, MKL, GNU Scientific lib, dlib, GLM, gotoblas, atlas, PETSc, \textbf{MAGMA}, plasma ...
     \newpage       
     
     
@@ -90,6 +91,7 @@
                         \item specify an input format for WA.
                         \item provide a validation machanism to ensure the well-formedness of the input.
                         \item implement the algorithm specified in~\autocite{Kiefer2013OnTC}.
+                        \item use the algorithm above on an example specified in \ref{wa_ex} and work deterministically correct with a fixed set of random vectors.
                         \item summarize the results and statistics on the difference between input and output.
                     \end{enumerate}
 
@@ -243,7 +245,7 @@ Interface UserInterface {
     public ModelRepresentation reduce(ModelRepresentation input) {
         require input not null
         ensure return value valid and not null
-    }
+    }198/1536 - 132/1024
  }
 \end{verbatim}
 
@@ -264,9 +266,381 @@ Interface UserInterface {
  }
 \end{verbatim}
 
-                
-            \begin{center}
-            \includegraphics[keepaspectratio, width=0.5\textwidth]{img/sequence_simple.pdf} \\
-            \noindent\includegraphics[keepaspectratio, width=1.1\textwidth]{img/class.pdf}
             
+            \begin{center}
+                \includegraphics[keepaspectratio, width=0.5\textwidth]{img/sequence_simple.pdf}\\
             \end{center}
+            \newgeometry{left=0.5cm, right=0.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}
+            \begin{center}
+                \includegraphics[keepaspectratio, width=\textwidth]{img/class.pdf}
+            \end{center}
+            \restoregeometry
+            \newpage
+            
+    
+    \section{Algorithm Test Cases}
+        \subsection{Weighted Automata}\label{wa_ex}
+            Weighted automaton $\mathcal{A} = (n, \Sigma, \mu, \alpha, \eta)$ with \\
+            \begin{minipage}{0.48\textwidth}
+             \begin{itemize}
+                \item $n = 3$,
+                \item $\Sigma = \{a, b\}$,
+                \item $\alpha = (1,0,0,0)$,
+                \item $\eta = (0,0,0,1)$,
+                \end{itemize}
+            \end{minipage} \begin{minipage}{0.48\textwidth}
+             \begin{itemize}
+                 \item $\mu(a) = \begin{pmatrix}
+                                    0 & 1 & 1 & 0 \\
+                                    0 & 0 & 0 & 0 \\
+                                    0 & 0 & 0 & 0 \\
+                                    0 & 0 & 0 & 0
+                                \end{pmatrix}$, 
+                    \item $\mu(b)= \begin{pmatrix}
+                                    0 & 0 & 0 & 0 \\
+                                    0 & 0 & 0 & 1 \\
+                                    0 & 0 & 0 & 1 \\
+                                    0 & 0 & 0 & 0
+                                 \end{pmatrix}
+                                $.
+                \end{itemize}
+            \end{minipage}
+            \begin{center}
+                \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+                    \node[state,initial] (z_0)   {$z_0$}; 
+                    \node[state] (z_1) [above right=of z_0] {$z_1$}; 
+                    \node[state] (z_2) [below right=of z_0] {$z_2$}; 
+                    \node[state,accepting](z_3) [below right=of z_1] {$z_3$};
+                        \path[->] 
+                        (z_0) edge  node {a/1} (z_1)
+                            edge  node [swap] {1/1} (z_2)
+                        (z_1) edge  node  {b/1} (z_3)
+                        (z_2) edge  node [swap] {b/1} (z_3);
+                \end{tikzpicture}
+            \end{center}
+
+               
+            All matrix multiplications were performed using Wolframalpha, all other results were verified using Wolframalpha. \\
+            
+            \textbf{Restrictions:} Those are actually obvious from the automaton. To be on the safe side the ``proofs'' are stated explicitly here.
+            \begin{itemize}
+                \item We only need to evaluate words starting with ``a'' and ending with ``b''.
+                    \[ \alpha \mu(a) = (0,1,1,0); \ \ \alpha \mu(b) = (0,0,0,0); \ \ \mu(a) \eta = (0,0,0,0)^T; \ \ \mu(b) \eta = (0, 1, 1, 0)^T \]
+                \item Words containing two consecutive letters do not need to be considered:
+                    \[  \mu(a)^2 = \begin{pmatrix}
+                                        0 & 1 & 1 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix}^2 = \begin{pmatrix}
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix};  \ \ \mu(b)^2 = \begin{pmatrix}
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 1 \\
+                                        0 & 0 & 0 & 1 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix}^2 = \begin{pmatrix}
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix}  \]
+                \item Words may only contain ``ab'' as ``ba'' yields the zero matrix and matrix multiplication is associative (i.e. $(\mu(a)\mu(b))\mu(a) = \mu(a)(\mu(b)\mu(a)) = \mu(a) \cdot 0 = 0$
+                    \[  \mu(a)\mu(b) = \begin{pmatrix}
+                                        0 & 1 & 1 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix} \cdot \begin{pmatrix}
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 1 \\
+                                        0 & 0 & 0 & 1 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix} = \begin{pmatrix}
+                                        0 & 0 & 0 & 2 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix}
+                                    \]
+                    \[ \mu(b)\mu(a) = \begin{pmatrix}
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 1 \\
+                                        0 & 0 & 0 & 1 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix} \cdot \begin{pmatrix}
+                                        0 & 1 & 1 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix} =  \begin{pmatrix}
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0 \\
+                                        0 & 0 & 0 & 0
+                                    \end{pmatrix} \]
+                \item Thus only words of length smaller or equal to 2 must be considered, staring with a or ending with b. This follows from the above, namely that only words starting with ``a'', not having two consecutive letters or ``ba'' in them yield non-zero vectors or matricies.
+            \end{itemize}
+            \vspace{1.5cm}
+
+        \textbf{Forward reduction,} i.e. applying \autocite{Kiefer2013OnTC} Figure 3: The only words that need to be considered due to the above restrictions are the words ``a'' and ``ab''.\\
+        Random vectors are generated using Wolframalpha and $K=3$, i.e. $r^{i} \in \{1, \dots, 12\}^{2 \times 4}$:
+        \[  r^{(1)}= \begin{pmatrix}
+                        9 & 5 & 5 & 7 \\
+                        6 & 11 & 2 & 1 
+                    \end{pmatrix}; \ \
+            r^{(2)}= \begin{pmatrix}
+                        2 & 3 & 1 & 2 \\
+                        12 & 3 & 9 & 4 
+                    \end{pmatrix} 
+            r^{(3)}= \begin{pmatrix}
+                        2 & 7 & 9 & 10 \\
+                        1 & 11 & 2 & 6 
+                    \end{pmatrix}         
+            r^{(4)}= \begin{pmatrix}
+                        4 & 5 & 2 & 10 \\
+                        5 & 9 & 5 & 5 
+                    \end{pmatrix}                     
+        \]
+        As the two words are the same for all $v_1, \dots, v_n$ we have:
+        \[ \rho(r^{(i)}) = \sum_{k=0}^{n} \sum_{w \in \Sigma^k} \alpha \sum_{j=1}^{|w|} \mu(w_j) r^{(i)}_{w_j, j} = \alpha\mu(a) r^{(i)}_{a, 1} + \alpha \mu(a) \mu(b) r^{(i)}_{a, 1} r^{(i)}_{b, 2} = (0,1,1,0) r^{(i)}_{a, 1} + (0,0,0,2) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
+        
+        Thus:
+        \[ v_1 = 9 \cdot (0,1,1,0) + 9 \cdot 11 \cdot (0,0,0,2) = (0,9,9,198) \]
+        \[ v_2 = 2 \cdot (0,1,1,0) + 2 \cdot 3 \cdot (0,0,0,2) = (0,2,2,12) \]
+        \[ v_3 = 2 \cdot (0,1,1,0) + 2 \cdot 11 \cdot (0,0,0,2) = (0,2,2,44) \]
+        \[ v_4 = 4 \cdot (0,1,1,0) + 4 \cdot 9 \cdot (0,0,0,2) = (0,4,4,72) \]
+        
+        According to Wolframalpha the maximally linearly independent subset is $\{v_1, v_2\}$ and by that
+        \[ \overrightarrow{F} = \begin{pmatrix}
+                                    1 & 0 & 0 & 0 \\
+                                    0 & 9 & 9 & 198 \\
+                                    0 & 2 & 2 & 12 
+                                \end{pmatrix}
+        \]
+        \textbf{Question:} Did the algorithm forget $ \alpha$ in the linear independent check? In the algorithm of \autocite{Kiefer2013OnTC}, the authors state ``let k be maximum such that $\{v_1, \dots v_k\}$ are linearly independent''. Shouldn't it be ``let k be maximum such that $\{\alpha, v_1, \dots v_k\}$ are linearly independent''?
+        \vspace{1cm}
+        
+        Applying the forward reduction using Schützenberger construction as described in \autocite{Kiefer2013OnTC} Eq. 4.2:
+        \[ \overrightarrow{F} \mu(a) = 
+            \begin{pmatrix}
+                1 & 0 & 0 & 0 \\
+                0 & 9 & 9 & 198 \\
+                0 & 2 & 2 & 12 
+            \end{pmatrix} \cdot \begin{pmatrix}
+                    0 & 1 & 1 & 0 \\
+                    0 & 0 & 0 & 0 \\
+                    0 & 0 & 0 & 0 \\
+                    0 & 0 & 0 & 0
+            \end{pmatrix} = \begin{pmatrix}
+                0 & 1 & 1 & 0 \\
+                0 & 0 & 0 & 0 \\
+                0 & 0 & 0 & 0
+            \end{pmatrix}  = \overrightarrow{\mu}(a) \overrightarrow{F} 
+        \] 
+        \[=  \begin{pmatrix}
+                m_{11} & m_{12} & m_{13} \\
+                m_{21} & m_{22} & m_{23} \\
+                m_{31} & m_{32} & m_{33} 
+            \end{pmatrix} \cdot \begin{pmatrix}
+                1 & 0 & 0 & 0 \\
+                0 & 9 & 9 & 198 \\
+                0 & 2 & 2 & 12 
+            \end{pmatrix} =
+             \begin{pmatrix}
+                m_{11} & 9m_{12}+2m_{13} & 9m_{12}+2m_{13} & 198m_{12}+12m_{13} \\
+                m_{21} & 9m_{22}+2m_{23} & 9m_{22}+2m_{23} & 198m_{22}+12m_{23} \\
+                m_{31} & 9m_{32}+2m_{33} & 9m_{32}+2m_{33} & 198m_{32}+12m_{33} \\
+            \end{pmatrix} 
+        \]
+        More compactly represented in order to set up the system of linear equations to be solved:
+        \[   \begin{pmatrix}
+                m_{11} & 9m_{12}+2m_{13} & 9m_{12}+2m_{13} & 198m_{12}+12m_{13} \\
+                m_{21} & 9m_{22}+2m_{23} & 9m_{22}+2m_{23} & 198m_{22}+12m_{23} \\
+                m_{31} & 9m_{32}+2m_{33} & 9m_{32}+2m_{33} & 198m_{32}+12m_{33} \\
+            \end{pmatrix}  = 
+            \begin{pmatrix}
+                0 & 1 & 1 & 0 \\
+                0 & 0 & 0 & 0 \\
+                0 & 0 & 0 & 0
+            \end{pmatrix}
+        \]
+        From that is immediately follows, that $m_{11} = m_{21} = m_{31} = 0$. For $m_{12}$ and $m_{13}$ we get 
+        \[   \begin{pmatrix}[c c | c]
+                9 & 2 & 1 \\
+                198 & 12 & 0 \\
+            \end{pmatrix} 
+            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
+            \begin{pmatrix}[c c | c]
+                9 & 2 & 1 \\
+                144 & 0 & -6 \\
+            \end{pmatrix} 
+            \Rightarrow m_{12} = \frac{-1}{24}, \ m_{13} = \frac{1}{2}(1 - 9 \cdot \frac{-1}{24}) = \frac{33}{48}
+        \]
+        As $m_{22}, m_{23}$ and $m_{32}, m_{33}$ are defined by the same system of equation, their value is equal. That is:
+         \[   \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                198 & 12 & 0 \\
+            \end{pmatrix} 
+            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
+            \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                144 & 0 & 0 \\
+            \end{pmatrix} 
+            \Rightarrow m_{22} = m_{23} = 0 = m_{32} = m_{33} 
+        \]
+        Thus \[ \overrightarrow{\mu}(a) = 
+            \begin{pmatrix}
+                0 & \frac{-1}{24} & \frac{33}{48} \\
+                0 & 0 & 0 \\
+                0 & 0 & 0 
+            \end{pmatrix} \]
+            
+        Regarding $\overrightarrow{\mu}(b)$ we get
+            \[ \overrightarrow{F} \mu(b) = 
+            \begin{pmatrix}
+                1 & 0 & 0 & 0 \\
+                0 & 9 & 9 & 198 \\
+                0 & 2 & 2 & 12 
+            \end{pmatrix} \cdot \begin{pmatrix}
+                    0 & 0 & 0 & 0 \\
+                    0 & 0 & 0 & 1 \\
+                    0 & 0 & 0 & 1 \\
+                    0 & 0 & 0 & 0
+            \end{pmatrix} = \begin{pmatrix}
+                0 & 0 & 0 & 0 \\
+                0 & 0 & 0 & 18 \\
+                0 & 0 & 0 & 4
+            \end{pmatrix}  = \overrightarrow{\mu}(a) \overrightarrow{F} 
+        \] 
+        \[\Rightarrow \begin{pmatrix}
+                h_{11} & 9h_{12}+2h_{13} & 9h_{12}+2h_{13} & 198h_{12}+12h_{13} \\
+                h_{21} & 9h_{22}+2h_{23} & 9h_{22}+2h_{23} & 198h_{22}+12h_{23} \\
+                h_{31} & 9h_{32}+2h_{33} & 9h_{32}+2h_{33} & 198h_{32}+12h_{33} \\
+            \end{pmatrix}  = 
+            \begin{pmatrix}
+                0 & 0 & 0 & 0 \\
+                0 & 0 & 0 & 18 \\
+                0 & 0 & 0 & 4
+            \end{pmatrix}
+        \]
+        From that is immediately follows, that $h_{11} = h_{21} = h_{31} = 0$. For $h_{12}$ and $h_{13}$ we get 
+        \[   \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                198 & 12 & 0 \\
+            \end{pmatrix} 
+            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
+            \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                144 & 0 & 0 \\
+            \end{pmatrix} 
+            \Rightarrow h_{12} = h_{13} = 0
+        \]
+        \[   \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                198 & 12 & 18 \\
+            \end{pmatrix} 
+            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
+            \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                144 & 0 & 18 \\
+            \end{pmatrix} 
+            \Rightarrow h_{22} = \frac{1}{8}, \ h_{23} = \frac{1}{2}(- 9 \cdot \frac{1}{8}) = \frac{-9}{8}
+        \]
+        \[   \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                198 & 12 & 4 \\
+            \end{pmatrix} 
+            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
+            \begin{pmatrix}[c c | c]
+                9 & 2 & 0 \\
+                144 & 0 & 4 \\
+            \end{pmatrix} 
+            \Rightarrow m_{12} = \frac{1}{36}, \ m_{13} = \frac{1}{2}(- 9 \cdot \frac{1}{36}) = \frac{-1}{8}
+        \]
+        
+        So that \[ \overrightarrow{\mu}(b) = 
+            \begin{pmatrix}
+                0 & 0 & 0 \\
+                0 & \frac{1}{8} & \frac{-9}{8} \\
+                0 & \frac{1}{36} & \frac{-1}{8} 
+            \end{pmatrix} \]
+        and 
+        \[ \overrightarrow{\eta} = \overrightarrow{F} \eta =  \begin{pmatrix}
+                1 & 0 & 0 & 0 \\
+                0 & 9 & 9 & 198 \\
+                0 & 2 & 2 & 12 
+            \end{pmatrix} \cdot (0,0,0,1)^T = (0, 198, 12)^T \]
+            
+            
+        And finally $\overrightarrow{\mathcal{A}} = (3, \{a, b\}, \overrightarrow{\mu}, (1,0,0), (0, 198, 12)^T)$
+        
+        \textbf{Question:} $\alpha$ is defined as $e_1$ in the paper. I just assumed that it's the first column vector of $\overrightarrow{F}$. Is that correct? \\
+        
+        As the automaton is minimal with 3 states, the backwards reduction is omitted for now (will be added when correctness of the test case is affirmed or rejected). Further another paper by the same author~\autocite{kiefer2014stability} states with reference to \autocite{schutz} that $\mathcal{A} \equiv \overrightarrow{\mathcal{A}} \equiv \overleftarrow{\overrightarrow{\mathcal{A}}} $, also providing a proof of this in the Appendix A.1 \\
+        
+        To assure that this is still the same automaton, compute the following examples with the new automaton:
+        \begin{itemize}
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) = (0,\frac{-1}{24}, \frac{33}{48}); \ \ \overrightarrow{\alpha} \overrightarrow{\mu}(b) = (0,0,0)$
+            
+            \item $ \overrightarrow{\mu}(a) \overrightarrow{\eta} = \begin{pmatrix}
+                    0 & \frac{-1}{24} & \frac{33}{48} \\
+                    0 & 0 & 0 \\
+                    0 & 0 & 0 
+                \end{pmatrix}  (0, 198, 12)^T = (198\frac{-1}{24} + 12\frac{33}{48}, 0, 0)^T = (0,0,0)^T $
+            
+            \item $ \overrightarrow{\mu}(b) \overrightarrow{\eta} = (0, \frac{45}{4}, 4)$
+            
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\eta} = 0 + \frac{198}{1536} - \frac{132}{1024} = 0$
+                
+            \item $\overrightarrow{\mu}(a)^2 = 0$, but $\overrightarrow{\mu}(b)^2 =  \begin{pmatrix}
+                    0 & 0 & 0 \\
+                    0 & \frac{-1}{64} & 0 \\
+                    0 & 0 & \frac{11}{64} 
+                \end{pmatrix}$
+                
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) =  (1,0,0)^T
+                \begin{pmatrix}
+                    0 & \frac{-1}{24} & \frac{33}{48} \\
+                    0 & 0 & 0 \\
+                    0 & 0 & 0 
+                \end{pmatrix}
+                \begin{pmatrix}
+                    0 & 0 & 0 \\
+                    0 & \frac{1}{8} & \frac{-9}{8} \\
+                    0 & \frac{1}{36} & \frac{-1}{8} 
+                \end{pmatrix}
+                = ( 0, \frac{1}{72}, \frac{-5}{128})$
+                
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) \cdot (0, 198, 12)^T = \frac{73}{32}$
+            
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(a) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) (0,0,0)^T  = 0$
+            
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) \cdot (0, \frac{45}{4}, 4) = 0$
+            
+            \item \textbf{This should not be non-zero, something is wrong!}\\
+            $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) \cdot \begin{pmatrix}
+                    0 & 0 & 0 \\
+                    0 & \frac{1}{8} & \frac{-9}{8} \\
+                    0 & \frac{1}{36} & \frac{-1}{8} 
+                \end{pmatrix} \cdot (0, \frac{45}{4}, 4) = \frac{-73}{2048}$. \\
+                With the addition of one additional b the weight is again zero, but for two more bs it's again non-zero. That is the ``minimization'' added an alternating mistake. \\
+                There are four obvious reasons:
+                \begin{enumerate}
+                 \item I miscalculated something or there is a typo
+                 \item I did not understand the algorithm and thus applied it wrongly
+                 \item It is necessary to also apply the backwards reduction to correct the mistake introduced by the forward reduction. Thus \autocite{kiefer2014stability} is incorrect
+                 \item the algorithm itself is incorrect
+                \end{enumerate}                
+
+        \end{itemize}
+            
+        %    {{0, 1/72, -5/128}} alpha a b
+        %    {{0,0,0}, {0,1/8, -9/8}, {0, 1/36, -1/8}} b
+        %    {{0}, {198}, {12}} eta 
+        %    {{0}, {45/4}, {4}} b eta
+        %    {{0, 1/1536, -11/1024}} alpha a b b
+        %    {{0, -1/4608, 5/8192}} alpha a b b b 

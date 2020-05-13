@@ -39,7 +39,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.16}
 \usetikzlibrary{calc}
-\usetikzlibrary{arrows.meta}
+\usetikzlibrary{arrows.meta,automata}
 \usetikzlibrary{backgrounds,matrix,fadings,calc,positioning,decorations.pathreplacing,arrows.meta,shapes,shapes.multipart, plotmarks}
 \usepackage{longtable}
 
@@ -102,6 +102,7 @@ citestyle=numeric]{biblatex}
 % Mathe und algos
 \usepackage{amssymb}
 \usepackage{amsmath}
+
 \usepackage[algoruled,boxed,vlined]{algorithm2e}
 \SetKwInOut{Parameters}{Parameters}
 \SetKwFor{For}{for}{do}{}
@@ -121,6 +122,16 @@ citestyle=numeric]{biblatex}
 \usepackage{graphicx}
 \usepackage{cleveref}
 
+% amsmath matrix with vertical line to write down systems of equations
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}
+  }
+  
+  % Roman numbers for solving systems of equations
+  \newcommand*{\rom}[1]{\uppercase\expandafter{\romannumeral #1\relax}}
+  
 % Farben Definition des CD der Uni Konstanz mit dem HSB Modell
 % Dadurch direkte Repraesentation der Saettigung
 \xdefinecolor{seeblau100}{hsb}{0.5409, 1, 0.8784}
