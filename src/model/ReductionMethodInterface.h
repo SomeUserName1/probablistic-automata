@@ -5,6 +5,7 @@
 
 class ReductionMethodInterface {
     public:
+        virtual std::string get_name() const;
         virtual RepresentationInterface reduce(RepresentationInterface) const;
 };
 

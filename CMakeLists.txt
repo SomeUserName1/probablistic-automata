@@ -23,8 +23,11 @@ INCLUDE_DIRECTORIES(src/model/weighted_automata)
 INCLUDE_DIRECTORIES(src/model/differential_equations)
 
 
-ADD_LIBRARY(ui  src/ui/TextUserInterface.cpp)
+ADD_LIBRARY(ui          src/ui/TextUserInterface.cpp)
+ADD_LIBRARY(models      src/model/differential_equations/DifferentialEquationModel.cpp
+                        src/model/weighted_automata/WeightedAutomatonModel.cpp)
+ADD_LIBRARY(util        src/NotImplementedException.cpp)
 
 
 ADD_EXECUTABLE(ssm src/main.cpp)
-# TARGET_LINK_LIBRARIES()
+TARGET_LINK_LIBRARIES(ssm ui models util)

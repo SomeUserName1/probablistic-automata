@@ -3,21 +3,21 @@
 
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "RepresentationInterface.h"
 #include "ReductionMethodInterface.h"
 #include "ConversionMethodInterface.h"
 
 class ModelInterface {
-    typedef RepresentationInterface (*ReductionMethodPointer)(RepresentationInterface);
 
     public:
         [[nodiscard]] virtual std::string get_name() const;
         [[nodiscard]] virtual RepresentationInterface validate_model_instance(const std::string&) const;
-        [[nodiscard]] virtual std::stringstream summarize_reduction(RepresentationInterface, RepresentationInterface)
+        [[nodiscard]] virtual std::string summarize_reduction(RepresentationInterface, RepresentationInterface)
             const;
-        // ReductionMethodPointer reductionMethods[1];
-        // ConversionMethodInterface* conversionMethods[1];
+        virtual std::vector<ReductionMethodInterface*> get_reduction_methods() const;
+        virtual std::vector<ConversionMethodInterface*> get_conversion_methods() const;
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_MODELINTERFACE_H
