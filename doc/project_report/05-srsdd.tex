@@ -313,7 +313,7 @@ Interface UserInterface {
                     \node[state,accepting](z_3) [below right=of z_1] {$z_3$};
                         \path[->] 
                         (z_0) edge  node {a/1} (z_1)
-                            edge  node [swap] {1/1} (z_2)
+                            edge  node [swap] {a/1} (z_2)
                         (z_1) edge  node  {b/1} (z_3)
                         (z_2) edge  node [swap] {b/1} (z_3);
                 \end{tikzpicture}
@@ -406,30 +406,29 @@ Interface UserInterface {
                     \end{pmatrix}                     
         \]
         As the two words are the same for all $v_1, \dots, v_n$ we have:
-        \[ \rho(r^{(i)}) = \sum_{k=0}^{n} \sum_{w \in \Sigma^k} \alpha \sum_{j=1}^{|w|} \mu(w_j) r^{(i)}_{w_j, j} = \alpha\mu(a) r^{(i)}_{a, 1} + \alpha \mu(a) \mu(b) r^{(i)}_{a, 1} r^{(i)}_{b, 2} = (0,1,1,0) r^{(i)}_{a, 1} + (0,0,0,2) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
+        \[ \rho(r^{(i)}) = \sum_{k=0}^{n} \sum_{w \in \Sigma^k} \alpha \sum_{j=1}^{|w|} \mu(w_j) r^{(i)}_{w_j, j} = \alpha + \alpha\mu(a) r^{(i)}_{a, 1} + \alpha \mu(a) \mu(b) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
+        \[= (1,0,0,0) + (0,1,1,0) r^{(i)}_{a, 1} + (0,0,0,2) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
         
         Thus:
-        \[ v_1 = 9 \cdot (0,1,1,0) + 9 \cdot 11 \cdot (0,0,0,2) = (0,9,9,198) \]
-        \[ v_2 = 2 \cdot (0,1,1,0) + 2 \cdot 3 \cdot (0,0,0,2) = (0,2,2,12) \]
-        \[ v_3 = 2 \cdot (0,1,1,0) + 2 \cdot 11 \cdot (0,0,0,2) = (0,2,2,44) \]
-        \[ v_4 = 4 \cdot (0,1,1,0) + 4 \cdot 9 \cdot (0,0,0,2) = (0,4,4,72) \]
+        \[ v_1 = (1,0,0,0) + 9 \cdot (0,1,1,0) + 9 \cdot 11 \cdot (0,0,0,2) = (1,9,9,198) \]
+        \[ v_2 = (1,0,0,0) + 2 \cdot (0,1,1,0) + 2 \cdot 3 \cdot (0,0,0,2) = (1,2,2,12) \]
+        \[ v_3 = (1,0,0,0) + 2 \cdot (0,1,1,0) + 2 \cdot 11 \cdot (0,0,0,2) = (1,2,2,44) \]
+        \[ v_4 = (1,0,0,0) + 4 \cdot (0,1,1,0) + 4 \cdot 9 \cdot (0,0,0,2) = (1,4,4,72) \]
         
-        According to Wolframalpha the maximally linearly independent subset is $\{v_1, v_2\}$ and by that
+        According to Wolframalpha the maximally linearly independent subset is $\{v_1, v_2, v_3\}$ and by that
         \[ \overrightarrow{F} = \begin{pmatrix}
-                                    1 & 0 & 0 & 0 \\
-                                    0 & 9 & 9 & 198 \\
-                                    0 & 2 & 2 & 12 
+                                    1 & 9 & 9 & 198 \\
+                                    1 & 2 & 2 & 12  \\
+                                    1 & 2 & 2 & 44
                                 \end{pmatrix}
         \]
-        \textbf{Question:} Did the algorithm forget $ \alpha$ in the linear independent check? In the algorithm of \autocite{Kiefer2013OnTC}, the authors state ``let k be maximum such that $\{v_1, \dots v_k\}$ are linearly independent''. Shouldn't it be ``let k be maximum such that $\{\alpha, v_1, \dots v_k\}$ are linearly independent''?
-        \vspace{1cm}
         
         Applying the forward reduction using Schützenberger construction as described in \autocite{Kiefer2013OnTC} Eq. 4.2:
         \[ \overrightarrow{F} \mu(a) = 
             \begin{pmatrix}
-                1 & 0 & 0 & 0 \\
-                0 & 9 & 9 & 198 \\
-                0 & 2 & 2 & 12 
+                1 & 9 & 9 & 198 \\
+                1 & 2 & 2 & 12  \\
+                1 & 2 & 2 & 44
             \end{pmatrix} \cdot \begin{pmatrix}
                     0 & 1 & 1 & 0 \\
                     0 & 0 & 0 & 0 \\
@@ -437,8 +436,8 @@ Interface UserInterface {
                     0 & 0 & 0 & 0
             \end{pmatrix} = \begin{pmatrix}
                 0 & 1 & 1 & 0 \\
-                0 & 0 & 0 & 0 \\
-                0 & 0 & 0 & 0
+                0 & 1 & 1 & 0 \\
+                0 & 1 & 1 & 0
             \end{pmatrix}  = \overrightarrow{\mu}(a) \overrightarrow{F} 
         \] 
         \[=  \begin{pmatrix}
@@ -446,201 +445,195 @@ Interface UserInterface {
                 m_{21} & m_{22} & m_{23} \\
                 m_{31} & m_{32} & m_{33} 
             \end{pmatrix} \cdot \begin{pmatrix}
-                1 & 0 & 0 & 0 \\
-                0 & 9 & 9 & 198 \\
-                0 & 2 & 2 & 12 
-            \end{pmatrix} =
+                1 & 9 & 9 & 198 \\
+                1 & 2 & 2 & 12  \\
+                1 & 2 & 2 & 44
+            \end{pmatrix} \]
+            \[ =
              \begin{pmatrix}
-                m_{11} & 9m_{12}+2m_{13} & 9m_{12}+2m_{13} & 198m_{12}+12m_{13} \\
-                m_{21} & 9m_{22}+2m_{23} & 9m_{22}+2m_{23} & 198m_{22}+12m_{23} \\
-                m_{31} & 9m_{32}+2m_{33} & 9m_{32}+2m_{33} & 198m_{32}+12m_{33} \\
+                m_{11} + m_{12} + m_{13} & 9m_{11}+2m_{12}+2m_{13} & 9m_{11}+2m_{12}+2m_{13} & 198m_{11}+12m_{12}+44m_{13} \\
+                m_{21} + m_{22} + m_{23} & 9m_{21}+2m_{22}+2m_{23} & 9m_{21}+2m_{22}+2m_{23} & 198m_{21}+12m_{22}+44m_{23}  \\
+                m_{31} + m_{32} + m_{33} & 9m_{31}+2m_{32}+2m_{33} & 9m_{31}+2m_{32}+2m_{33} & 198m_{31}+12m_{32}+44m_{33}  \\
             \end{pmatrix} 
         \]
-        More compactly represented in order to set up the system of linear equations to be solved:
-        \[   \begin{pmatrix}
-                m_{11} & 9m_{12}+2m_{13} & 9m_{12}+2m_{13} & 198m_{12}+12m_{13} \\
-                m_{21} & 9m_{22}+2m_{23} & 9m_{22}+2m_{23} & 198m_{22}+12m_{23} \\
-                m_{31} & 9m_{32}+2m_{33} & 9m_{32}+2m_{33} & 198m_{32}+12m_{33} \\
-            \end{pmatrix}  = 
+        \[ = 
             \begin{pmatrix}
                 0 & 1 & 1 & 0 \\
-                0 & 0 & 0 & 0 \\
-                0 & 0 & 0 & 0
+                0 & 1 & 1 & 0 \\
+                0 & 1 & 1 & 0
             \end{pmatrix}
         \]
-        From that is immediately follows, that $m_{11} = m_{21} = m_{31} = 0$. For $m_{12}$ and $m_{13}$ we get 
-        \[   \begin{pmatrix}[c c | c]
-                9 & 2 & 1 \\
-                198 & 12 & 0 \\
+        From the above system of equations we can see that the coefficients and the resulting row vectors are the same for all rows, i.e. $m_{11} = m_{21} = m_{31}$, $m_{12} = m_{22} = m_{32}$, $m_{13} = m_{23} = m_{33}$. Thus we only solve the system of equations once.
+        \[   \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                9 & 2 & 2 & 1 \\
+                198 & 12 & 44 & 0 \\
             \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
-            \begin{pmatrix}[c c | c]
-                9 & 2 & 1 \\
-                144 & 0 & -6 \\
+            \xrightarrow{\rom{2} = \rom{2} - 2\rom{1}} 
+            \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                7 & 0 & 0 & 1 \\
+                198 & 12 & 44 & 0 \\
             \end{pmatrix} 
-            \Rightarrow m_{12} = \frac{-1}{24}, \ m_{13} = \frac{1}{2}(1 - 9 \cdot \frac{-1}{24}) = \frac{33}{48}
-        \]
-        As $m_{22}, m_{23}$ and $m_{32}, m_{33}$ are defined by the same system of equation, their value is equal. That is:
-         \[   \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                198 & 12 & 0 \\
+            \xrightarrow{\rom{3} = \rom{3} - 12\rom{1}} 
+            \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                7 & 0 & 0 & 1 \\
+                186 & 0 & 32 & 0 \\
             \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
-            \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                144 & 0 & 0 \\
-            \end{pmatrix} 
-            \Rightarrow m_{22} = m_{23} = 0 = m_{32} = m_{33} 
+        \] 
+        \[ 
+            \Rightarrow m_{11} = \frac{1}{7}, \qquad m_{13} = \frac{1}{32}(- 186 \cdot \frac{1}{7}) = \frac{-186}{224} = \frac{-93}{112}, \qquad m_{12} = - \frac{1}{7} + \frac{93}{112} = \frac{154}{224} = \frac{11}{16}
         \]
         Thus \[ \overrightarrow{\mu}(a) = 
             \begin{pmatrix}
-                0 & \frac{-1}{24} & \frac{33}{48} \\
-                0 & 0 & 0 \\
-                0 & 0 & 0 
+                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
+                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
+                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112}
             \end{pmatrix} \]
             
         Regarding $\overrightarrow{\mu}(b)$ we get
-            \[ \overrightarrow{F} \mu(b) = 
+        \[ \overrightarrow{F} \mu(b) = 
             \begin{pmatrix}
-                1 & 0 & 0 & 0 \\
-                0 & 9 & 9 & 198 \\
-                0 & 2 & 2 & 12 
+                1 & 9 & 9 & 198 \\
+                1 & 2 & 2 & 12  \\
+                1 & 2 & 2 & 44
             \end{pmatrix} \cdot \begin{pmatrix}
                     0 & 0 & 0 & 0 \\
                     0 & 0 & 0 & 1 \\
                     0 & 0 & 0 & 1 \\
                     0 & 0 & 0 & 0
             \end{pmatrix} = \begin{pmatrix}
-                0 & 0 & 0 & 0 \\
                 0 & 0 & 0 & 18 \\
+                0 & 0 & 0 & 4 \\
                 0 & 0 & 0 & 4
             \end{pmatrix}  = \overrightarrow{\mu}(a) \overrightarrow{F} 
         \] 
-        \[\Rightarrow \begin{pmatrix}
-                h_{11} & 9h_{12}+2h_{13} & 9h_{12}+2h_{13} & 198h_{12}+12h_{13} \\
-                h_{21} & 9h_{22}+2h_{23} & 9h_{22}+2h_{23} & 198h_{22}+12h_{23} \\
-                h_{31} & 9h_{32}+2h_{33} & 9h_{32}+2h_{33} & 198h_{32}+12h_{33} \\
-            \end{pmatrix}  = 
+        \[\Rightarrow 
+             \begin{pmatrix}
+                h_{11} + h_{12} + h_{13} & 9h_{11}+2h_{12}+2h_{13} & 9h_{11}+2h_{12}+2h_{13} & 198h_{11}+12h_{12}+44h_{13} \\
+                h_{21} + h_{22} + h_{23} & 9h_{21}+2h_{22}+2h_{23} & 9h_{21}+2h_{22}+2h_{23} & 198h_{21}+12h_{22}+44h_{23}  \\
+                h_{31} + h_{32} + h_{33} & 9h_{31}+2h_{32}+2h_{33} & 9h_{31}+2h_{32}+2h_{33} & 198h_{31}+12h_{32}+44h_{33}  \\
+            \end{pmatrix}  
+        \]
+        \[ = 
             \begin{pmatrix}
-                0 & 0 & 0 & 0 \\
                 0 & 0 & 0 & 18 \\
+                0 & 0 & 0 & 4 \\
                 0 & 0 & 0 & 4
             \end{pmatrix}
         \]
-        From that is immediately follows, that $h_{11} = h_{21} = h_{31} = 0$. For $h_{12}$ and $h_{13}$ we get 
-        \[   \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                198 & 12 & 0 \\
+        For $h_{11}, h_{12}$ and $h_{13}$ this yields
+        \[   \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                9 & 2 & 2 & 0 \\
+                198 & 12 & 44 & 18 \\
             \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
-            \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                144 & 0 & 0 \\
+            \xrightarrow{\rom{2} = \rom{2} - 2\rom{1}} 
+            \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                7 & 0 & 0 & 0 \\
+                198 & 12 & 44 & 18 \\
             \end{pmatrix} 
-            \Rightarrow h_{12} = h_{13} = 0
+            \xrightarrow{\rom{3} = \rom{3} - 12\rom{1}} 
+            \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                7 & 0 & 0 & 0 \\
+                186 & 0 & 32 & 18 \\
+            \end{pmatrix} 
+        \] 
+        \[
+            \Rightarrow h_{11} = 0, \qquad h_{13} = \frac{18}{32} = \frac{9}{16}, \qquad h_12 = \frac{-9}{16}
         \]
-        \[   \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                198 & 12 & 18 \\
+        
+        
+        As in the matricies concerned with $\overrightarrow{\mu}(a)$, $h_{2\cdot} = h_{3\cdot}$ as the coefficients and numerals are the same in both systems of equations.
+        \[   \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                9 & 2 & 2 & 0 \\
+                198 & 12 & 44 & 4 \\
             \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
-            \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                144 & 0 & 18 \\
+            \xrightarrow{\rom{2} = \rom{2} - 2\rom{1}} 
+            \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                7 & 0 & 0 & 0 \\
+                198 & 12 & 44 & 18 \\
             \end{pmatrix} 
-            \Rightarrow h_{22} = \frac{1}{8}, \ h_{23} = \frac{1}{2}(- 9 \cdot \frac{1}{8}) = \frac{-9}{8}
+            \xrightarrow{\rom{3} = \rom{3} - 12\rom{1}} 
+            \begin{pmatrix}[c c c | c]
+                1 & 1 & 1 & 0 \\
+                7 & 0 & 0 & 0 \\
+                186 & 0 & 32 & 4 \\
+            \end{pmatrix} 
+        \] 
+        \[
+            \Rightarrow h_{21} = 0, \qquad h_{23} = \frac{4}{32} = \frac{1}{8}, \qquad h_{22} = \frac{-1}{8}
         \]
-        \[   \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                198 & 12 & 4 \\
-            \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 6\rom{1}} 
-            \begin{pmatrix}[c c | c]
-                9 & 2 & 0 \\
-                144 & 0 & 4 \\
-            \end{pmatrix} 
-            \Rightarrow m_{12} = \frac{1}{36}, \ m_{13} = \frac{1}{2}(- 9 \cdot \frac{1}{36}) = \frac{-1}{8}
-        \]
+
+        
         
         So that \[ \overrightarrow{\mu}(b) = 
             \begin{pmatrix}
-                0 & 0 & 0 \\
-                0 & \frac{1}{8} & \frac{-9}{8} \\
-                0 & \frac{1}{36} & \frac{-1}{8} 
+                0 & \frac{-9}{16} & \frac{9}{16} \\
+                0 & \frac{-1}{8} & \frac{1}{8} \\
+                0 & \frac{-1}{8} & \frac{1}{8} 
             \end{pmatrix} \]
         and 
         \[ \overrightarrow{\eta} = \overrightarrow{F} \eta =  \begin{pmatrix}
-                1 & 0 & 0 & 0 \\
-                0 & 9 & 9 & 198 \\
-                0 & 2 & 2 & 12 
-            \end{pmatrix} \cdot (0,0,0,1)^T = (0, 198, 12)^T \]
+                1 & 9 & 9 & 198 \\
+                1 & 2 & 2 & 12  \\
+                1 & 2 & 2 & 44
+            \end{pmatrix} \cdot (0,0,0,1)^T = (198, 12, 44)^T \]
             
             
-        And finally $\overrightarrow{\mathcal{A}} = (3, \{a, b\}, \overrightarrow{\mu}, (1,0,0), (0, 198, 12)^T)$
+        And finally $\overrightarrow{\mathcal{A}} = (3, \{a, b\}, \overrightarrow{\mu}, (1,0,0), (198, 12, 44)^T)$
         
-        \textbf{Question:} $\alpha$ is defined as $e_1$ in the paper. I just assumed that it's the first column vector of $\overrightarrow{F}$. Is that correct? \\
+        \vspace{1cm}
+        Hm nontheless a strange representation, let's check its' correctness
+        \newpage
         
-        As the automaton is minimal with 3 states, the backwards reduction is omitted for now (will be added when correctness of the test case is affirmed or rejected). Further another paper by the same author~\autocite{kiefer2014stability} states with reference to \autocite{schutz} that $\mathcal{A} \equiv \overrightarrow{\mathcal{A}} \equiv \overleftarrow{\overrightarrow{\mathcal{A}}} $, also providing a proof of this in the Appendix A.1 \\
+        
+        
+        
+        
         
         To assure that this is still the same automaton, compute the following examples with the new automaton:
         \begin{itemize}
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) = (0,\frac{-1}{24}, \frac{33}{48}); \ \ \overrightarrow{\alpha} \overrightarrow{\mu}(b) = (0,0,0)$
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) = (\frac{1}{7}, \frac{11}{16}, \frac{-93}{112}); \ \ \overrightarrow{\alpha} \overrightarrow{\mu}(b) = (0, \frac{-9}{16}, \frac{9}{16})$
             
             \item $ \overrightarrow{\mu}(a) \overrightarrow{\eta} = \begin{pmatrix}
-                    0 & \frac{-1}{24} & \frac{33}{48} \\
-                    0 & 0 & 0 \\
-                    0 & 0 & 0 
-                \end{pmatrix}  (0, 198, 12)^T = (198\frac{-1}{24} + 12\frac{33}{48}, 0, 0)^T = (0,0,0)^T $
+                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
+                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
+                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112}
+            \end{pmatrix}  (198, 12, 44)^T = (0,0,0)$
             
-            \item $ \overrightarrow{\mu}(b) \overrightarrow{\eta} = (0, \frac{45}{4}, 4)$
+            \item $ \overrightarrow{\mu}(b) \overrightarrow{\eta} = \begin{pmatrix}
+                0 & \frac{-9}{16} & \frac{9}{16} \\
+                0 & \frac{-1}{8} & \frac{1}{8} \\
+                0 & \frac{-1}{8} & \frac{1}{8} 
+            \end{pmatrix} (198, 12, 44)^T = (12 \frac{-9}{16} + 44 \frac{9}{16}, 12\frac{-1}{8} + 44\frac{1}{8}, 12\frac{-1}{8} + 44\frac{1}{8})^T$ \\
+            $= (18, 4, 4)$
             
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\eta} = 0 + \frac{198}{1536} - \frac{132}{1024} = 0$
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\eta} = 0$
+            \item \textbf{Wrong!! w=``b'' is accepted} $\overrightarrow{\alpha} \overrightarrow{\mu}(b) \overrightarrow{\eta} = 18$
                 
-            \item $\overrightarrow{\mu}(a)^2 = 0$, but $\overrightarrow{\mu}(b)^2 =  \begin{pmatrix}
-                    0 & 0 & 0 \\
-                    0 & \frac{-1}{64} & 0 \\
-                    0 & 0 & \frac{11}{64} 
-                \end{pmatrix}$
+            \item $\overrightarrow{\mu}(a)^2 = 0$, and $\overrightarrow{\mu}(b)^2 = 0$
                 
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) =  (1,0,0)^T
-                \begin{pmatrix}
-                    0 & \frac{-1}{24} & \frac{33}{48} \\
-                    0 & 0 & 0 \\
-                    0 & 0 & 0 
-                \end{pmatrix}
-                \begin{pmatrix}
-                    0 & 0 & 0 \\
-                    0 & \frac{1}{8} & \frac{-9}{8} \\
-                    0 & \frac{1}{36} & \frac{-1}{8} 
-                \end{pmatrix}
-                = ( 0, \frac{1}{72}, \frac{-5}{128})$
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) =  ( 0, \frac{-1}{16}, \frac{1}{16})$
                 
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) \cdot (0, 198, 12)^T = \frac{73}{32}$
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\eta} = 2$
             
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(a) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) (0,0,0)^T  = 0$
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(a) \overrightarrow{\eta} = 0$
             
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) \cdot (0, \frac{45}{4}, 4) = 0$
-            
-            \item \textbf{This should not be non-zero, something is wrong!}\\
-            $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\eta} = ( 0, \frac{1}{72}, \frac{-5}{128}) \cdot \begin{pmatrix}
-                    0 & 0 & 0 \\
-                    0 & \frac{1}{8} & \frac{-9}{8} \\
-                    0 & \frac{1}{36} & \frac{-1}{8} 
-                \end{pmatrix} \cdot (0, \frac{45}{4}, 4) = \frac{-73}{2048}$. \\
-                With the addition of one additional b the weight is again zero, but for two more bs it's again non-zero. That is the ``minimization'' added an alternating mistake. \\
-                There are four obvious reasons:
-                \begin{enumerate}
-                 \item I miscalculated something or there is a typo
-                 \item I did not understand the algorithm and thus applied it wrongly
-                 \item It is necessary to also apply the backwards reduction to correct the mistake introduced by the forward reduction. Thus \autocite{kiefer2014stability} is incorrect
-                 \item the algorithm itself is incorrect
-                \end{enumerate}                
-
+            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\eta} = 0$
         \end{itemize}
             
-        %    {{0, 1/72, -5/128}} alpha a b
-        %    {{0,0,0}, {0,1/8, -9/8}, {0, 1/36, -1/8}} b
-        %    {{0}, {198}, {12}} eta 
-        %    {{0}, {45/4}, {4}} b eta
-        %    {{0, 1/1536, -11/1024}} alpha a b b
-        %    {{0, -1/4608, 5/8192}} alpha a b b b 
+        %       a = {{1/7, 11/16, -93/112}, {1/7, 11/16, -93/112}, {1/7, 11/16, -93/112}}
+        %       b = {{0, -9/16, 9/16}, {0, -1/8, 1/8}, {0, -1/8, 1/8}}
+        %   alpha = {{1, 0, 0}}
+        %     eta = {{198}, {12}, {44}}
+        %  alph a = {{1/7, 11/16, -93/112}} 
+        %  alph b = {{0, -9/16, 9/16}}
+        % alp a b = {{0, -1/16, 1/16}}
+        
+        
