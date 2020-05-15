@@ -1,3 +1,5 @@
+#include <tclap/CmdLine.h>
+
 #include "differential_equations/DifferentialEquationModel.h"
 #include "weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.cpp"
@@ -10,9 +12,12 @@ int main(int argc, char* argv[]) {
     UserInterface::IOMethod outputMethod;
     std::string outputDestination;
     std::string input;
+    std::unique_ptr<TextUserInterface> ui;
 
-    if (argc == 0) {
-        auto ui = std::make_unique<TextUserInterface>(TextUserInterface());
+    if (argc == 0 || argc == 1) {
+        if (argc == 0) {
+            ui = std::make_unique<TextUserInterface>(TextUserInterface());
+        } else if (argc == 1 )
         task = ui->select_task();
 
         switch (task) {
@@ -50,9 +55,9 @@ int main(int argc, char* argv[]) {
             const auto summary = model.summarize_reduction(representation, reduced_representation);
 
             if (outputMethod == UserInterface::IOMethod::File) {
-                TextUserInterface::display_file(summary, outputDestination);
+                ui->display_file(summary, outputDestination);
             } else if (outputMethod == UserInterface::IOMethod::Stdin) {
-                TextUserInterface::display_stdout(summary);
+                ui->display_stdout(summary);
             }
             break;
         }
