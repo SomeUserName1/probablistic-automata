@@ -320,7 +320,7 @@ Interface UserInterface {
             \end{center}
 
                
-            All matrix multiplications were performed using Wolframalpha, all other results were verified using Wolframalpha. \\
+            All steps were performed using the Matlab script found in \mintinline{c}{src/test/WA_kiefer.m}. \\
             
             \textbf{Restrictions:} Those are actually obvious from the automaton. To be on the safe side the ``proofs'' are stated explicitly here.
             \begin{itemize}
@@ -406,234 +406,125 @@ Interface UserInterface {
                     \end{pmatrix}                     
         \]
         As the two words are the same for all $v_1, \dots, v_n$ we have:
-        \[ \rho(r^{(i)}) = \sum_{k=0}^{n} \sum_{w \in \Sigma^k} \alpha \sum_{j=1}^{|w|} \mu(w_j) r^{(i)}_{w_j, j} = \alpha + \alpha\mu(a) r^{(i)}_{a, 1} + \alpha \mu(a) \mu(b) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
-        \[= (1,0,0,0) + (0,1,1,0) r^{(i)}_{a, 1} + (0,0,0,2) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
+        \[ \rho(r^{(i)}) = \sum_{k=0}^{n} \sum_{w \in \Sigma^k} \alpha \sum_{j=1}^{|w|} \mu(w_j) r^{(i)}_{w_j, j} = \alpha\mu(a) r^{(i)}_{a, 1} + \alpha \mu(a) \mu(b) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
+        \[= (0,1,1,0) r^{(i)}_{a, 1} + (0,0,0,2) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
         
         Thus:
-        \[ v_1 = (1,0,0,0) + 9 \cdot (0,1,1,0) + 9 \cdot 11 \cdot (0,0,0,2) = (1,9,9,198) \]
-        \[ v_2 = (1,0,0,0) + 2 \cdot (0,1,1,0) + 2 \cdot 3 \cdot (0,0,0,2) = (1,2,2,12) \]
-        \[ v_3 = (1,0,0,0) + 2 \cdot (0,1,1,0) + 2 \cdot 11 \cdot (0,0,0,2) = (1,2,2,44) \]
-        \[ v_4 = (1,0,0,0) + 4 \cdot (0,1,1,0) + 4 \cdot 9 \cdot (0,0,0,2) = (1,4,4,72) \]
+        \[ v_1 = 9 \cdot (0,1,1,0) + 9 \cdot 11 \cdot (0,0,0,2) = (0,9,9,198) \]
+        \[ v_2 = 2 \cdot (0,1,1,0) + 2 \cdot 3 \cdot (0,0,0,2) = (0,2,2,12) \]
+        \[ v_3 = 2 \cdot (0,1,1,0) + 2 \cdot 11 \cdot (0,0,0,2) = (0,2,2,44) \]
+        \[ v_4 = 4 \cdot (0,1,1,0) + 4 \cdot 9 \cdot (0,0,0,2) = (0,4,4,72) \]
         
-        According to Wolframalpha the maximally linearly independent subset is $\{v_1, v_2, v_3\}$ and by that
+        $\alpha$ needs to be stadcked atop of the row vectors.According to Matlab the maximally linearly independent subset is $\{\alpha, v_1, v_2\}$ and by that
         \[ \overrightarrow{F} = \begin{pmatrix}
-                                    1 & 9 & 9 & 198 \\
-                                    1 & 2 & 2 & 12  \\
-                                    1 & 2 & 2 & 44
+                                    1 & 0 & 0 & 0 \\
+                                    0 & 9 & 9 & 198 \\
+                                    0 & 2 & 2 & 12  \\
                                 \end{pmatrix}
         \]
         
-        Applying the forward reduction using Schützenberger construction as described in \autocite{Kiefer2013OnTC} Eq. 4.2:
-        \[ \overrightarrow{F} \mu(a) = 
-            \begin{pmatrix}
-                1 & 9 & 9 & 198 \\
-                1 & 2 & 2 & 12  \\
-                1 & 2 & 2 & 44
-            \end{pmatrix} \cdot \begin{pmatrix}
-                    0 & 1 & 1 & 0 \\
-                    0 & 0 & 0 & 0 \\
-                    0 & 0 & 0 & 0 \\
-                    0 & 0 & 0 & 0
-            \end{pmatrix} = \begin{pmatrix}
-                0 & 1 & 1 & 0 \\
-                0 & 1 & 1 & 0 \\
-                0 & 1 & 1 & 0
-            \end{pmatrix}  = \overrightarrow{\mu}(a) \overrightarrow{F} 
-        \] 
-        \[=  \begin{pmatrix}
-                m_{11} & m_{12} & m_{13} \\
-                m_{21} & m_{22} & m_{23} \\
-                m_{31} & m_{32} & m_{33} 
-            \end{pmatrix} \cdot \begin{pmatrix}
-                1 & 9 & 9 & 198 \\
-                1 & 2 & 2 & 12  \\
-                1 & 2 & 2 & 44
-            \end{pmatrix} \]
-            \[ =
-             \begin{pmatrix}
-                m_{11} + m_{12} + m_{13} & 9m_{11}+2m_{12}+2m_{13} & 9m_{11}+2m_{12}+2m_{13} & 198m_{11}+12m_{12}+44m_{13} \\
-                m_{21} + m_{22} + m_{23} & 9m_{21}+2m_{22}+2m_{23} & 9m_{21}+2m_{22}+2m_{23} & 198m_{21}+12m_{22}+44m_{23}  \\
-                m_{31} + m_{32} + m_{33} & 9m_{31}+2m_{32}+2m_{33} & 9m_{31}+2m_{32}+2m_{33} & 198m_{31}+12m_{32}+44m_{33}  \\
-            \end{pmatrix} 
-        \]
-        \[ = 
-            \begin{pmatrix}
-                0 & 1 & 1 & 0 \\
-                0 & 1 & 1 & 0 \\
-                0 & 1 & 1 & 0
-            \end{pmatrix}
-        \]
-        From the above system of equations we can see that the coefficients and the resulting row vectors are the same for all rows, i.e. $m_{11} = m_{21} = m_{31}$, $m_{12} = m_{22} = m_{32}$, $m_{13} = m_{23} = m_{33}$. Thus we only solve the system of equations once.
-        \[   \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                9 & 2 & 2 & 1 \\
-                198 & 12 & 44 & 0 \\
-            \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 2\rom{1}} 
-            \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                7 & 0 & 0 & 1 \\
-                198 & 12 & 44 & 0 \\
-            \end{pmatrix} 
-            \xrightarrow{\rom{3} = \rom{3} - 12\rom{1}} 
-            \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                7 & 0 & 0 & 1 \\
-                186 & 0 & 32 & 0 \\
-            \end{pmatrix} 
-        \] 
-        \[ 
-            \Rightarrow m_{11} = \frac{1}{7}, \qquad m_{13} = \frac{1}{32}(- 186 \cdot \frac{1}{7}) = \frac{-186}{224} = \frac{-93}{112}, \qquad m_{12} = - \frac{1}{7} + \frac{93}{112} = \frac{154}{224} = \frac{11}{16}
-        \]
-        Thus \[ \overrightarrow{\mu}(a) = 
-            \begin{pmatrix}
-                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
-                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
-                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112}
-            \end{pmatrix} \]
+        Applying the forward reduction using Schützenberger construction as described in \autocite{Kiefer2013OnTC} Eq. 4.2 using the right inverse or the Moore-Penrose inverse:
+        \[ \overrightarrow{F} \mu(\sigma) = \overrightarrow{\mu}(\sigma)\overrightarrow{F} \equiv \overrightarrow{\mu}(\sigma) = \overrightarrow{F} \mu(\sigma) \overrightarrow{F}^{-1}_R \]
+        Solving using Matlab gives:
+        \[
+        \overrightarrow{\mu}(a) = 
+        \begin{pmatrix}
+            0 & \frac{-1}{24} & \frac{11}{16} \\
+            0 & 0 & 0 \\
+            0 & 0 & 0
+        \end{pmatrix}
+       \]
+        
             
-        Regarding $\overrightarrow{\mu}(b)$ we get
-        \[ \overrightarrow{F} \mu(b) = 
+        Regarding $\overrightarrow{\mu}(b)$ using the same procedure we get
+        \[ \overrightarrow{\mu}(b) = 
             \begin{pmatrix}
-                1 & 9 & 9 & 198 \\
-                1 & 2 & 2 & 12  \\
-                1 & 2 & 2 & 44
-            \end{pmatrix} \cdot \begin{pmatrix}
-                    0 & 0 & 0 & 0 \\
-                    0 & 0 & 0 & 1 \\
-                    0 & 0 & 0 & 1 \\
-                    0 & 0 & 0 & 0
-            \end{pmatrix} = \begin{pmatrix}
-                0 & 0 & 0 & 18 \\
-                0 & 0 & 0 & 4 \\
-                0 & 0 & 0 & 4
-            \end{pmatrix}  = \overrightarrow{\mu}(a) \overrightarrow{F} 
-        \] 
-        \[\Rightarrow 
-             \begin{pmatrix}
-                h_{11} + h_{12} + h_{13} & 9h_{11}+2h_{12}+2h_{13} & 9h_{11}+2h_{12}+2h_{13} & 198h_{11}+12h_{12}+44h_{13} \\
-                h_{21} + h_{22} + h_{23} & 9h_{21}+2h_{22}+2h_{23} & 9h_{21}+2h_{22}+2h_{23} & 198h_{21}+12h_{22}+44h_{23}  \\
-                h_{31} + h_{32} + h_{33} & 9h_{31}+2h_{32}+2h_{33} & 9h_{31}+2h_{32}+2h_{33} & 198h_{31}+12h_{32}+44h_{33}  \\
-            \end{pmatrix}  
-        \]
-        \[ = 
-            \begin{pmatrix}
-                0 & 0 & 0 & 18 \\
-                0 & 0 & 0 & 4 \\
-                0 & 0 & 0 & 4
+                0 & 0 & 0 \\
+                0 & \frac{1}{8}& \frac{-9}{16} \\
+                0 & \frac{1}{36} & \frac{-1}{8}
             \end{pmatrix}
-        \]
-        For $h_{11}, h_{12}$ and $h_{13}$ this yields
-        \[   \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                9 & 2 & 2 & 0 \\
-                198 & 12 & 44 & 18 \\
-            \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 2\rom{1}} 
-            \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                7 & 0 & 0 & 0 \\
-                198 & 12 & 44 & 18 \\
-            \end{pmatrix} 
-            \xrightarrow{\rom{3} = \rom{3} - 12\rom{1}} 
-            \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                7 & 0 & 0 & 0 \\
-                186 & 0 & 32 & 18 \\
-            \end{pmatrix} 
         \] 
-        \[
-            \Rightarrow h_{11} = 0, \qquad h_{13} = \frac{18}{32} = \frac{9}{16}, \qquad h_12 = \frac{-9}{16}
-        \]
         
-        
-        As in the matricies concerned with $\overrightarrow{\mu}(a)$, $h_{2\cdot} = h_{3\cdot}$ as the coefficients and numerals are the same in both systems of equations.
-        \[   \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                9 & 2 & 2 & 0 \\
-                198 & 12 & 44 & 4 \\
-            \end{pmatrix} 
-            \xrightarrow{\rom{2} = \rom{2} - 2\rom{1}} 
-            \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                7 & 0 & 0 & 0 \\
-                198 & 12 & 44 & 18 \\
-            \end{pmatrix} 
-            \xrightarrow{\rom{3} = \rom{3} - 12\rom{1}} 
-            \begin{pmatrix}[c c c | c]
-                1 & 1 & 1 & 0 \\
-                7 & 0 & 0 & 0 \\
-                186 & 0 & 32 & 4 \\
-            \end{pmatrix} 
-        \] 
-        \[
-            \Rightarrow h_{21} = 0, \qquad h_{23} = \frac{4}{32} = \frac{1}{8}, \qquad h_{22} = \frac{-1}{8}
-        \]
-
-        
-        
-        So that \[ \overrightarrow{\mu}(b) = 
-            \begin{pmatrix}
-                0 & \frac{-9}{16} & \frac{9}{16} \\
-                0 & \frac{-1}{8} & \frac{1}{8} \\
-                0 & \frac{-1}{8} & \frac{1}{8} 
-            \end{pmatrix} \]
-        and 
+        Regarding $\overrightarrow{\eta}$ we get:
         \[ \overrightarrow{\eta} = \overrightarrow{F} \eta =  \begin{pmatrix}
-                1 & 9 & 9 & 198 \\
-                1 & 2 & 2 & 12  \\
-                1 & 2 & 2 & 44
-            \end{pmatrix} \cdot (0,0,0,1)^T = (198, 12, 44)^T \]
+                                    1 & 0 & 0 & 0 \\
+                                    0 & 9 & 9 & 198 \\
+                                    0 & 2 & 2 & 12  \\
+                                \end{pmatrix} \cdot (0,0,0,1)^T = (0, 198, 12)^T \]
             
             
-        And finally $\overrightarrow{\mathcal{A}} = (3, \{a, b\}, \overrightarrow{\mu}, (1,0,0), (198, 12, 44)^T)$
-        
-        \vspace{1cm}
-        Hm nontheless a strange representation, let's check its' correctness
+        And finally $\overrightarrow{\mathcal{A}} = (3, \{a, b\}, \overrightarrow{\mu}, (1,0,0), (0, 198, 12)^T)$
+
+        Additional checks, that this is indeed the same automaton can be found in the output of the Matlab script using the \mintinline{matlab}{probe_and_display()} function. 
         \newpage
         
         
+        \textbf{Backward reduction} The only words that need to be considered due to the above restrictions are the words ``b'' and ``ab''. The second reduction step of the algorithm is to be applied on the output automaton of the previous reduction, i.e. $\overrightarrow{\mathcal{A}}$ \\
+        Random vectors are generated using Wolframalpha and $K=3$, i.e. $r^{i} \in \{1, \dots, 9\}^{2 \times 3}$:
+        \[  r^{(1)}= \begin{pmatrix}
+                        1 & 6 & 2 \\
+                        4 & 5 & 4
+                    \end{pmatrix}; \ \
+            r^{(2)}= \begin{pmatrix}
+                        8 & 1 & 8 \\
+                        7 & 8 & 2
+                    \end{pmatrix} 
+            r^{(3)}= \begin{pmatrix}
+                        1 & 6 & 5 \\
+                        9 & 2 & 1
+                    \end{pmatrix}                      
+        \]
+        As the two words are the same for all $v_1, \dots, v_n$ we have:
+        \[ \rho(r^{(i)}) = \sum_{k=0}^{n} \sum_{w \in \Sigma^k} \left(\sum_{j=1}^{|w|} \overrightarrow{\mu}(w_j) r^{(i)}_{w_j, j} \right) \overrightarrow{\eta} = \overrightarrow{\mu}(b) \overrightarrow{\eta} r^{(i)}_{b, 1}  + \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\eta} r^{(i)}_{a, 1} r^{(i)}_{b, 2}  \]
+        \[ = (0, 18, 4) r^{(i)}_{b, 1} + (2,0,0) r^{(i)}_{a, 1} r^{(i)}_{b, 2} \]
         
+        Thus:
+        \[ v_1 = 4 \cdot (0,18,4) + 1 \cdot 5 \cdot (2,0,0) = (10, 72, 16) \]
+        \[ v_2 = 7 \cdot (0,18,4) + 8 \cdot 8 \cdot (2,0,0) = (128, 126, 28) \]
+        \[ v_3 = 9 \cdot (0,18,4) + 1 \cdot 2 \cdot (2,0,0) = (4, 162, 36) \]
         
+        $\overrightarrow{\eta}$ needs to be stadcked ahead of the column vectors. According to Matlab the maximally linearly independent subset is $\{eta, v_1, v_2\}$ and by that
+        \[ \overleftarrow{\overrightarrow{B}} = \begin{pmatrix}
+                                    0 & 10 & 128 \\
+                                    198 & 72 & 126 \\
+                                    12 & 16 & 28  \\
+                                \end{pmatrix}
+        \]
         
+        Applying the backward reduction using Schützenberger construction as described in \autocite{Kiefer2013OnTC} Eq. 4.2 using the left inverse or the Moore-Penrose inverse:
+        \[ \overrightarrow{\mu}(\sigma) \overleftarrow{B} = \overleftarrow{B}\overleftarrow{\overrightarrow{\mu}}(\sigma) \equiv \overleftarrow{\overrightarrow{\mu}}(\sigma) = \overleftarrow{B}^{-1}_L  \overrightarrow{\mu}(\sigma) \overleftarrow{B} \]
+        Solving using Matlab gives:
+        \[
+        \overleftarrow{\overrightarrow{\mu}}(a) = 
+        \begin{pmatrix}
+            0 & 0 & 0 \\
+            0 & \frac{-28}{221} & \frac{-49}{221} \\
+            0 & \frac{16}{221} & \frac{28}{221}
+        \end{pmatrix}
+       \]
         
-        To assure that this is still the same automaton, compute the following examples with the new automaton:
-        \begin{itemize}
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) = (\frac{1}{7}, \frac{11}{16}, \frac{-93}{112}); \ \ \overrightarrow{\alpha} \overrightarrow{\mu}(b) = (0, \frac{-9}{16}, \frac{9}{16})$
             
-            \item $ \overrightarrow{\mu}(a) \overrightarrow{\eta} = \begin{pmatrix}
-                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
-                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112} \\
-                \frac{1}{7} & \frac{11}{16} & \frac{-93}{112}
-            \end{pmatrix}  (198, 12, 44)^T = (0,0,0)$
-            
-            \item $ \overrightarrow{\mu}(b) \overrightarrow{\eta} = \begin{pmatrix}
-                0 & \frac{-9}{16} & \frac{9}{16} \\
-                0 & \frac{-1}{8} & \frac{1}{8} \\
-                0 & \frac{-1}{8} & \frac{1}{8} 
-            \end{pmatrix} (198, 12, 44)^T = (12 \frac{-9}{16} + 44 \frac{9}{16}, 12\frac{-1}{8} + 44\frac{1}{8}, 12\frac{-1}{8} + 44\frac{1}{8})^T$ \\
-            $= (18, 4, 4)$
-            
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\eta} = 0$
-            \item \textbf{Wrong!! w=``b'' is accepted} $\overrightarrow{\alpha} \overrightarrow{\mu}(b) \overrightarrow{\eta} = 18$
-                
-            \item $\overrightarrow{\mu}(a)^2 = 0$, and $\overrightarrow{\mu}(b)^2 = 0$
-                
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) =  ( 0, \frac{-1}{16}, \frac{1}{16})$
-                
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\eta} = 2$
-            
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(a) \overrightarrow{\eta} = 0$
-            
-            \item $\overrightarrow{\alpha} \overrightarrow{\mu}(a) \overrightarrow{\mu}(b) \overrightarrow{\mu}(b) \overrightarrow{\eta} = 0$
-        \end{itemize}
-            
-        %       a = {{1/7, 11/16, -93/112}, {1/7, 11/16, -93/112}, {1/7, 11/16, -93/112}}
-        %       b = {{0, -9/16, 9/16}, {0, -1/8, 1/8}, {0, -1/8, 1/8}}
-        %   alpha = {{1, 0, 0}}
-        %     eta = {{198}, {12}, {44}}
-        %  alph a = {{1/7, 11/16, -93/112}} 
-        %  alph b = {{0, -9/16, 9/16}}
-        % alp a b = {{0, -1/16, 1/16}}
+        Regarding $\overleftarrow{\overrightarrow{\mu}}(b)$ using the same procedure we get
+        \[ \overleftarrow{\overrightarrow{\mu}}(b) = 
+            \begin{pmatrix}
+                0 & 0 & 0 \\
+                \frac{64}{221} & 0 & 0 \\
+                \frac{-5}{221} & 0 & 0
+            \end{pmatrix}
+        \] 
         
+        Regarding $\overleftarrow{\overrightarrow{\alpha}}$ we get:
+        \[ \overleftarrow{\overrightarrow{\alpha}} = \overleftarrow{B} \overrightarrow{\alpha} =  \begin{pmatrix}
+            0 & 10 & 128 \\
+            198 & 72 & 126 \\
+            12 & 16 & 28  \\
+        \end{pmatrix} \cdot (1,0,0) = (0, 10, 128) \]
+            
+            
+        Finally $\overleftarrow{\overrightarrow{\mathcal{A}}} = (3, \{a, b\}, \overleftarrow{\overrightarrow{\mu}}, (0, 10, 128), (1,0,0))$. \\
+
+        Additional checks, that this is indeed the same automaton can be found in the output of the Matlab script using the \mintinline{matlab}{probe_and_display()} function. \hfill $\blacksquare$
+        \newpage
+        
+            
         

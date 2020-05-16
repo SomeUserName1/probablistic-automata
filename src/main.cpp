@@ -14,39 +14,44 @@ int main(int argc, char* argv[]) {
     std::string input;
     std::unique_ptr<TextUserInterface> ui;
 
-    if (argc == 0 || argc == 1) {
-        if (argc == 0) {
-            ui = std::make_unique<TextUserInterface>(TextUserInterface());
-        } else if (argc == 1 )
-        task = ui->select_task();
+    try {
+        TCLAP::CmdLine cmd("Stochastic dynamic system reducer", ' ', "0.1");
+        TCLAP::SwitchArg reverseSwitch("r","reverse","Print name backwards", cmd, false);
+        TCLAP::ValueArg<std::string> nameArg("n","name","Name to print",true,"homer","string");
+        cmd.add( nameArg );
 
-        switch (task) {
-            case UserInterface::Reduction: {
-                std::vector<ModelInterface> models = {WeightedAutomatonModel(), DifferentialEquationModel()};
-                model = ui->select_model(models);
-                reductionMethod = ui->select_reduction_method(model);
-                inputMethod = ui->select_io_method();
-                outputMethod = ui->select_io_method();
-
-                if (inputMethod == UserInterface::IOMethod::File) {
-                    input = ui->file_input();
-                } else {
-                    input = ui->stdin_input();
-                }
-                if (outputMethod == UserInterface::IOMethod::File) {
-                    outputDestination = ui->set_output_destination();
-                }
-                break;
+        if (argc == 0 || argc == 1) {
+            if (argc == 0) {
+                ui = std::make_unique<TextUserInterface>(TextUserInterface());
+            } else if ()
+                task = ui->select_task();
             }
-            case UserInterface::Benchmark:
-            case UserInterface::Conversion:
-            case UserInterface::Unselected:
-                throw NotImplementedException();
-        }
-    } else if (argc == 1) {
-    } else {
+            switch (task) {
+                case UserInterface::Reduction: {
+                    std::vector<ModelInterface> models = {WeightedAutomatonModel(), DifferentialEquationModel()};
+                    model = ui->select_model(models);
+                    reductionMethod = ui->select_reduction_method(model);
+                    inputMethod = ui->select_io_method();
+                    outputMethod = ui->select_io_method();
 
-    }
+                    if (inputMethod == UserInterface::IOMethod::File) {
+                        input = ui->file_input();
+                    } else {
+                        input = ui->stdin_input();
+                    }
+                    if (outputMethod == UserInterface::IOMethod::File) {
+                        outputDestination = ui->set_output_destination();
+                    }
+                    break;
+                }
+                case UserInterface::Benchmark:
+                case UserInterface::Conversion:
+                case UserInterface::Unselected:
+                    throw NotImplementedException();
+            }
+        } else {
+
+        }
 
     switch (task) {
         case UserInterface::Reduction: {
@@ -66,7 +71,8 @@ int main(int argc, char* argv[]) {
         case UserInterface::Unselected:
             throw NotImplementedException();
     }
-
+    } catch (TCLAP::ArgException &e)  // catch any exceptions
+    { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
 }
 
 
