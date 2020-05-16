@@ -16,6 +16,8 @@ class ModelInterface {
         [[nodiscard]] virtual RepresentationInterface validate_model_instance(const std::string&) const;
         [[nodiscard]] virtual std::string summarize_reduction(RepresentationInterface, RepresentationInterface)
             const;
+        virtual bool is_wa() const;
+        virtual bool is_de() const;
         virtual std::vector<ReductionMethodInterface*> get_reduction_methods() const;
         virtual std::vector<ConversionMethodInterface*> get_conversion_methods() const;
 };

@@ -83,14 +83,7 @@ std::string TextUserInterface::file_input() const {
             pick = true;
         }
     } while (!pick);
-    std::ifstream in(line, std::ios::in | std::ios::binary);
-    std::string contents;
-    in.seekg(0, std::ios::end);
-    contents.resize(in.tellg());
-    in.seekg(0, std::ios::beg);
-    in.read(&contents[0], contents.size());
-    in.close();
-    return(contents);
+    return read_file(line);
 }
 
 std::string TextUserInterface::stdin_input() const {
@@ -121,12 +114,7 @@ std::string TextUserInterface::set_output_destination() const {
     return line;
 }
 
-void TextUserInterface::display_file(const std::string& output, const std::string& file) const {
-    std::ofstream outfile(file);
-    outfile << output;
-}
-
-void TextUserInterface::display_stdout(const std::string& output) const {
+void TextUserInterface::display(const std::string& output) const {
     std::cout << output;
 }
 
