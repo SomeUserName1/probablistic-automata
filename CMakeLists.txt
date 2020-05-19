@@ -17,6 +17,7 @@ SET(MSAN_OPTIONS detect_leaks=1)
 SET(MSAN_OPTIONS symbolize=1)
 SET(MSAN_SYMBOLIZER_PATH $(which llvm-symbolizer))
 
+INCLUDE_DIRECTORIES(include)
 INCLUDE_DIRECTORIES(src/ui)
 INCLUDE_DIRECTORIES(src/model)
 INCLUDE_DIRECTORIES(src/model/weighted_automata)
@@ -25,7 +26,7 @@ INCLUDE_DIRECTORIES(src/model/differential_equations)
 
 ADD_LIBRARY(ui          src/ui/TextUserInterface.cpp)
 ADD_LIBRARY(models      src/model/differential_equations/DifferentialEquationModel.cpp
-                        src/model/weighted_automata/WeightedAutomatonModel.cpp)
+                        src/model/weighted_automata/WeightedAutomatonModel.cpp src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp src/model/weighted_automata/KieferSchuetzenbergerReduction.h src/model/weighted_automata/WeightedAutomatonInstance.h)
 ADD_LIBRARY(util        src/NotImplementedException.cpp)
 
 

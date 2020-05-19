@@ -15,13 +15,13 @@ bool iequals(std::string str1, std::string str2) {
 
 int main(int argc, char* argv[]) {
     UserInterface::Task task;
-    ModelInterface model;
-    ReductionMethodInterface reductionMethod;
+    std::shared_ptr<ModelInterface> model;
+    std::shared_ptr<ReductionMethodInterface> reductionMethod;
     UserInterface::IOMethod inputMethod;
     UserInterface::IOMethod outputMethod;
     std::string outputDestination;
     std::string input;
-    std::unique_ptr<TextUserInterface> ui;
+    std::shared_ptr<TextUserInterface> ui;
 
     try {
         TCLAP::CmdLine cmd("Stochastic dynamic system reducer", ' ', "0.1");
@@ -67,10 +67,10 @@ int main(int argc, char* argv[]) {
             }
             if (iequals(taskStr,"WA") || iequals(taskStr,"WeightedAutomatonModel")
                 || iequals(taskStr,"WeightedAutomaton")) {
-                model = WeightedAutomatonModel();
+                model = std::make_shared<WeightedAutomatonModel>();
             } else if (iequals(taskStr,"DE") || iequals(taskStr,"DifferentialEquationModel")
                 || iequals(taskStr,"Differential Equation")) {
-                model = DifferentialEquationModel();
+                model = std::make_shared<DifferentialEquationModel>();
             } else {
                 throw std::invalid_argument("Specify either 'WA', 'DE', 'WeightedAutomatonModel', "
                                             "'DifferentialEquationModel', 'WeightedAutomaton' or 'DifferentialEquation'"
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
             }
             // currently only two methods are supported, one per model so ignore what the user says and just use it
             // Intentionally bad design, FIXME
-            reductionMethod = *model.get_reduction_methods()[0];
+            reductionMethod = model->get_reduction_methods()[0];
 
             std::filesystem::path inputPath (inputStr);
             if (inputPath.has_filename() && std::filesystem::exists(inputPath)) {
@@ -90,14 +90,15 @@ int main(int argc, char* argv[]) {
             }
         } else {
             if (argc == 0 || tuiSwitch) {
-                ui = std::make_unique<TextUserInterface>(TextUserInterface());
+                ui = std::make_shared<TextUserInterface>(TextUserInterface());
             } else if (guiSwitch) {
                 throw NotImplementedException();
             }
             task = ui->select_task();
             switch (task) {
                 case UserInterface::Reduction: {
-                    std::vector<ModelInterface> models = {WeightedAutomatonModel(), DifferentialEquationModel()};
+                    std::vector<std::shared_ptr<ModelInterface>> models = {std::make_shared<WeightedAutomatonModel>(),
+                            std::make_shared<DifferentialEquationModel>()};
                     model = ui->select_model(models);
                     reductionMethod = ui->select_reduction_method(model);
                     inputMethod = ui->select_io_method();
@@ -122,9 +123,9 @@ int main(int argc, char* argv[]) {
 
         switch (task) {
             case UserInterface::Reduction: {
-                const auto representation = model.validate_model_instance(input);
-                const auto reduced_representation = reductionMethod.reduce(representation);
-                const auto summary = model.summarize_reduction(representation, reduced_representation);
+                const auto representation = model->validate_model_instance(input);
+                const auto reduced_representation = reductionMethod->reduce(representation);
+                const auto summary = model->summarize_reduction(representation, reduced_representation);
 
                 if (outputMethod == UserInterface::IOMethod::File) {
                     ui->display_file(summary, outputDestination);

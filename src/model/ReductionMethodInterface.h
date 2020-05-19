@@ -5,8 +5,14 @@
 
 class ReductionMethodInterface {
     public:
-        virtual std::string get_name() const;
-        virtual RepresentationInterface reduce(RepresentationInterface) const;
+        virtual ~ReductionMethodInterface() = default;;
+        [[nodiscard]] virtual std::string get_name() const {
+            throw NotImplementedException();
+        }
+
+    [[nodiscard]] virtual RepresentationInterface reduce(RepresentationInterface) const {
+            throw NotImplementedException();
+        }
 };
 
 

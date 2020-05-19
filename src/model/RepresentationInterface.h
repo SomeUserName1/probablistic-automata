@@ -1,6 +1,7 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_MODELREPRESENTATIONINTERFACE_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_MODELREPRESENTATIONINTERFACE_H
 
+#include "../NotImplementedException.cpp"
 class RepresentationInterface {
     public:
         struct representation;

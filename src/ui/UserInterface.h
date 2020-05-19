@@ -25,17 +25,18 @@ class UserInterface {
          * To allow polymorphism in the main, pure virtual is not possible. As the below functions are virtual, we
          * simply throw an exception, when an invalid call to the base class is made.
          */
-        virtual ~UserInterface() = 0;
+        virtual ~UserInterface() = default;
         [[nodiscard]] virtual Task select_task() const {
             throw std::logic_error("Please use a concrete implementation of this interface!");
         }
-        [[nodiscard]] virtual const ModelInterface& select_model(const std::vector<ModelInterface>&) const {
+        [[nodiscard]] virtual std::shared_ptr<ModelInterface> select_model(const std::vector<std::shared_ptr<ModelInterface>>&) const {
             throw std::logic_error("Please use a concrete implementation of this interface!");
         };
-        [[nodiscard]] virtual const ReductionMethodInterface& select_reduction_method(const ModelInterface&) const {
+        [[nodiscard]] virtual std::shared_ptr<ReductionMethodInterface> select_reduction_method(
+                std::shared_ptr<ModelInterface> &selectedModel) const {
             throw std::logic_error("Please use a concrete implementation of this interface!");
         };
-        [[nodiscard]] virtual const ConversionMethodInterface& select_conversion_method(const ModelInterface&) const {
+        [[nodiscard]] virtual std::shared_ptr<ConversionMethodInterface> select_conversion_method(std::shared_ptr<ModelInterface>& ) const {
             throw std::logic_error("Please use a concrete implementation of this interface!");
         };
         [[nodiscard]] virtual IOMethod select_io_method() const {

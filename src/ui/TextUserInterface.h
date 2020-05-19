@@ -11,11 +11,14 @@
 
 class TextUserInterface : public UserInterface {
 public:
-    ~TextUserInterface() = default;
+    ~TextUserInterface() override = default;
     [[nodiscard]] Task select_task() const override;
-    [[nodiscard]] const ModelInterface& select_model(const std::vector<ModelInterface>&) const override;
-    [[nodiscard]] const ReductionMethodInterface& select_reduction_method(const ModelInterface&) const override;
-    [[nodiscard]] const ConversionMethodInterface& select_conversion_method(const ModelInterface&) const override;
+    [[nodiscard]] std::shared_ptr<ModelInterface> select_model(const std::vector<std::shared_ptr<ModelInterface>>&)
+        const override;
+    [[nodiscard]] std::shared_ptr<ReductionMethodInterface> select_reduction_method(std::shared_ptr<ModelInterface>&)
+        const override;
+    [[nodiscard]] std::shared_ptr<ConversionMethodInterface> select_conversion_method(std::shared_ptr<ModelInterface>& )
+        const override;
     [[nodiscard]] IOMethod select_io_method() const override;
     [[nodiscard]] std::string file_input() const override;
     [[nodiscard]] std::string stdin_input() const override;

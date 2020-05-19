@@ -1,5 +1,4 @@
 #include "TextUserInterface.h"
-#include "../NotImplementedException.cpp"
 
 UserInterface::Task TextUserInterface::select_task() const {
     Task task = Unselected;
@@ -26,11 +25,11 @@ UserInterface::Task TextUserInterface::select_task() const {
     return task;
 }
 
-const ModelInterface& TextUserInterface::select_model(const std::vector<ModelInterface>& availableInterfaces) const {
+std::shared_ptr<ModelInterface> TextUserInterface::select_model(const std::vector<std::shared_ptr<ModelInterface>> &availableModels) const {
     std::cout << "Choose a model" << std::endl;
     int i = 0;
-    for (const ModelInterface& mModel : availableInterfaces) {
-        std::cout << "\t\t"  << i << mModel.get_name()  << std::endl;
+    for (const auto& mModel : availableModels) {
+        std::cout << "\t\t"  << i << mModel->get_name()  << std::endl;
     }
     while(true) {
         std::string input;
@@ -39,9 +38,9 @@ const ModelInterface& TextUserInterface::select_model(const std::vector<ModelInt
             std::cout << "Please enter 1 or 2!";
             continue;
         } else {
-            for (i = 0; i < availableInterfaces.size(); i++) {
+            for (i = 0; i < availableModels.size(); i++) {
                 if (input == std::to_string(i)) {
-                    return (availableInterfaces[i]);
+                    return availableModels[i];
                 }
             }
         }
@@ -118,10 +117,13 @@ void TextUserInterface::display(const std::string& output) const {
     std::cout << output;
 }
 
-const ReductionMethodInterface& TextUserInterface::select_reduction_method(const ModelInterface& selectedModel) const {
+
+
+std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_method(
+        std::shared_ptr<ModelInterface> &selectedModel) const {
     std::cout << "Choose a reduction method" << std::endl;
     int i = 0;
-    for (ReductionMethodInterface* reduction : selectedModel.get_reduction_methods()) {
+    for (const auto& reduction : selectedModel->get_reduction_methods()) {
         std::cout << "\t\t"  << i << reduction->get_name()  << std::endl;
     }
     while(true) {
@@ -131,19 +133,19 @@ const ReductionMethodInterface& TextUserInterface::select_reduction_method(const
             std::cout << "Please enter 1 or 2!";
             continue;
         } else {
-            for (i = 0; i < selectedModel.get_reduction_methods().size(); i++) {
+            for (i = 0; i < selectedModel->get_reduction_methods().size(); i++) {
                 if (input == std::to_string(i)) {
-                    return *(selectedModel.get_reduction_methods()[i]);
+                    return selectedModel->get_reduction_methods()[i];
                 }
             }
         }
     }
 }
 
-const ConversionMethodInterface& TextUserInterface::select_conversion_method(const ModelInterface& anInterface) const {
+std::shared_ptr<ConversionMethodInterface> TextUserInterface::select_conversion_method(std::shared_ptr<ModelInterface>& model) const {
     std::cout << "Choose a conversion method" << std::endl;
     int i = 0;
-    for (ConversionMethodInterface* conversion : anInterface.get_conversion_methods()) {
+    for (const auto& conversion : model->get_conversion_methods()) {
         std::cout << "\t\t"  << i << conversion->get_left_model_name() << "to" << conversion->get_right_model_name()
          << std::endl;
     }
@@ -154,9 +156,9 @@ const ConversionMethodInterface& TextUserInterface::select_conversion_method(con
             std::cout << "Please enter 1 or 2!";
             continue;
         } else {
-            for (i = 0; i < anInterface.get_conversion_methods().size(); i++) {
+            for (i = 0; i < model->get_conversion_methods().size(); i++) {
                 if (input == std::to_string(i)) {
-                    return *(anInterface.get_conversion_methods()[i]);
+                    return model->get_conversion_methods()[i];
                 }
             }
         }
