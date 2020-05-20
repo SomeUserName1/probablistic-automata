@@ -3,10 +3,6 @@
 #include "KieferSchuetzenbergerReduction.h"
 #include "WeightedAutomatonInstance.h"
 
-void WeightedAutomatonModel::set_instance(std::shared_ptr<RepresentationInterface>& modelInstance) {
-    this->instance = std::move(modelInstance);
-}
-
 std::string WeightedAutomatonModel::get_name() const {
     return "Weighted Automaton Model";
 }

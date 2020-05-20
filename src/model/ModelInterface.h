@@ -26,6 +26,8 @@ class ModelInterface {
         [[nodiscard]] virtual std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const
         = 0;
         virtual void set_instance(std::shared_ptr<RepresentationInterface>&) = 0;
+
+        virtual std::string get_representation_description() const = 0;
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_MODELINTERFACE_H

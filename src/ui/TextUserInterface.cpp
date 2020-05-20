@@ -87,7 +87,7 @@ std::string TextUserInterface::file_input() const {
 
 std::string TextUserInterface::stdin_input(std::shared_ptr<ModelInterface> &selectedModel) const {
     std::cout << "Please enter the input!" << std::endl;
-    std::cout << selectedModel->get_representation()->get_representation_description();
+    std::cout << selectedModel->get_representation_description();
     std::string inputLine;
     std::stringstream ss;
     while (std::getline(std::cin, inputLine)) {
