@@ -27,7 +27,7 @@ UserInterface::Task TextUserInterface::select_task() const {
 
 std::shared_ptr<ModelInterface> TextUserInterface::select_model(const std::vector<std::shared_ptr<ModelInterface>> &availableModels) const {
     std::cout << "Choose a model" << std::endl;
-    int i = 0;
+    uint i = 0;
     for (const auto& mModel : availableModels) {
         std::cout << "\t\t"  << i << mModel->get_name()  << std::endl;
     }
@@ -48,7 +48,7 @@ std::shared_ptr<ModelInterface> TextUserInterface::select_model(const std::vecto
 }
 
 UserInterface::IOMethod TextUserInterface::select_io_method() const {
-    IOMethod io_method;
+    IOMethod io_method = Unse;
     std::cout << "Choose an input method" << std::endl
               << "\t\t 1. File" << std::endl
               << "\t\t 2. Stdin" << std::endl;
@@ -85,8 +85,9 @@ std::string TextUserInterface::file_input() const {
     return read_file(line);
 }
 
-std::string TextUserInterface::stdin_input() const {
+std::string TextUserInterface::stdin_input(std::shared_ptr<ModelInterface> &selectedModel) const {
     std::cout << "Please enter the input!" << std::endl;
+    std::cout << selectedModel->get_representation()->get_representation_description();
     std::string inputLine;
     std::stringstream ss;
     while (std::getline(std::cin, inputLine)) {
@@ -122,7 +123,7 @@ void TextUserInterface::display(const std::string& output) const {
 std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_method(
         std::shared_ptr<ModelInterface> &selectedModel) const {
     std::cout << "Choose a reduction method" << std::endl;
-    int i = 0;
+    uint i = 0;
     for (const auto& reduction : selectedModel->get_reduction_methods()) {
         std::cout << "\t\t"  << i << reduction->get_name()  << std::endl;
     }
@@ -144,7 +145,7 @@ std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_me
 
 std::shared_ptr<ConversionMethodInterface> TextUserInterface::select_conversion_method(std::shared_ptr<ModelInterface>& model) const {
     std::cout << "Choose a conversion method" << std::endl;
-    int i = 0;
+    uint i = 0;
     for (const auto& conversion : model->get_conversion_methods()) {
         std::cout << "\t\t"  << i << conversion->get_left_model_name() << "to" << conversion->get_right_model_name()
          << std::endl;

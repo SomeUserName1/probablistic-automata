@@ -5,16 +5,18 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_KIEFERSCHUETZENBERGERREDUCTION_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_KIEFERSCHUETZENBERGERREDUCTION_H
 
+#include <string>
+#include <memory>
 
 #include <ReductionMethodInterface.h>
-#include <string>
 
 class KieferSchuetzenbergerReduction : public ReductionMethodInterface {
 public:
     ~KieferSchuetzenbergerReduction() override = default;
     [[nodiscard]] std::string get_name() const override;
 
-    [[nodiscard]] RepresentationInterface reduce(RepresentationInterface anInterface) const override;
+    [[nodiscard]] std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface>&)
+    const override;
 };
 
 

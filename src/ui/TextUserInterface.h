@@ -21,7 +21,7 @@ public:
         const override;
     [[nodiscard]] IOMethod select_io_method() const override;
     [[nodiscard]] std::string file_input() const override;
-    [[nodiscard]] std::string stdin_input() const override;
+    [[nodiscard]] std::string stdin_input(std::shared_ptr<ModelInterface> &) const override;
     [[nodiscard]] std::string set_output_destination() const override;
     void display(const std::string&) const override;
 };

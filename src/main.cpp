@@ -3,8 +3,13 @@
 #include "differential_equations/DifferentialEquationModel.h"
 #include "weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.cpp"
+#include "NotImplementedException.h"
 
-bool iequals(std::string str1, std::string str2) {
+// FIXME when everything is implemented: smart pointers and references wrt functions/passing & returning
+
+bool iequals(const std::string&, const std::string&);
+
+bool iequals(const std::string& str1, const std::string& str2) {
     return str1.size() == str2.size()
         && std::equal(str1.begin(), str1.end(), str2.begin(),
                 [](auto a, auto b){
@@ -18,10 +23,10 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<ModelInterface> model;
     std::shared_ptr<ReductionMethodInterface> reductionMethod;
     UserInterface::IOMethod inputMethod;
-    UserInterface::IOMethod outputMethod;
-    std::string outputDestination;
-    std::string input;
-    std::shared_ptr<TextUserInterface> ui;
+    UserInterface::IOMethod outputMethod = UserInterface::IOMethod::Unse;
+    std::string outputDestination = "init";
+    std::string input = "init";
+    std::shared_ptr<UserInterface> ui;
 
     try {
         TCLAP::CmdLine cmd("Stochastic dynamic system reducer", ' ', "0.1");
@@ -63,7 +68,7 @@ int main(int argc, char* argv[]) {
             } else if (iequals(taskStr, "Conversion")) {
                 task = UserInterface::Conversion;
             } else {
-                throw std::invalid_argument("Specify either 'Reduction', 'Benchmark' or 'Conversion as task'");
+                throw std::invalid_argument("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task");
             }
             if (iequals(taskStr,"WA") || iequals(taskStr,"WeightedAutomatonModel")
                 || iequals(taskStr,"WeightedAutomaton")) {
@@ -79,12 +84,11 @@ int main(int argc, char* argv[]) {
             // currently only two methods are supported, one per model so ignore what the user says and just use it
             // Intentionally bad design, FIXME
             reductionMethod = model->get_reduction_methods()[0];
-
-            std::filesystem::path inputPath (inputStr);
+            std::filesystem::path inputPath(inputStr);
             if (inputPath.has_filename() && std::filesystem::exists(inputPath)) {
                 input = UserInterface::read_file(inputStr);
             }
-            std::filesystem::path outputPath (outputStr);
+            std::filesystem::path outputPath(outputStr);
             if (inputPath.has_filename()) {
                 outputDestination = outputStr;
             }
@@ -107,7 +111,7 @@ int main(int argc, char* argv[]) {
                     if (inputMethod == UserInterface::IOMethod::File) {
                         input = ui->file_input();
                     } else {
-                        input = ui->stdin_input();
+                        input = ui->stdin_input(model);
                     }
                     if (outputMethod == UserInterface::IOMethod::File) {
                         outputDestination = ui->set_output_destination();
@@ -123,9 +127,9 @@ int main(int argc, char* argv[]) {
 
         switch (task) {
             case UserInterface::Reduction: {
-                const auto representation = model->validate_model_instance(input);
-                const auto reduced_representation = reductionMethod->reduce(representation);
-                const auto summary = model->summarize_reduction(representation, reduced_representation);
+                auto representation = model->validate_model_instance(input);
+                auto reduced_representation = reductionMethod->reduce(representation);
+                auto summary = model->summarize_reduction(representation, reduced_representation);
 
                 if (outputMethod == UserInterface::IOMethod::File) {
                     ui->display_file(summary, outputDestination);

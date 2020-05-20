@@ -5,15 +5,10 @@
 
 class ReductionMethodInterface {
     public:
-        virtual ~ReductionMethodInterface() = default;;
-        [[nodiscard]] virtual std::string get_name() const {
-            throw NotImplementedException();
-        }
-
-    [[nodiscard]] virtual RepresentationInterface reduce(RepresentationInterface) const {
-            throw NotImplementedException();
-        }
+        virtual ~ReductionMethodInterface() = default;
+        [[nodiscard]] virtual std::string get_name() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface>&)
+        const = 0;
 };
-
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_REDUCTIONMETHODINTERFACE_H

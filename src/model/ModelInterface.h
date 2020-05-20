@@ -14,31 +14,18 @@
 class ModelInterface {
 
     public:
-        [[nodiscard]] virtual std::string get_name() const {
-            throw NotImplementedException();
-        }
-        [[nodiscard]] virtual RepresentationInterface validate_model_instance(const std::string&) const {
-            throw NotImplementedException();
-        }
-        [[nodiscard]] virtual std::string summarize_reduction(RepresentationInterface, RepresentationInterface)
-            const {
-            throw NotImplementedException();
-        }
-        [[nodiscard]] virtual bool is_wa() const {
-            throw NotImplementedException();
-        }
-        [[nodiscard]] virtual bool is_de() const {
-            throw NotImplementedException();
-        }
-        [[nodiscard]] virtual std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const {
-            throw NotImplementedException();
-        }
-        [[nodiscard]] virtual std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const {
-            throw NotImplementedException();
-        }
-        virtual void set_instance(std::shared_ptr<RepresentationInterface>&) {
-            throw NotImplementedException();
-        }
+        virtual ~ModelInterface() = default;
+        [[nodiscard]] virtual std::string get_name() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> validate_model_instance(const std::string&)
+        const = 0;
+        [[nodiscard]] virtual std::string summarize_reduction(std::shared_ptr<RepresentationInterface>&,
+                std::shared_ptr<RepresentationInterface>&)
+            const = 0;
+        virtual std::shared_ptr<RepresentationInterface> get_representation() const = 0;
+        [[nodiscard]] virtual std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const = 0;
+        [[nodiscard]] virtual std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const
+        = 0;
+        virtual void set_instance(std::shared_ptr<RepresentationInterface>&) = 0;
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_MODELINTERFACE_H
