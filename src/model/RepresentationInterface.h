@@ -3,7 +3,7 @@
 
 class RepresentationInterface {
     public:
-        virtual ~RepresentationInterface() = 0;
+        virtual ~RepresentationInterface() = default;
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_MODELREPRESENTATIONINTERFACE_H

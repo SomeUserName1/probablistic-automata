@@ -21,12 +21,9 @@ class ModelInterface {
         [[nodiscard]] virtual std::string summarize_reduction(std::shared_ptr<RepresentationInterface>&,
                 std::shared_ptr<RepresentationInterface>&)
             const = 0;
-        virtual std::shared_ptr<RepresentationInterface> get_representation() const = 0;
         [[nodiscard]] virtual std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const = 0;
         [[nodiscard]] virtual std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const
         = 0;
-        virtual void set_instance(std::shared_ptr<RepresentationInterface>&) = 0;
-
         virtual std::string get_representation_description() const = 0;
 };
 

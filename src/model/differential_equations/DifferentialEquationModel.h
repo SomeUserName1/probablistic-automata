@@ -6,6 +6,7 @@
 
 class DifferentialEquationModel : public ModelInterface {
     public:
+        DifferentialEquationModel() = default;
         ~DifferentialEquationModel() override = default;
 
         std::string get_name() const override;
@@ -15,13 +16,11 @@ class DifferentialEquationModel : public ModelInterface {
         std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &ptr,
                                         std::shared_ptr<RepresentationInterface> &sharedPtr) const override;
 
-        std::shared_ptr<RepresentationInterface> get_representation() const override;
-
         std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const override;
 
         std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const override;
 
-        void set_instance(std::shared_ptr<RepresentationInterface> &ptr) override;
+        std::string get_representation_description() const override;
 };
 
 

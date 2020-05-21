@@ -29,8 +29,12 @@ INCLUDE_DIRECTORIES(src/model/differential_equations)
 
 
 ADD_LIBRARY(ui          src/ui/TextUserInterface.cpp)
+
 ADD_LIBRARY(models      src/model/differential_equations/DifferentialEquationModel.cpp
-                        src/model/weighted_automata/WeightedAutomatonModel.cpp src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp src/model/weighted_automata/KieferSchuetzenbergerReduction.h src/model/weighted_automata/WeightedAutomatonInstance.h)
+                        src/model/weighted_automata/WeightedAutomatonModel.cpp
+                        src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp
+                        src/model/weighted_automata/WeightedAutomatonInstance.cpp)
+
 ADD_LIBRARY(util src/NotImplementedException.h src/NotImplementedException.cpp)
 
 

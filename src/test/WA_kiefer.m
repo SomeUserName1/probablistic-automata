@@ -13,9 +13,9 @@ function WA_kiefer
   f3 = [2 7 9 10;   1 11 2 6];
   f4 = [4 5 2 10;   5 9 5 5 ];
  
-  % Forward reduction
+  % Backward reduction
   [alpha_arrow, mu_a_arrow, mu_b_arrow, eta_arrow] = ...
-      ForwardSchuetzenbergerConstruction(alpha, mu_a, mu_b, eta, ...
+      BackwardSchuetzenbergerConstruction(alpha, mu_a, mu_b, eta, ...
         f1,f2, f3, f4);
     
   probe_and_display(alpha_arrow, mu_a_arrow, mu_b_arrow, eta_arrow);
@@ -25,9 +25,9 @@ function WA_kiefer
   b2 = [8 1 8;   7 8 2];
   b3 = [1 6 5;   9 2 1];
     
-  % Backwards reduction
+  % Forward reduction
    [alpha_arrow2, mu_a_arrow2, mu_b_arrow2, eta_arrow2] = ...
-      BackwardSchuetzenbergerConstruction(alpha_arrow, mu_a_arrow, ...
+      ForwardSchuetzenbergerConstruction(alpha_arrow, mu_a_arrow, ...
         mu_b_arrow, eta_arrow, b1, b2, b3);  
     
   probe_and_display(alpha_arrow2, mu_a_arrow2, mu_b_arrow2, eta_arrow2);

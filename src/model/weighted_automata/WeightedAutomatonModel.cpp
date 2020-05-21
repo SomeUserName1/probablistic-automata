@@ -2,6 +2,7 @@
 
 #include "KieferSchuetzenbergerReduction.h"
 #include "WeightedAutomatonInstance.h"
+#include "../../NotImplementedException.h"
 
 std::string WeightedAutomatonModel::get_name() const {
     return "Weighted Automaton Model";
@@ -13,9 +14,9 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
     std::string::size_type prev = 0;
     int states = -1;
     int characters = -1;
-    auto alpha = std::make_shared<Eigen::Matrix<float, 1, Eigen::Dynamic>>();
-    std::vector<std::shared_ptr<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>>> mu;
-    auto eta = std::make_shared<Eigen::Matrix<float, Eigen::Dynamic, 1>>();
+    auto alpha = std::make_shared<Eigen::RowVectorXf>();
+    std::vector<std::shared_ptr<Eigen::MatrixXf>> mu;
+    auto eta = std::make_shared<Eigen::VectorXf>();
 
     while ((pos = str.find('\n', prev)) != std::string::npos) {
         line = str.substr(prev, pos - prev);
@@ -44,20 +45,30 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
                 (*alpha)(0, i) = std::get<0>(digitVectorTuple);
                 vector = std::get<1>(digitVectorTuple);
             }
+            if (alpha->cols() != states) {
+                throw std::invalid_argument("The initial vector alpha needs to have as much columns as states in the "
+                                            "Automaton!");
+            }
         } else if (line.starts_with("mu")) {
             if (states == -1) {
                 throw std::invalid_argument("Please specify the number of states first");
             }
             std::tuple<float, std::string> digitVectorTuple;
+            std::shared_ptr<Eigen::MatrixXf> muX;
 
             std::string vector = line.substr(line.find("mu="), line.size() - 1);
             for(int i = 0; i < states; i++) {
                 for (int j = 0; j < states; j++) {
                     digitVectorTuple = extract_one_digit(vector);
-                    (*alpha)(i, j) = std::get<0>(digitVectorTuple);
+                    (*muX)(i, j) = std::get<0>(digitVectorTuple);
                     vector = std::get<1>(digitVectorTuple);
                 }
             }
+            if (muX->rows() != muX->cols() || muX->rows() != states) {
+                throw std::invalid_argument("The transition matrices need to be square matrices with one row/column for "
+                                            "each state!");
+            }
+            mu.push_back(muX);
         } else if (line.starts_with("eta")) {
             if (states == -1) {
                 throw std::invalid_argument("Please specify the number of states first");
@@ -70,11 +81,20 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
                 (*eta)(i, 0) = std::get<0>(digitVectorTuple);
                 vector = std::get<1>(digitVectorTuple);
             }
+            if (eta->rows() != states) {
+                throw std::invalid_argument("The final vector eta needs to have as much rows as states in the "
+                                            "Automaton!");
+            }
         } else {
             throw std::invalid_argument("The automaton you specified does not conform with the expected input format!");
         }
         prev = pos + 2;
     }
+    if ((int)mu.size() != characters) {
+        throw std::invalid_argument("You must specify one transition matrix muX for each character in the input "
+                                    "alphabet!");
+    }
+
     return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
 }
 
@@ -94,7 +114,7 @@ std::tuple<float, std::string> WeightedAutomatonModel::extract_one_digit(std::st
 
 std::string WeightedAutomatonModel::summarize_reduction(std::shared_ptr<RepresentationInterface> &anInterface,
         std::shared_ptr<RepresentationInterface> &representationInterface) const {
-    return ModelInterface::summarize_reduction(anInterface, representationInterface);
+    throw NotImplementedException();
 }
 
 std::vector<std::shared_ptr<ReductionMethodInterface>> WeightedAutomatonModel::get_reduction_methods() const {
