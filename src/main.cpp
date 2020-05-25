@@ -3,9 +3,43 @@
 #include "differential_equations/DifferentialEquationModel.h"
 #include "weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.cpp"
-#include "NotImplementedException.h"
 
 // FIXME when everything is implemented: smart pointers and references wrt functions/passing & returning
+// FIXME see whats inlineable
+// TODO use sparse matrices and edge lists
+// TODO mln have no initial state & no final state
+
+// Example
+// 1 1 2 1
+// layer one, nodes one and two, weight 1
+
+
+// Lifting to create benchmarks:
+//  start with a minimal automata
+// copy each state
+// careful state s with a/2
+// if split this state distribute weight with weight mass preservance
+
+// updates & presentation on Stage 1:
+//     Not full presentation but starting from last presentation
+//  to give a high level intro + example + pseudo code & co,
+//  12 June;
+// Intro & motivation / outline on project
+// done so far
+// overview of the algorithm (paper)
+// implementation
+// how it relates to the next steps (preview/teaser)
+
+// Given current code stage
+// Possible to implement equivalnce in how many days?
+// Given 2 automata for eq., piece of code to generate subtraction automata
+// code for equivalence
+
+// TODO equivalence
+// TODO Lifting/Benchmark generation
+// TODO presentation on stage 1
+
+
 
 bool iequals(const std::string&, const std::string&);
 
@@ -31,9 +65,9 @@ int main(int argc, char* argv[]) {
     try {
         TCLAP::CmdLine cmd("Stochastic dynamic system reducer", ' ', "0.1");
 
-        TCLAP::SwitchArg tuiSwitch("tui","TextUserInterface",
+        TCLAP::SwitchArg tuiSwitch("T","TextUserInterface",
                 "Use the text user interface as front end", false);
-        TCLAP::SwitchArg guiSwitch("gui","GraphicUserInterface",
+        TCLAP::SwitchArg guiSwitch("G","GraphicUserInterface",
                 "Use the graphic user interface as front end", false);
 
         TCLAP::ValueArg<std::string> taskArg("t","task","Task to execute",
@@ -50,8 +84,10 @@ int main(int argc, char* argv[]) {
         for (auto arg : {&taskArg, &modelArg, &methodArg, &inputArg, &outputArg} ) {
             cmd.add(arg);
         }
-        cmd.xorAdd(tuiSwitch, guiSwitch);
+        cmd.add(tuiSwitch);
+        cmd.add(guiSwitch);
         cmd.parse(argc, argv);
+
 
         std::string taskStr = taskArg.getValue();
         std::string modelStr = modelArg.getValue();
@@ -70,27 +106,28 @@ int main(int argc, char* argv[]) {
             } else {
                 throw std::invalid_argument("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task");
             }
-            if (iequals(taskStr,"WA") || iequals(taskStr,"WeightedAutomatonModel")
-                || iequals(taskStr,"WeightedAutomaton")) {
+            if (iequals(modelStr,"WA") || iequals(modelStr,"WeightedAutomatonModel")
+                || iequals(modelStr,"WeightedAutomaton")) {
                 model = std::make_shared<WeightedAutomatonModel>();
-            } else if (iequals(taskStr,"DE") || iequals(taskStr,"DifferentialEquationModel")
-                || iequals(taskStr,"Differential Equation")) {
+            } else if (iequals(modelStr,"DE") || iequals(modelStr,"DifferentialEquationModel")
+                || iequals(modelStr,"Differential Equation")) {
                 model = std::make_shared<DifferentialEquationModel>();
             } else {
                 throw std::invalid_argument("Specify either 'WA', 'DE', 'WeightedAutomatonModel', "
                                             "'DifferentialEquationModel', 'WeightedAutomaton' or 'DifferentialEquation'"
-                                            " as model'");
+                                            " as model', you specified " + taskStr);
             }
             // currently only two methods are supported, one per model so ignore what the user says and just use it
             // Intentionally bad design, FIXME
             reductionMethod = model->get_reduction_methods()[0];
-            std::filesystem::path inputPath(inputStr);
-            if (inputPath.has_filename() && std::filesystem::exists(inputPath)) {
-                input = UserInterface::read_file(inputStr);
-            }
+
+            input = UserInterface::read_file(inputStr);
+
             std::filesystem::path outputPath(outputStr);
-            if (inputPath.has_filename()) {
+            if (outputPath.has_filename()) {
                 outputDestination = outputStr;
+            } else {
+                throw std::invalid_argument("Please specify a path with a file name to write the results to!");
             }
         } else {
             if (argc == 0 || tuiSwitch) {
@@ -105,8 +142,8 @@ int main(int argc, char* argv[]) {
                             std::make_shared<DifferentialEquationModel>()};
                     model = ui->select_model(models);
                     reductionMethod = ui->select_reduction_method(model);
-                    inputMethod = ui->select_io_method();
-                    outputMethod = ui->select_io_method();
+                    inputMethod = ui->select_io_method(true);
+                    outputMethod = ui->select_io_method(false);
 
                     if (inputMethod == UserInterface::IOMethod::File) {
                         input = ui->file_input();

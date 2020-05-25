@@ -5,7 +5,7 @@ WeightedAutomatonInstance::WeightedAutomatonInstance(int states, int characters,
                                                      std::shared_ptr<Eigen::RowVectorXf> alpha,
                                                      std::vector<std::shared_ptr<Eigen::MatrixXf>> mu,
                                                      std::shared_ptr<Eigen::VectorXf> eta)
-    : states(states), noInputCharacters(characters), alpha(std::move(alpha)), mu(std::move(mu)), eta(std::move(eta)) {}
+     : states(states), noInputCharacters(characters), alpha(std::move(alpha)), mu(std::move(mu)), eta(std::move(eta)) {}
 
 int WeightedAutomatonInstance::get_states() const {
     return this->states;

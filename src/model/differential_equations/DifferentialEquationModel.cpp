@@ -12,7 +12,7 @@ std::string DifferentialEquationModel::summarize_reduction(std::shared_ptr<Repre
 }
 
 std::string DifferentialEquationModel::get_name() const {
-    throw NotImplementedException();
+    return "Differential Equation Model";
 }
 
 std::vector<std::shared_ptr<ReductionMethodInterface>> DifferentialEquationModel::get_reduction_methods() const {

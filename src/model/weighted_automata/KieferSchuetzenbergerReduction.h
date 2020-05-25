@@ -38,10 +38,10 @@ class KieferSchuetzenbergerReduction : public ReductionMethodInterface {
 
         int get_word_factor(std::vector<uint> word, Eigen::Matrix<int, -1, -1> randVector) const;
 
-        std::vector<std::tuple<Eigen::RowVectorXf, std::vector<uint>>> generate_words_forwards(
+        std::vector<std::tuple<std::shared_ptr<Eigen::RowVectorXf>, std::vector<uint>>> generate_words_forwards(
                 std::shared_ptr<WeightedAutomatonInstance> &A, int k) const;
 
-        std::vector<std::tuple<Eigen::VectorXf, std::vector<uint>>> generate_words_backwards(
+        std::vector<std::tuple<std::shared_ptr<Eigen::VectorXf>, std::vector<uint>>> generate_words_backwards(
                 std::shared_ptr<WeightedAutomatonInstance> &A, int k) const;
 
         std::vector<Eigen::RowVectorXf> calculate_rho_forward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K)
