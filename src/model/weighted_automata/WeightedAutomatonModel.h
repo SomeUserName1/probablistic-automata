@@ -3,10 +3,9 @@
 
 #include <utility>
 
-#include "ModelInterface.h"
+#include "../ModelInterface.h"
 #include "KieferSchuetzenbergerReduction.h"
 #include "WeightedAutomatonInstance.h"
-#include "../../NotImplementedException.h"
 
 class WeightedAutomatonModel : public ModelInterface {
 private:

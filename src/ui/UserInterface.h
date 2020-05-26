@@ -5,7 +5,7 @@
 #include <ios>
 #include <stdexcept>
 
-#include "ModelInterface.h"
+#include "../model/ModelInterface.h"
 
 
 class UserInterface {

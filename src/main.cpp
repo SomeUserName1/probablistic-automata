@@ -1,7 +1,7 @@
 #include <tclap/CmdLine.h>
 
-#include "differential_equations/DifferentialEquationModel.h"
-#include "weighted_automata/WeightedAutomatonModel.h"
+#include "model/differential_equations/DifferentialEquationModel.h"
+#include "model/weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.cpp"
 
 // FIXME when everything is implemented: smart pointers and references wrt functions/passing & returning
@@ -130,9 +130,8 @@ int main(int argc, char* argv[]) {
                 throw std::invalid_argument("Please specify a path with a file name to write the results to!");
             }
         } else {
-            if (argc == 0 || tuiSwitch) {
-                ui = std::make_shared<TextUserInterface>(TextUserInterface());
-            } else if (guiSwitch) {
+            ui = std::make_shared<TextUserInterface>();
+            if (guiSwitch) {
                 throw NotImplementedException();
             }
             task = ui->select_task();

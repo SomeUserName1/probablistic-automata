@@ -1,0 +1,1 @@
+-t "Reduction" -m "WA" -r "KieferSchützenberger" -i "../src/test/test_input.txt" -o "out.txt"

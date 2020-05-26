@@ -1,7 +1,3 @@
-//
-// Created by someusername on 19.05.20.
-//
-
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_KIEFERSCHUETZENBERGERREDUCTION_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_KIEFERSCHUETZENBERGERREDUCTION_H
 
@@ -10,7 +6,7 @@
 #include <iostream>
 #include <random>
 
-#include "ReductionMethodInterface.h"
+#include "../ReductionMethodInterface.h"
 #include "WeightedAutomatonInstance.h"
 
 class KieferSchuetzenbergerReduction : public ReductionMethodInterface {

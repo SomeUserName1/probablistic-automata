@@ -2,7 +2,8 @@
 #define STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
 
 
-#include <ModelInterface.h>
+#include "../ModelInterface.h"
+#include "../RepresentationInterface.h"
 
 class DifferentialEquationModel : public ModelInterface {
     public:

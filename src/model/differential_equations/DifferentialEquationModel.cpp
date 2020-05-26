@@ -1,5 +1,4 @@
 #include "DifferentialEquationModel.h"
-#include "../../NotImplementedException.h"
 
 std::shared_ptr<RepresentationInterface>
 DifferentialEquationModel::validate_model_instance(const std::string &) const {

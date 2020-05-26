@@ -22,33 +22,34 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::backw
     auto rhoVectors = calculate_rho_backward_vectors(A, K);
     Eigen::MatrixXf rankTemp(A->get_states(), 1 + rhoVectors.size());
 
-    rankTemp << *(A->get_eta());
+    rankTemp.col(0) = *(A->get_eta());
+    int i = 1;
     for (auto rhoVector : rhoVectors) {
-        rankTemp << rhoVector;
+        rankTemp.col(i) = rhoVector;
     }
     Eigen::ColPivHouseholderQR<Eigen::Ref<Eigen::MatrixXf>> qr(rankTemp);
     int rank = qr.rank();
 
     Eigen::MatrixXf backwardBasis(A->get_states(), rank);
-    backwardBasis << *(A->get_eta());
-    for (int i = 0; i < rank - 1; i++) {
-        backwardBasis << rhoVectors[i];
+    backwardBasis.col(0) = *(A->get_eta());
+    for (i = 1; i < rank - 1; i++) {
+        backwardBasis.col(i) = rhoVectors[i - 1];
     }
-    auto alphaArrow = std::make_shared<Eigen::RowVectorXf>(*(A->get_alpha()) * backwardBasis);
+    auto alphaArrow = std::make_shared<Eigen::RowVectorXf>(rank);
+    *alphaArrow = *(A->get_alpha()) * backwardBasis;
     auto etaArrow = std::make_shared<Eigen::VectorXf>(Eigen::MatrixXf::Zero(rank, 1));
-    (*etaArrow)(0,0) = 1;
+    (*etaArrow)(0, 0) = 1;
     std::vector<std::shared_ptr<Eigen::MatrixXf>> muArrow = {};
 
-
+    Eigen::ColPivHouseholderQR<Eigen::MatrixXf> householderX(rank, rank);
     for (auto muX : A->get_mu()) {
-        // x*A = b <=> A.transpose() * z = b.transpose(); x = z.transpose()
-        // => x = (housholder(A.transpose()).solve(b.transpose())).transpose()
-        Eigen::ColPivHouseholderQR<Eigen::MatrixXf> householderX((*(muX) * backwardBasis).transpose());
-        auto muXArrow = std::make_shared<Eigen::MatrixXf>((householderX.solve(backwardBasis.transpose())).transpose());
+        auto muXArrow = std::make_shared<Eigen::MatrixXf>(rank, rank);
+        householderX.compute(backwardBasis);
+        *muX = householderX.solve(*muX * backwardBasis);
         muArrow.push_back(muXArrow);
     }
     return std::make_shared<WeightedAutomatonInstance>(rank, A->get_number_input_characters(), alphaArrow, muArrow,
-            etaArrow);
+                                                       etaArrow);
 }
 
 std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forward_reduction(
@@ -56,27 +57,34 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forwa
     auto rhoVectors = calculate_rho_forward_vectors(A, K);
     Eigen::MatrixXf rankTemp(1 + rhoVectors.size(), A->get_states());
 
-    rankTemp << *(A->get_alpha());
+    rankTemp.row(0) = *(A->get_alpha());
+    int i = 1;
     for (auto rhoVector : rhoVectors) {
-        rankTemp << rhoVector;
+        rankTemp.row(i) = rhoVector;
+        i++;
     }
     Eigen::ColPivHouseholderQR<Eigen::Ref<Eigen::MatrixXf>> qr(rankTemp);
     int rank = qr.rank();
 
     Eigen::MatrixXf forwardBasis(rank, A->get_states());
-    forwardBasis << *(A->get_alpha());
-    for (int i = 0; i < rank - 1; i++) {
-        forwardBasis << rhoVectors[i];
+    forwardBasis.row(0) = *(A->get_alpha());
+    for (i = 1; i < rank; i++) {
+        forwardBasis.row(i) = rhoVectors[i - 1];
     }
-    auto etaArrow = std::make_shared<Eigen::VectorXf>(forwardBasis * *(A->get_eta()));
+
+    auto etaArrow = std::make_shared<Eigen::VectorXf>(rank);
+    *etaArrow = forwardBasis * *(A->get_eta());
     auto alphaArrow = std::make_shared<Eigen::RowVectorXf>(Eigen::MatrixXf::Zero(1, rank));
-    (*alphaArrow)(0,0) = 1;
+    (*alphaArrow)(0, 0) = 1;
     std::vector<std::shared_ptr<Eigen::MatrixXf>> muArrow = {};
 
-
+    Eigen::ColPivHouseholderQR<Eigen::MatrixXf> householderX(rank, rank);
     for (auto muX : A->get_mu()) {
-        Eigen::ColPivHouseholderQR<Eigen::MatrixXf> householderX(forwardBasis * *(muX));
-        auto muXArrow = std::make_shared<Eigen::MatrixXf>(householderX.solve(forwardBasis));
+        auto muXArrow = std::make_shared<Eigen::MatrixXf>(rank, rank);
+        // x*A = b <=> A.transpose() * z = b.transpose(); x = z.transpose()
+        // => x = (housholder(A.transpose()).solve(b.transpose())).transpose()
+        householderX.compute(forwardBasis.transpose());
+        *muXArrow = (householderX.solve((forwardBasis * *muX).transpose())).transpose();
         muArrow.push_back(muXArrow);
     }
     return std::make_shared<WeightedAutomatonInstance>(rank, A->get_number_input_characters(), alphaArrow, muArrow,
@@ -94,7 +102,7 @@ KieferSchuetzenbergerReduction::calculate_rho_backward_vectors(std::shared_ptr<W
     for (auto randomVector : randomVectors) {
         Eigen::VectorXf vI = Eigen::MatrixXf::Zero(A->get_states(), 1);
         for (auto word : sigmaK) {
-             vI = vI + (*std::get<0>(word) * get_word_factor(std::get<1>(word), randomVector));
+            vI = vI + (*std::get<0>(word) * get_word_factor(std::get<1>(word), randomVector));
         }
         result.push_back(vI.transpose());
     }
@@ -103,7 +111,7 @@ KieferSchuetzenbergerReduction::calculate_rho_backward_vectors(std::shared_ptr<W
 
 std::vector<Eigen::RowVectorXf>
 KieferSchuetzenbergerReduction::calculate_rho_forward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                                               int K) const {
+                                                              int K) const {
     auto randomVectors = generate_random_vectors(A, K);
     auto sigmaK = generate_words_forwards(A, A->get_states());
     std::vector<Eigen::RowVectorXf> result = {};
@@ -118,28 +126,35 @@ KieferSchuetzenbergerReduction::calculate_rho_forward_vectors(std::shared_ptr<We
     return result;
 }
 
+// FIXME free after use ?! vector frees pointer to matrix but why?
 std::vector<std::tuple<std::shared_ptr<Eigen::VectorXf>, std::vector<uint>>>
 KieferSchuetzenbergerReduction::generate_words_backwards(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                               int k) const {
-    std::vector<std::tuple<std::shared_ptr<Eigen::VectorXf>,std::vector<uint>>> result;
+                                                         int k) const {
+    std::vector<std::tuple<std::shared_ptr<Eigen::VectorXf>, std::vector<uint>>> result;
     std::vector<uint> temp;
     if (k == 1) {
         result = {};
         for (uint i = 0; i < A->get_mu().size(); i++) {
-            auto resultVect = std::make_shared<Eigen::VectorXf>(*(A->get_mu()[i]) * *(A->get_eta()));
+            auto resultVect = std::make_shared<Eigen::VectorXf>(A->get_states());
+            *resultVect = *(A->get_mu()[i]) * *(A->get_eta());
             if (!resultVect->isZero()) {
-                result.push_back({resultVect, {i}});
+                temp = {i};
+                result.emplace_back(resultVect, temp);
             }
+
         }
     } else {
         result = generate_words_backwards(A, k - 1);
         for (auto &element : result) {
-            for (uint i = 0; i < A->get_mu().size(); i++) {
-                auto resultVect = std::make_shared<Eigen::VectorXf>(*(A->get_mu()[i]) * *(std::get<0>(element)));
-                if (!resultVect->isZero()) {
-                    temp = std::get<1>(element);
-                    temp.push_back(i);
-                    result.push_back({resultVect, temp});
+            if ((int) std::get<1>(element).size() == k - 1) {
+                for (uint i = 0; i < A->get_mu().size(); i++) {
+                    auto resultVect = std::make_shared<Eigen::VectorXf>(A->get_states());
+                    *resultVect = *(A->get_mu()[i]) * *(std::get<0>(element));
+                    if (!resultVect->isZero()) {
+                        temp = std::get<1>(element);
+                        temp.push_back(i);
+                        result.emplace_back(resultVect, temp);
+                    }
                 }
             }
         }
@@ -149,26 +164,31 @@ KieferSchuetzenbergerReduction::generate_words_backwards(std::shared_ptr<Weighte
 
 std::vector<std::tuple<std::shared_ptr<Eigen::RowVectorXf>, std::vector<uint>>>
 KieferSchuetzenbergerReduction::generate_words_forwards(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                                          int k) const {
-    std::vector<std::tuple<std::shared_ptr<Eigen::RowVectorXf>,std::vector<uint>>> result;
+                                                        int k) const {
+    std::vector<std::tuple<std::shared_ptr<Eigen::RowVectorXf>, std::vector<uint>>> result;
     std::vector<uint> temp;
     if (k == 1) {
         result = {};
         for (uint i = 0; i < A->get_mu().size(); i++) {
-            auto resultVect = std::make_shared<Eigen::RowVectorXf>(*(A->get_alpha()) * *(A->get_mu()[i]));
+            auto resultVect = std::make_shared<Eigen::RowVectorXf>(A->get_states());
+            *resultVect = *(A->get_alpha()) * *(A->get_mu()[i]);
             if (!resultVect->isZero()) {
-                result.push_back({resultVect, {i}});
+                temp = {i};
+                result.emplace_back(resultVect, temp);
             }
         }
     } else {
         result = generate_words_forwards(A, k - 1);
         for (auto &element : result) {
-            for (uint i = 0; i < A->get_mu().size(); i++) {
-                auto resultVect = std::make_shared<Eigen::RowVectorXf>(*(std::get<0>(element)) * *(A->get_mu()[i]));
-                if (!resultVect->isZero()) {
-                    temp = std::get<1>(element);
-                    temp.push_back(i);
-                    result.push_back({resultVect, temp});
+            if ((int) std::get<1>(element).size() == k - 1) {
+                for (uint i = 0; i < A->get_mu().size(); i++) {
+                    auto resultVect = std::make_shared<Eigen::RowVectorXf>(A->get_states());
+                    *resultVect = *(std::get<0>(element)) * *(A->get_mu()[i]);
+                    if (!resultVect->isZero()) {
+                        temp = std::get<1>(element);
+                        temp.push_back(i);
+                        result.emplace_back(resultVect, temp);
+                    }
                 }
             }
         }
@@ -197,7 +217,7 @@ const {
 }
 
 int KieferSchuetzenbergerReduction::get_word_factor(std::vector<uint> word, Eigen::MatrixXi randVector) const {
-    int result = 0;
+    int result = 1;
     for (uint i = 0; i < word.size(); i++) {
         result *= randVector(word[i], i);
     }
