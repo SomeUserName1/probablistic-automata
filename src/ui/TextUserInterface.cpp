@@ -11,10 +11,10 @@ UserInterface::Task TextUserInterface::select_task() const {
               << "\t\t 3. Convert an example from one model to another" << std::endl;
 
     do {
-        std::string input;
+        std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1 ||
-            (!(input == "1") && !(input == "2") && !(input == "3"))) {
+            (input != "1" && input != "2" && input != "3")) {
             std::cout << "Please enter 1, 2 or 3!";
             continue;
         } else {
@@ -33,7 +33,7 @@ std::shared_ptr<ModelInterface> TextUserInterface::select_model(const std::vecto
         ++i;
     }
     while(true) {
-        std::string input;
+        std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1) {
             std::cout << "Please enter 0 or 1!";
@@ -65,10 +65,10 @@ UserInterface::IOMethod TextUserInterface::select_io_method(bool in) const {
     }
 
     do {
-        std::string input;
+        std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1 ||
-            (!(input == "1") && !(input == "2"))) {
+            (input != "1" && input != "2")) {
             std::cout << "Please enter 1, 2 or 3!";
             continue;
         } else {
@@ -135,7 +135,7 @@ std::string TextUserInterface::set_output_destination() const {
 }
 
 void TextUserInterface::display(const std::string& output) const {
-    std::cout << output;
+    std::cout << output << std::endl;
 }
 
 
@@ -149,7 +149,7 @@ std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_me
         ++i;
     }
     while(true) {
-        std::string input;
+        std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1) {
             std::cout << "Please enter 1 or 2!";
@@ -173,7 +173,7 @@ std::shared_ptr<ConversionMethodInterface> TextUserInterface::select_conversion_
         ++i;
     }
     while(true) {
-        std::string input;
+        std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1) {
             std::cout << "Please enter 1 or 2!";

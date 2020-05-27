@@ -2,7 +2,7 @@
 
 #include "model/differential_equations/DifferentialEquationModel.h"
 #include "model/weighted_automata/WeightedAutomatonModel.h"
-#include "ui/TextUserInterface.cpp"
+#include "ui/TextUserInterface.h"
 
 // FIXME when everything is implemented: smart pointers and references wrt functions/passing & returning
 // FIXME see whats inlineable
@@ -17,21 +17,19 @@
 // Lifting to create benchmarks:
 //  start with a minimal automata
 // copy each state
-// careful state s with a/2
+// careful: state s with a/2
 // if split this state distribute weight with weight mass preservance
 
 // updates & presentation on Stage 1:
-//     Not full presentation but starting from last presentation
-//  to give a high level intro + example + pseudo code & co,
-//  12 June;
-// Intro & motivation / outline on project
+//  12 June presentation date
+// start from last presentation to give a high level Intro & motivation / outline on project
 // done so far
-// overview of the algorithm (paper)
+// overview of the algorithm (paper) + example + pseudo code
 // implementation
 // how it relates to the next steps (preview/teaser)
 
 // Given current code stage
-// Possible to implement equivalnce in how many days?
+// Possible to implement equivalence in how many days?
 // Given 2 automata for eq., piece of code to generate subtraction automata
 // code for equivalence
 
@@ -118,7 +116,7 @@ int main(int argc, char* argv[]) {
                                             " as model', you specified " + taskStr);
             }
             // currently only two methods are supported, one per model so ignore what the user says and just use it
-            // Intentionally bad design, FIXME
+            // Intentionally bad design, sufficient for now
             reductionMethod = model->get_reduction_methods()[0];
 
             input = UserInterface::read_file(inputStr);
@@ -129,6 +127,9 @@ int main(int argc, char* argv[]) {
             } else {
                 throw std::invalid_argument("Please specify a path with a file name to write the results to!");
             }
+
+            inputMethod = UserInterface::IOMethod::File;
+            outputMethod = UserInterface::IOMethod::File;
         } else {
             ui = std::make_shared<TextUserInterface>();
             if (guiSwitch) {
@@ -165,6 +166,7 @@ int main(int argc, char* argv[]) {
             case UserInterface::Reduction: {
                 auto representation = model->validate_model_instance(input);
                 auto reduced_representation = reductionMethod->reduce(representation);
+                std::cout << "Finished reduction" << std::endl;
                 auto summary = model->summarize_reduction(representation, reduced_representation);
 
                 if (outputMethod == UserInterface::IOMethod::File) {

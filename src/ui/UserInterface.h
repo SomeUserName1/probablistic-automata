@@ -41,6 +41,7 @@ class UserInterface {
             // TODO take care of creating the directories if non-existent
             std::ofstream outfile(file);
             outfile << output;
+            std::cout << "Output was written to " << file << std::endl;
         }
         virtual void display(const std::string&) const {
             throw std::logic_error("Please use a concrete implementation of this interface!");
@@ -58,7 +59,7 @@ class UserInterface {
             if (in.fail()) {
                 throw std::invalid_argument("Failed to open input stream");
             }
-            std::string contents;
+            std::string contents("");
             in.seekg(0, std::ios::end);
             contents.resize(static_cast<unsigned long>(in.tellg()));
             in.seekg(0, std::ios::beg);

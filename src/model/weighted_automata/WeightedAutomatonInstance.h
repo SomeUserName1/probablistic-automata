@@ -5,8 +5,10 @@
 #include <vector>
 #include <Eigen/Eigen>
 #include <memory>
+#include <iostream>
+#include <sstream>
 
-#include <RepresentationInterface.h>
+#include "../RepresentationInterface.h"
 
 class WeightedAutomatonInstance : public RepresentationInterface {
     private:
@@ -32,6 +34,8 @@ class WeightedAutomatonInstance : public RepresentationInterface {
         [[nodiscard]] const std::vector<std::shared_ptr<Eigen::MatrixXf>> &get_mu() const;
 
         [[nodiscard]] const std::shared_ptr<Eigen::VectorXf> &get_eta() const;
+
+        const std::string pretty_print() const override;
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_WEIGHTEDAUTOMATONINSTANCE_H

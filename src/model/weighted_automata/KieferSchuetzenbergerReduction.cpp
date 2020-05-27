@@ -11,7 +11,7 @@ std::shared_ptr<RepresentationInterface> KieferSchuetzenbergerReduction::reduce(
 
 std::shared_ptr<RepresentationInterface> KieferSchuetzenbergerReduction::reduce(
         std::shared_ptr<RepresentationInterface> &waInstance, int K) const {
-    std::shared_ptr<WeightedAutomatonInstance> A = std::dynamic_pointer_cast<WeightedAutomatonInstance>(waInstance);
+    auto A = std::dynamic_pointer_cast<WeightedAutomatonInstance>(waInstance);
     std::shared_ptr<WeightedAutomatonInstance> minA = forward_reduction(A, K);
     minA = backward_reduction(minA, K);
     return minA;
@@ -42,10 +42,11 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::backw
     std::vector<std::shared_ptr<Eigen::MatrixXf>> muArrow = {};
 
     Eigen::ColPivHouseholderQR<Eigen::MatrixXf> householderX(rank, rank);
+    householderX.setThreshold(0.0001);
     for (auto muX : A->get_mu()) {
         auto muXArrow = std::make_shared<Eigen::MatrixXf>(rank, rank);
         householderX.compute(backwardBasis);
-        *muX = householderX.solve(*muX * backwardBasis);
+        *muXArrow = householderX.solve(*muX * backwardBasis);
         muArrow.push_back(muXArrow);
     }
     return std::make_shared<WeightedAutomatonInstance>(rank, A->get_number_input_characters(), alphaArrow, muArrow,
@@ -79,6 +80,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forwa
     std::vector<std::shared_ptr<Eigen::MatrixXf>> muArrow = {};
 
     Eigen::ColPivHouseholderQR<Eigen::MatrixXf> householderX(rank, rank);
+    householderX.setThreshold(0.0001);
     for (auto muX : A->get_mu()) {
         auto muXArrow = std::make_shared<Eigen::MatrixXf>(rank, rank);
         // x*A = b <=> A.transpose() * z = b.transpose(); x = z.transpose()
@@ -126,7 +128,6 @@ KieferSchuetzenbergerReduction::calculate_rho_forward_vectors(std::shared_ptr<We
     return result;
 }
 
-// FIXME free after use ?! vector frees pointer to matrix but why?
 std::vector<std::tuple<std::shared_ptr<Eigen::VectorXf>, std::vector<uint>>>
 KieferSchuetzenbergerReduction::generate_words_backwards(std::shared_ptr<WeightedAutomatonInstance> &A,
                                                          int k) const {
@@ -145,7 +146,8 @@ KieferSchuetzenbergerReduction::generate_words_backwards(std::shared_ptr<Weighte
         }
     } else {
         result = generate_words_backwards(A, k - 1);
-        for (auto &element : result) {
+        auto iteratorCopy(result);
+        for (auto &element : iteratorCopy) {
             if ((int) std::get<1>(element).size() == k - 1) {
                 for (uint i = 0; i < A->get_mu().size(); i++) {
                     auto resultVect = std::make_shared<Eigen::VectorXf>(A->get_states());
@@ -179,7 +181,8 @@ KieferSchuetzenbergerReduction::generate_words_forwards(std::shared_ptr<Weighted
         }
     } else {
         result = generate_words_forwards(A, k - 1);
-        for (auto &element : result) {
+        auto iteratorCopy(result);
+        for (auto &element : iteratorCopy) {
             if ((int) std::get<1>(element).size() == k - 1) {
                 for (uint i = 0; i < A->get_mu().size(); i++) {
                     auto resultVect = std::make_shared<Eigen::RowVectorXf>(A->get_states());

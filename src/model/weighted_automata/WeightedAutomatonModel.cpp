@@ -97,9 +97,16 @@ std::tuple<float, std::string> WeightedAutomatonModel::extract_one_digit(const s
     throw std::invalid_argument("No numbers found in the input!");
 }
 
-std::string WeightedAutomatonModel::summarize_reduction(std::shared_ptr<RepresentationInterface> &anInterface,
-        std::shared_ptr<RepresentationInterface> &representationInterface) const {
-    throw NotImplementedException();
+std::string WeightedAutomatonModel::summarize_reduction(std::shared_ptr<RepresentationInterface> &A,
+        std::shared_ptr<RepresentationInterface> &minA) const {
+    std::stringstream result;
+    auto WA = std::dynamic_pointer_cast<WeightedAutomatonInstance>(A);
+    auto minWA = std::dynamic_pointer_cast<WeightedAutomatonInstance>(minA);
+    result << "Before Reduction" << std::endl
+           << WA->pretty_print()
+           << "After Reduction" << std::endl
+           << minWA->pretty_print();
+    return result.str();
 }
 
 std::vector<std::shared_ptr<ReductionMethodInterface>> WeightedAutomatonModel::get_reduction_methods() const {
