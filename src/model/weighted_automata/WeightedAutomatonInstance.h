@@ -25,6 +25,10 @@ class WeightedAutomatonInstance : public RepresentationInterface {
         WeightedAutomatonInstance() = default;
         ~WeightedAutomatonInstance() override = default;
 
+        bool operator==(const WeightedAutomatonInstance& lhs, const WeightedAutomatonInstance& rhs) const;
+
+        bool operator!=(const X& lhs, const X& rhs) const;
+
         [[nodiscard]] int get_states() const;
 
         int get_number_input_characters() const;
@@ -34,6 +38,9 @@ class WeightedAutomatonInstance : public RepresentationInterface {
         [[nodiscard]] const std::vector<std::shared_ptr<Eigen::MatrixXf>> &get_mu() const;
 
         [[nodiscard]] const std::shared_ptr<Eigen::VectorXf> &get_eta() const;
+
+        const WeightedAutomatonInstance create_subtraction_automaton(const WeightedAutomatonInstance& lhs,
+                const WeightedAutomatonInstance& rhs) const;
 
         const std::string pretty_print() const override;
 };
