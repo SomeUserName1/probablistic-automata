@@ -12,14 +12,17 @@ std::shared_ptr<RepresentationInterface> KieferSchuetzenbergerReduction::reduce(
 std::shared_ptr<RepresentationInterface> KieferSchuetzenbergerReduction::reduce(
         std::shared_ptr<RepresentationInterface> &waInstance, int K) const {
     auto A = std::dynamic_pointer_cast<WeightedAutomatonInstance>(waInstance);
-    std::shared_ptr<WeightedAutomatonInstance> minA = forward_reduction(A, K);
-    minA = backward_reduction(minA, K);
+
+    auto randomVectors = generate_random_vectors(A, K);
+    std::shared_ptr<WeightedAutomatonInstance> minA = forward_reduction(A, randomVectors);
+    randomVectors = generate_random_vectors(minA, K);
+    minA = backward_reduction(minA, randomVectors);
     return minA;
 }
 
 std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::backward_reduction(
-        std::shared_ptr<WeightedAutomatonInstance> &A, int K) const {
-    auto rhoVectors = calculate_rho_backward_vectors(A, K);
+        std::shared_ptr<WeightedAutomatonInstance> &A, std::vector<Eigen::MatrixXi> randomVectors) const {
+    auto rhoVectors = calculate_rho_backward_vectors(A, randomVectors);
     Eigen::MatrixXf rankTemp(A->get_states(), 1 + rhoVectors.size());
 
     rankTemp.col(0) = *(A->get_eta());
@@ -54,8 +57,8 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::backw
 }
 
 std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forward_reduction(
-        std::shared_ptr<WeightedAutomatonInstance> &A, int K) const {
-    auto rhoVectors = calculate_rho_forward_vectors(A, K);
+        std::shared_ptr<WeightedAutomatonInstance> &A, std::vector<Eigen::MatrixXi> randomVectors) const {
+    auto rhoVectors = calculate_rho_forward_vectors(A, randomVectors);
     Eigen::MatrixXf rankTemp(1 + rhoVectors.size(), A->get_states());
 
     rankTemp.row(0) = *(A->get_alpha());
@@ -96,8 +99,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forwa
 
 std::vector<Eigen::VectorXf>
 KieferSchuetzenbergerReduction::calculate_rho_backward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                                               int K) const {
-    auto randomVectors = generate_random_vectors(A, K);
+                                                               std::vector<Eigen::MatrixXi> randomVectors) const {
     auto sigmaK = generate_words_backwards(A, A->get_states());
     std::vector<Eigen::VectorXf> result = {};
 
@@ -113,8 +115,7 @@ KieferSchuetzenbergerReduction::calculate_rho_backward_vectors(std::shared_ptr<W
 
 std::vector<Eigen::RowVectorXf>
 KieferSchuetzenbergerReduction::calculate_rho_forward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                                              int K) const {
-    auto randomVectors = generate_random_vectors(A, K);
+        std::vector<Eigen::MatrixXi> randomVectors) const {
     auto sigmaK = generate_words_forwards(A, A->get_states());
     std::vector<Eigen::RowVectorXf> result = {};
 
@@ -154,7 +155,7 @@ KieferSchuetzenbergerReduction::generate_words_backwards(std::shared_ptr<Weighte
                     *resultVect = *(A->get_mu()[i]) * *(std::get<0>(element));
                     if (!resultVect->isZero()) {
                         temp = std::get<1>(element);
-                        temp.push_back(i);
+                        temp.insert(temp.begin(), i);
                         result.emplace_back(resultVect, temp);
                     }
                 }

@@ -21,16 +21,19 @@ class KieferSchuetzenbergerReduction : public ReductionMethodInterface {
                 int K) const;
 
         std::shared_ptr<WeightedAutomatonInstance> backward_reduction(std::shared_ptr<WeightedAutomatonInstance> &A,
-                int K) const;
+                                                                      std::vector<Eigen::MatrixXi> randomVectors) const;
 
         std::shared_ptr<WeightedAutomatonInstance> forward_reduction(std::shared_ptr<WeightedAutomatonInstance> &A,
-                int K) const;
+                                                                     std::vector<Eigen::MatrixXi> randomVectors) const;
 
         std::vector<Eigen::MatrixXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K)
             const;
 
-        std::vector<Eigen::VectorXf> calculate_rho_backward_vectors(std::shared_ptr<WeightedAutomatonInstance> &, int)
-            const;
+        std::vector<Eigen::VectorXf> calculate_rho_backward_vectors(std::shared_ptr<WeightedAutomatonInstance> &,
+                std::vector<Eigen::MatrixXi>) const;
+
+        std::vector<Eigen::RowVectorXf> calculate_rho_forward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
+                std::vector<Eigen::MatrixXi>) const;
 
         int get_word_factor(std::vector<uint> word, Eigen::Matrix<int, -1, -1> randVector) const;
 
@@ -40,8 +43,7 @@ class KieferSchuetzenbergerReduction : public ReductionMethodInterface {
         std::vector<std::tuple<std::shared_ptr<Eigen::VectorXf>, std::vector<uint>>> generate_words_backwards(
                 std::shared_ptr<WeightedAutomatonInstance> &A, int k) const;
 
-        std::vector<Eigen::RowVectorXf> calculate_rho_forward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K)
-            const;
+
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_KIEFERSCHUETZENBERGERREDUCTION_H

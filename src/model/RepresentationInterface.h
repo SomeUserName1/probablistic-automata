@@ -3,6 +3,7 @@
 
 #include "../NotImplementedException.h"
 
+// Used to avoid a cyclic dependency: ModelInterface to ReductionMethodInterface to ModelInterface
 class RepresentationInterface {
     public:
         virtual ~RepresentationInterface() = default;
