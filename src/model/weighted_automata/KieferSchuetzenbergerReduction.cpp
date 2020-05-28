@@ -6,7 +6,7 @@ std::string KieferSchuetzenbergerReduction::get_name() const {
 
 std::shared_ptr<RepresentationInterface> KieferSchuetzenbergerReduction::reduce(
         std::shared_ptr<RepresentationInterface> &waInstance) const {
-    return reduce(waInstance, 3);
+    return reduce(waInstance, 300);
 }
 
 std::shared_ptr<RepresentationInterface> KieferSchuetzenbergerReduction::reduce(
@@ -199,8 +199,8 @@ KieferSchuetzenbergerReduction::generate_words_forwards(std::shared_ptr<Weighted
     return result;
 }
 
-std::vector<Eigen::MatrixXi>
-KieferSchuetzenbergerReduction::generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K)
+inline std::vector<Eigen::MatrixXi>
+KieferSchuetzenbergerReduction::generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K=300)
 const {
     std::random_device rd;
     std::mt19937 rng(rd());
@@ -219,7 +219,7 @@ const {
     return randV;
 }
 
-int KieferSchuetzenbergerReduction::get_word_factor(std::vector<uint> word, Eigen::MatrixXi randVector) const {
+inline int KieferSchuetzenbergerReduction::get_word_factor(std::vector<uint> word, Eigen::MatrixXi randVector) const {
     int result = 1;
     for (uint i = 0; i < word.size(); i++) {
         result *= randVector(word[i], i);

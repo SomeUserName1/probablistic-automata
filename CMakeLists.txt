@@ -27,5 +27,5 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/model/weighted_automata/WeightedAutomatonModel.cpp
                    src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp
                    src/model/weighted_automata/WeightedAutomatonInstance.cpp
-                   src/NotImplementedException.cpp
+        src/NotImplementedException.cpp
                    src/test/KieferSchuetzenbergerReductionTest.cpp)

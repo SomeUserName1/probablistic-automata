@@ -45,26 +45,41 @@ const std::string WeightedAutomatonInstance::pretty_print() const {
     return result.str();
 }
 
-bool WeightedAutomatonInstance::operator==(const WeightedAutomatonInstance& lhs, const WeightedAutomatonInstance& rhs)
+bool WeightedAutomatonInstance::operator==(const WeightedAutomatonInstance& other)
     const {
+    return equivalent(*this, other);
+}
+
+bool WeightedAutomatonInstance::operator!=(const WeightedAutomatonInstance& other)
+    const {
+    return !(*this == other);
+}
+
+bool WeightedAutomatonInstance::equivalent(const WeightedAutomatonInstance& lhs, const WeightedAutomatonInstance&
+rhs, int K) const {
     if (lhs.get_number_input_characters() != rhs.get_number_input_characters()) {
         return false;
     }
-    auto subtractionAutomaton = create_subtraction_automaton(lsh, rhs);
+    auto subtractionAutomaton = create_subtraction_automaton(lhs, rhs);
 
-    if (!(subtractionAutomaton->get_alpha() * subtractionAutomaton->get_eta())->isZero()) {
+    if (!(*(subtractionAutomaton->get_alpha()) * *(subtractionAutomaton->get_eta())).isZero()) {
         return false;
     }
 
+    auto randomVectors = generate_random_vectors(subtractionAutomaton, K);
+    auto v = (*subtractionAutomaton->get_eta());
+    auto sMu = subtractionAutomaton->get_mu();
+    auto sAlpha = subtractionAutomaton->get_alpha();
+
     for (int i = 0; i < subtractionAutomaton->get_states(); i++) {
-
+        for (uint j = 0; j < sMu.size(); j++) {
+            v = v + (randomVectors[i](j) * *(sMu[j]) * v);
+        }
+        if (!((*sAlpha * v).isZero())) {
+            return false;
+        }
     }
-
-}
-
-bool WeightedAutomatonInstance::operator!=(const WeightedAutomatonInstance& lhs, const WeightedAutomatonInstance& rhs)
-    const {
-    return !(lhs == rhs);
+    return true;
 }
 
 const std::shared_ptr<WeightedAutomatonInstance>
@@ -73,33 +88,49 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     int i;
     int lhsStates = lhs.get_states();
     int rhsStates = rhs.get_states();
-    int states = lhsStates + rhsStates;
-    int characters = lhs.get_number_input_characters();
+    int subStates = lhsStates + rhsStates;
+    int subCharacters = lhs.get_number_input_characters();
 
     auto lhsAlpha = lhs.get_alpha();
     auto rhsAlpha = rhs.get_alpha();
-    auto alpha = std::make_shared<Eigen::RowVectorXf>(lhsAlpha->cols() + rhsAlpha->cols());
+    auto subAlpha = std::make_shared<Eigen::RowVectorXf>(lhsAlpha->cols() + rhsAlpha->cols());
     for (i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
-        (*alpha)(1, i) = i < lhsAlpha->cols() ? lhsAlpha(1, i) : - rhsAlpha(1, i);
+        (*subAlpha)(1, i) = i < lhsAlpha->cols() ? (*lhsAlpha)(1, i) : - (*rhsAlpha)(1, i);
     }
 
     auto lhsEta = lhs.get_eta();
     auto rhsEta = rhs.get_eta();
-    auto eta = std::make_shared<Eigen::VectorXf>(lhsEta->rows() + rhsEta->rows());
+    auto subEta = std::make_shared<Eigen::VectorXf>(lhsEta->rows() + rhsEta->rows());
     for (i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
-        (*eta)(1, i) = i < lhsEta->rows() ? lhsEta(i, 1) : - rhsEta(i, 1);
+        (*subEta)(1, i) = i < lhsEta->rows() ? (*lhsEta)(i, 1) : - (*rhsEta)(i, 1);
     }
 
-    std::vector<std::shared_ptr<Eigen::MatrixXf>> mu = {};
+    std::vector<std::shared_ptr<Eigen::MatrixXf>> subMu = {};
     auto lhsMu = lhs.get_mu();
     auto rhsMu = rhs.get_mu();
-    for (i = 0; i < characters; i++) {
-        auto muX = std::make_shared<Eigen::MatrixXf>(Eigen::MatrixXf::Zero(states, states));
-        (*mux).block(0, 0, lhsStates, lhsStates) = *(lhsMu[i]);
+    for (i = 0; i < subCharacters; i++) {
+        auto muX = std::make_shared<Eigen::MatrixXf>(Eigen::MatrixXf::Zero(subStates, subStates));
+        (*muX).block(0, 0, lhsStates, lhsStates) = *(lhsMu[i]);
         (*muX).block(lhsStates + 1, lhsStates + 1, rhsStates, rhsStates);
-        mu.push_back(muX)
+        subMu.push_back(muX);
     }
-    return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu,
-                                                       eta);
+    return std::make_shared<WeightedAutomatonInstance>(subStates, subCharacters, subAlpha, subMu,
+                                                       subEta);
 }
 
+inline std::vector<Eigen::RowVectorXi>
+WeightedAutomatonInstance::generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K) const {
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<> uniform(1, A->get_states() * K);
+    std::vector<Eigen::RowVectorXi> randV;
+
+    auto vect = Eigen::RowVectorXi(1, A->get_number_input_characters());
+    for (int i = 0; i < A->get_states(); i++) {
+        for (int j = 0; j < A->get_number_input_characters(); j++) {
+            vect(j) = uniform(rng);
+        }
+        randV.push_back(vect);
+    }
+    return randV;
+}

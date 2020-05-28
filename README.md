@@ -5,7 +5,7 @@ For requirements and software design see the appendix of the ![report draft](doc
 
 ## TODOs  
 - [x] Implementation of WA minimization algorithm  
-- [ ] Implementation of WA equivalence algorithm (WIP)  
+- [X] Implementation of WA equivalence algorithm  
 - [ ] Write Unit Tests for the above  
 - [ ] Implement Lifting for WAs/Benchmarks  
 - [ ] Presentation on WA paper & implementation  
