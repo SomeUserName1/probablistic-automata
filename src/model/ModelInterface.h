@@ -13,18 +13,24 @@
 
 class ModelInterface {
 
-    public:
-        virtual ~ModelInterface() = default;
-        [[nodiscard]] virtual std::string get_name() const = 0;
-        [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> validate_model_instance(const std::string&)
-        const = 0;
-        [[nodiscard]] virtual std::string summarize_reduction(std::shared_ptr<RepresentationInterface>&,
-                std::shared_ptr<RepresentationInterface>&)
-            const = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const = 0;
-        [[nodiscard]] virtual std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const
-        = 0;
-        virtual std::string get_representation_description() const = 0;
+public:
+    virtual ~ModelInterface() = default;
+
+    [[nodiscard]] virtual std::string get_name() const = 0;
+
+    [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> validate_model_instance(const std::string &)
+    const = 0;
+
+    [[nodiscard]] virtual std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &,
+                                                          std::shared_ptr<RepresentationInterface> &)
+    const = 0;
+
+    [[nodiscard]] virtual std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const = 0;
+
+    [[nodiscard]] virtual std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const
+    = 0;
+
+    virtual std::string get_representation_description() const noexcept = 0;
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_MODELINTERFACE_H

@@ -22,6 +22,6 @@ std::vector<std::shared_ptr<ConversionMethodInterface>> DifferentialEquationMode
     throw NotImplementedException();
 }
 
-std::string DifferentialEquationModel::get_representation_description() const {
-    throw NotImplementedException();
+std::string DifferentialEquationModel::get_representation_description() const noexcept {
+    return "TODO";
 }

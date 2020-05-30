@@ -6,14 +6,14 @@ SCENARIO("The input can be specified over the tui", "[TUI]") {
             THEN("The correct task is selected") {
 
             }
-        }
-        WHEN("An invalid task number is entered") {
+        }WHEN("An invalid task number is entered") {
             THEN("The user is informed and probed again") {
 
             }
-        }
-        WHEN("A not implemented task is selected") {
-            THEN("A NotImplementedException is thrown")
+        }WHEN("A not implemented task is selected") {
+            THEN("A NotImplementedException is thrown") {
+
+            }
         }
     }
 
@@ -22,8 +22,7 @@ SCENARIO("The input can be specified over the tui", "[TUI]") {
             THEN("The correct model is selected") {
 
             }
-        }
-        WHEN("An invalid model number is entered") {
+        }WHEN("An invalid model number is entered") {
             THEN("The user is informed an probed again") {
 
             }
@@ -35,8 +34,7 @@ SCENARIO("The input can be specified over the tui", "[TUI]") {
             THEN("The correct IO Method is selected") {
 
             }
-        }
-        WHEN("An invalid number is entered") {
+        }WHEN("An invalid number is entered") {
             THEN("The user is informed and reprobed") {
 
             }
@@ -48,8 +46,7 @@ SCENARIO("The input can be specified over the tui", "[TUI]") {
             THEN("The file is read into a string") {
 
             }
-        }
-        WHEN("An invalid file path is entered") {
+        }WHEN("An invalid file path is entered") {
             THEN("The user is informed and probed again") {
 
             }
@@ -60,11 +57,9 @@ SCENARIO("The input can be specified over the tui", "[TUI]") {
         WHEN("specifying the input") {
             THEN("the input can be terminated by two consecutive newlines") {
 
-            }
-            THEN("The input can be terminated by STRG+D/EOF") {
+            }THEN("The input can be terminated by STRG+D/EOF") {
 
-            }
-            THEN("What the user entered is read into a string") {
+            }THEN("What the user entered is read into a string") {
 
             }
         }
@@ -75,8 +70,7 @@ SCENARIO("The input can be specified over the tui", "[TUI]") {
             THEN("The output is written to the file") {
 
             }
-        }
-        WHEN("An invalid file path is entered") {
+        }WHEN("An invalid file path is entered") {
             THEN("The user is informed and probed again") {
 
             }
@@ -88,8 +82,7 @@ SCENARIO("The input can be specified over the tui", "[TUI]") {
             THEN("The correct reduction Method is selected") {
 
             }
-        }
-        WHEN("An invalid number is entered") {
+        }WHEN("An invalid number is entered") {
             THEN("The user is informed and reprobed") {
 
             }

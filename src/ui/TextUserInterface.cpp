@@ -8,7 +8,8 @@ UserInterface::Task TextUserInterface::select_task() const {
               << "What do you want to do?" << std::endl
               << "\t\t 1. Reduce an example" << std::endl
               << "\t\t 2. Perform a benchmark" << std::endl
-              << "\t\t 3. Convert an example from one model to another" << std::endl;
+              << "\t\t 3. Convert an example from one model to another" << std::endl
+              << "\t\t 4. to exit" << std::endl;
 
     do {
         std::string input("");
@@ -25,14 +26,15 @@ UserInterface::Task TextUserInterface::select_task() const {
     return task;
 }
 
-std::shared_ptr<ModelInterface> TextUserInterface::select_model(const std::vector<std::shared_ptr<ModelInterface>> &availableModels) const {
+std::shared_ptr<ModelInterface>
+TextUserInterface::select_model(const std::vector<std::shared_ptr<ModelInterface>> &availableModels) const {
     std::cout << "Choose a model" << std::endl;
     uint i = 0;
-    for (const auto& mModel : availableModels) {
-        std::cout << "\t\t"  << i << ". " << mModel->get_name()  << std::endl;
+    for (const auto &mModel : availableModels) {
+        std::cout << "\t\t" << i << ". " << mModel->get_name() << std::endl;
         ++i;
     }
-    while(true) {
+    while (true) {
         std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1) {
@@ -134,21 +136,20 @@ std::string TextUserInterface::set_output_destination() const {
     return line;
 }
 
-void TextUserInterface::display(const std::string& output) const {
+void TextUserInterface::display(const std::string &output) const {
     std::cout << output << std::endl;
 }
-
 
 
 std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_method(
         std::shared_ptr<ModelInterface> &selectedModel) const {
     std::cout << "Choose a reduction method" << std::endl;
     uint i = 0;
-    for (const auto& reduction : selectedModel->get_reduction_methods()) {
-        std::cout << "\t\t"  << i << ". " << reduction->get_name()  << std::endl;
+    for (const auto &reduction : selectedModel->get_reduction_methods()) {
+        std::cout << "\t\t" << i << ". " << reduction->get_name() << std::endl;
         ++i;
     }
-    while(true) {
+    while (true) {
         std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1) {
@@ -164,15 +165,16 @@ std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_me
     }
 }
 
-std::shared_ptr<ConversionMethodInterface> TextUserInterface::select_conversion_method(std::shared_ptr<ModelInterface>& model) const {
+std::shared_ptr<ConversionMethodInterface>
+TextUserInterface::select_conversion_method(std::shared_ptr<ModelInterface> &model) const {
     std::cout << "Choose a conversion method" << std::endl;
     uint i = 0;
-    for (const auto& conversion : model->get_conversion_methods()) {
-        std::cout << "\t\t"  << i << ". " << conversion->get_left_model_name() << " to " <<
-        conversion->get_right_model_name() << std::endl;
+    for (const auto &conversion : model->get_conversion_methods()) {
+        std::cout << "\t\t" << i << ". " << conversion->get_left_model_name() << " to " <<
+                  conversion->get_right_model_name() << std::endl;
         ++i;
     }
-    while(true) {
+    while (true) {
         std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1) {

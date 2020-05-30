@@ -28,29 +28,23 @@
 // implementation
 // how it relates to the next steps (preview/teaser)
 
-// Given current code stage
-// Possible to implement equivalence in how many days?
-// Given 2 automata for eq., piece of code to generate subtraction automata
-// code for equivalence
-
-// TODO equivalence
 // TODO Lifting/Benchmark generation
 // TODO presentation on stage 1
 
 
 
-bool iequals(const std::string&, const std::string&);
+bool iequals(const std::string &, const std::string &);
 
-bool iequals(const std::string& str1, const std::string& str2) {
+bool iequals(const std::string &str1, const std::string &str2) {
     return str1.size() == str2.size()
-        && std::equal(str1.begin(), str1.end(), str2.begin(),
-                [](auto a, auto b){
-                    return std::tolower(a)==std::tolower(b);
-                }
-            );
+           && std::equal(str1.begin(), str1.end(), str2.begin(),
+                         [](auto a, auto b) {
+                             return std::tolower(a) == std::tolower(b);
+                         }
+    );
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     UserInterface::Task task;
     std::shared_ptr<ModelInterface> model;
     std::shared_ptr<ReductionMethodInterface> reductionMethod;
@@ -63,23 +57,23 @@ int main(int argc, char* argv[]) {
     try {
         TCLAP::CmdLine cmd("Stochastic dynamic system reducer", ' ', "0.1");
 
-        TCLAP::SwitchArg tuiSwitch("T","TextUserInterface",
-                "Use the text user interface as front end", false);
-        TCLAP::SwitchArg guiSwitch("G","GraphicUserInterface",
-                "Use the graphic user interface as front end", false);
+        TCLAP::SwitchArg tuiSwitch("T", "TextUserInterface",
+                                   "Use the text user interface as front end", false);
+        TCLAP::SwitchArg guiSwitch("G", "GraphicUserInterface",
+                                   "Use the graphic user interface as front end", false);
 
-        TCLAP::ValueArg<std::string> taskArg("t","task","Task to execute",
-                false,"","string");
-        TCLAP::ValueArg<std::string> modelArg("m","model","model to use",
-                false,"","string");
-        TCLAP::ValueArg<std::string> methodArg("r","reduction","reduction method to apply",
-                false,"","string");
-        TCLAP::ValueArg<std::string> inputArg("i","input","Path to input file",
-                false,"","string");
-        TCLAP::ValueArg<std::string> outputArg("o","output","path to output file",
-                false,"","string");
+        TCLAP::ValueArg<std::string> taskArg("t", "task", "Task to execute",
+                                             false, "", "string");
+        TCLAP::ValueArg<std::string> modelArg("m", "model", "model to use",
+                                              false, "", "string");
+        TCLAP::ValueArg<std::string> methodArg("r", "reduction", "reduction method to apply",
+                                               false, "", "string");
+        TCLAP::ValueArg<std::string> inputArg("i", "input", "Path to input file",
+                                              false, "", "string");
+        TCLAP::ValueArg<std::string> outputArg("o", "output", "path to output file",
+                                               false, "", "string");
 
-        for (auto arg : {&taskArg, &modelArg, &methodArg, &inputArg, &outputArg} ) {
+        for (auto arg : {&taskArg, &modelArg, &methodArg, &inputArg, &outputArg}) {
             cmd.add(arg);
         }
         cmd.add(tuiSwitch);
@@ -95,20 +89,20 @@ int main(int argc, char* argv[]) {
 
         if (!taskStr.empty() && !modelStr.empty() && !methodStr.empty() && !inputStr.empty() && !outputStr.empty()
             && !tuiSwitch && !guiSwitch) {
-            if (iequals(taskStr,"Reduction")) {
+            if (iequals(taskStr, "Reduction")) {
                 task = UserInterface::Reduction;
-            } else if (iequals(taskStr,"Benchmark")) {
+            } else if (iequals(taskStr, "Benchmark")) {
                 task = UserInterface::Benchmark;
             } else if (iequals(taskStr, "Conversion")) {
                 task = UserInterface::Conversion;
             } else {
                 throw std::invalid_argument("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task");
             }
-            if (iequals(modelStr,"WA") || iequals(modelStr,"WeightedAutomatonModel")
-                || iequals(modelStr,"WeightedAutomaton")) {
+            if (iequals(modelStr, "WA") || iequals(modelStr, "WeightedAutomatonModel")
+                || iequals(modelStr, "WeightedAutomaton")) {
                 model = std::make_shared<WeightedAutomatonModel>();
-            } else if (iequals(modelStr,"DE") || iequals(modelStr,"DifferentialEquationModel")
-                || iequals(modelStr,"Differential Equation")) {
+            } else if (iequals(modelStr, "DE") || iequals(modelStr, "DifferentialEquationModel")
+                       || iequals(modelStr, "Differential Equation")) {
                 model = std::make_shared<DifferentialEquationModel>();
             } else {
                 throw std::invalid_argument("Specify either 'WA', 'DE', 'WeightedAutomatonModel', "
@@ -137,9 +131,10 @@ int main(int argc, char* argv[]) {
             }
             task = ui->select_task();
             switch (task) {
+                case UserInterface::Exit: {exit(0);}
                 case UserInterface::Reduction: {
                     std::vector<std::shared_ptr<ModelInterface>> models = {std::make_shared<WeightedAutomatonModel>(),
-                            std::make_shared<DifferentialEquationModel>()};
+                                                                           std::make_shared<DifferentialEquationModel>()};
                     model = ui->select_model(models);
                     reductionMethod = ui->select_reduction_method(model);
                     inputMethod = ui->select_io_method(true);
@@ -181,6 +176,7 @@ int main(int argc, char* argv[]) {
             case UserInterface::Unselected:
                 throw NotImplementedException();
         }
-    } catch (TCLAP::ArgException &e)  {
-    std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
+    } catch (TCLAP::ArgException &e) {
+        std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+    }
 }

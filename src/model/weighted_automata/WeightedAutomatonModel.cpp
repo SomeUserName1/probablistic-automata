@@ -5,7 +5,7 @@ std::string WeightedAutomatonModel::get_name() const {
 }
 
 std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_instance(const std::string &str) const {
-    auto [ line, prev ] = get_next_line(str, 0);
+    auto[line, prev] = get_next_line(str, 0);
 
     // states
     if (!line.starts_with("states")) {
@@ -35,7 +35,7 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
     if (!line.starts_with("alpha")) {
         throw std::invalid_argument("The initial vector needs to be specified as 3rd!");
     }
-    auto alpha = std::make_shared<Eigen::RowVectorXf>(states);
+    auto alpha = std::make_shared<Eigen::RowVectorXd>(states);
     line = line.substr(line.find('=') + 1, line.size());
     for (int i = 0; i < states; i++) {
         std::tie((*alpha)(0, i), line) = extract_one_digit(line);
@@ -45,12 +45,12 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
     std::tie(line, prev) = get_next_line(str, prev);
 
     // mu
-    std::vector<std::shared_ptr<Eigen::MatrixXf>> mu = {};
+    std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {};
     for (int k = 0; k < characters; k++) {
         if (!line.starts_with("mu")) {
             throw std::invalid_argument("Specify the transition matrices 4th, one for each character!");
         }
-        std::shared_ptr<Eigen::MatrixXf> muX = std::make_shared<Eigen::MatrixXf>(states, states);
+        std::shared_ptr<Eigen::MatrixXd> muX = std::make_shared<Eigen::MatrixXd>(states, states);
         line = line.substr(line.find('=') + 1, line.size());
         for (int i = 0; i < states; i++) {
             for (int j = 0; j < states; j++) {
@@ -65,7 +65,7 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
     if (!line.starts_with("eta")) {
         throw std::invalid_argument("Please specify the final state vector last");
     }
-    auto eta = std::make_shared<Eigen::VectorXf>(states);
+    auto eta = std::make_shared<Eigen::VectorXd>(states);
     line = line.substr(line.find("eta=") + 4, line.size());
     for (int i = 0; i < states; i++) {
         std::tie((*eta)(i, 0), line) = extract_one_digit(line);
@@ -74,7 +74,8 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
     return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
 }
 
-std::tuple<std::string, std::size_t> WeightedAutomatonModel::get_next_line(const std::string& str, std::size_t prev) const {
+std::tuple<std::string, std::size_t> WeightedAutomatonModel::get_next_line(const std::string &str, std::size_t
+prev) noexcept {
     std::string line;
     std::size_t pos = str.find(';', prev);
     line = str.substr(prev, pos - prev);
@@ -83,10 +84,10 @@ std::tuple<std::string, std::size_t> WeightedAutomatonModel::get_next_line(const
     return std::make_tuple(line, prev);
 }
 
-std::tuple<float, std::string> WeightedAutomatonModel::extract_one_digit(const std::string& vector) const {
+inline std::tuple<float, std::string> WeightedAutomatonModel::extract_one_digit(const std::string &vector) {
     bool prevDigit = false;
     int firstDigit = -1;
-    for (int i = 0; i < (int)vector.size(); i++) {
+    for (int i = 0; i < (int) vector.size(); i++) {
         if (std::isdigit(vector[i]) && !prevDigit) {
             prevDigit = true;
             firstDigit = i;
@@ -98,7 +99,7 @@ std::tuple<float, std::string> WeightedAutomatonModel::extract_one_digit(const s
 }
 
 std::string WeightedAutomatonModel::summarize_reduction(std::shared_ptr<RepresentationInterface> &A,
-        std::shared_ptr<RepresentationInterface> &minA) const {
+                                                        std::shared_ptr<RepresentationInterface> &minA) const {
     std::stringstream result;
     auto WA = std::dynamic_pointer_cast<WeightedAutomatonInstance>(A);
     auto minWA = std::dynamic_pointer_cast<WeightedAutomatonInstance>(minA);

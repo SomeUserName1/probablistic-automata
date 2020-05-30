@@ -21,21 +21,6 @@ SET(MSAN_SYMBOLIZER_PATH $(which llvm-symbolizer))
 
 INCLUDE_DIRECTORIES(include)
 
-find_package(Catch2 REQUIRED)
-add_executable(tests src/test/TestsMain.cpp
-                     src/test/CLITest.cpp
-                     src/test/TUITest.cpp
-                     src/test/WAModelTest.cpp
-                     src/test/WAInstanceTest.cpp
-                     src/test/KieferSchuetzenbergerReductionTest.cpp)
-target_link_libraries(tests Catch2::Catch2)
-
-
-
-include(CTest)
-include(Catch)
-catch_discover_tests(tests)
-
 ADD_EXECUTABLE(ssm src/main.cpp
                    src/ui/TextUserInterface.cpp
                    src/model/differential_equations/DifferentialEquationModel.cpp
@@ -43,3 +28,24 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp
                    src/model/weighted_automata/WeightedAutomatonInstance.cpp
                    src/NotImplementedException.cpp)
+
+find_package(Catch2 REQUIRED)
+add_executable(tests src/test/TestsMain.cpp
+        src/test/CLITest.cpp
+        src/test/TUITest.cpp
+        src/test/WAModelTest.cpp
+        src/test/WAInstanceTest.cpp
+        src/test/KieferSchuetzenbergerReductionTest.cpp
+        src/ui/TextUserInterface.cpp
+        src/model/differential_equations/DifferentialEquationModel.cpp
+        src/model/weighted_automata/WeightedAutomatonModel.cpp
+        src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp
+        src/model/weighted_automata/WeightedAutomatonInstance.cpp
+        src/NotImplementedException.cpp)
+target_link_libraries(tests Catch2::Catch2)
+
+
+
+include(CTest)
+include(Catch)
+catch_discover_tests(tests)

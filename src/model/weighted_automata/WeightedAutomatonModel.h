@@ -13,23 +13,23 @@ private:
     std::vector<std::shared_ptr<ConversionMethodInterface>> conversionMethods;
 public:
     WeightedAutomatonModel() : reductionMethods({std::make_shared<KieferSchuetzenbergerReduction>()}),
-        conversionMethods({}) {};
+                               conversionMethods({}) {};
 
     [[nodiscard]] std::string get_name() const override;
 
     [[nodiscard]] std::shared_ptr<RepresentationInterface> validate_model_instance(const std::string &string) const
     override;
 
-    [[nodiscard]] std::string summarize_reduction(std::shared_ptr<RepresentationInterface>&,
-                                                  std::shared_ptr<RepresentationInterface>&)
-                                                  const override;
+    [[nodiscard]] std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &,
+                                                  std::shared_ptr<RepresentationInterface> &)
+    const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const override;
 
     [[nodiscard]] std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const override;
 
 
-    std::string get_representation_description() const override {
+    std::string get_representation_description() const noexcept override {
         return "You need to specify 5 variables: \n "
                "The number of states by: states=\n"
                "The number of characters in the input alphabet: characters=\n"
@@ -45,9 +45,9 @@ public:
                "eta=(0,0,0,1);\n";
     }
 
-    std::tuple<std::string, size_t> get_next_line(const std::string &str, size_t prev) const;
+    static std::tuple<std::string, size_t> get_next_line(const std::string &str, size_t prev) noexcept;
 
-    std::tuple<float, std::string> extract_one_digit(const std::string &vector) const;
+    static std::tuple<float, std::string> extract_one_digit(const std::string &vector);
 };
 
 

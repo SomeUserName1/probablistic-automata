@@ -10,38 +10,39 @@
 #include "WeightedAutomatonInstance.h"
 
 class KieferSchuetzenbergerReduction : public ReductionMethodInterface {
-    public:
-        ~KieferSchuetzenbergerReduction() override = default;
-        [[nodiscard]] std::string get_name() const override;
+public:
+    ~KieferSchuetzenbergerReduction() override = default;
 
-        [[nodiscard]] std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface>&)
-        const override;
+    [[nodiscard]] std::string get_name() const override;
 
-        std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface> &waInstance,
-                int K) const;
+    [[nodiscard]] std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface> &)
+    const override;
 
-        std::shared_ptr<WeightedAutomatonInstance> backward_reduction(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                                                      std::vector<Eigen::MatrixXi> randomVectors) const;
+    static std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface> &waInstance,
+                                                           int K);
 
-        std::shared_ptr<WeightedAutomatonInstance> forward_reduction(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                                                     std::vector<Eigen::MatrixXi> randomVectors) const;
+    static std::shared_ptr<WeightedAutomatonInstance> backward_reduction(std::shared_ptr<WeightedAutomatonInstance>
+                                                                         &A,
+                                                                         std::vector<Eigen::MatrixXi> randomVectors);
 
-        std::vector<Eigen::MatrixXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K)
-            const;
+    static std::shared_ptr<WeightedAutomatonInstance> forward_reduction(std::shared_ptr<WeightedAutomatonInstance> &A,
+                                                                        std::vector<Eigen::MatrixXi> randomVectors);
 
-        std::vector<Eigen::VectorXf> calculate_rho_backward_vectors(std::shared_ptr<WeightedAutomatonInstance> &,
-                std::vector<Eigen::MatrixXi>) const;
+    static std::vector<Eigen::MatrixXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K);
 
-        std::vector<Eigen::RowVectorXf> calculate_rho_forward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
-                std::vector<Eigen::MatrixXi>) const;
+    static std::vector<Eigen::VectorXd> calculate_rho_backward_vectors(std::shared_ptr<WeightedAutomatonInstance> &,
+                                                                       std::vector<Eigen::MatrixXi>);
 
-        int get_word_factor(std::vector<uint> word, Eigen::Matrix<int, -1, -1> randVector) const;
+    static std::vector<Eigen::RowVectorXd> calculate_rho_forward_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
+                                                                         std::vector<Eigen::MatrixXi>);
 
-        std::vector<std::tuple<std::shared_ptr<Eigen::RowVectorXf>, std::vector<uint>>> generate_words_forwards(
-                std::shared_ptr<WeightedAutomatonInstance> &A, int k) const;
+    static int get_word_factor(std::vector<uint> word, Eigen::Matrix<int, -1, -1> randVector);
 
-        std::vector<std::tuple<std::shared_ptr<Eigen::VectorXf>, std::vector<uint>>> generate_words_backwards(
-                std::shared_ptr<WeightedAutomatonInstance> &A, int k) const;
+    static std::vector<std::tuple<std::shared_ptr<Eigen::RowVectorXd>, std::vector<uint>>> generate_words_forwards(
+            std::shared_ptr<WeightedAutomatonInstance> &A, int k);
+
+    static std::vector<std::tuple<std::shared_ptr<Eigen::VectorXd>, std::vector<uint>>> generate_words_backwards(
+            std::shared_ptr<WeightedAutomatonInstance> &A, int k);
 
 
 };
