@@ -200,30 +200,3 @@ KieferSchuetzenbergerReduction::generate_words_forwards(std::shared_ptr<Weighted
     }
     return result;
 }
-
-inline std::vector<Eigen::MatrixXi>
-KieferSchuetzenbergerReduction::generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K = 300) {
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<> uniform(1, A->get_states() * K);
-    std::vector<Eigen::MatrixXi> randV;
-
-    for (int i = 0; i < A->get_states(); i++) {
-        auto vect = Eigen::MatrixXi(A->get_number_input_characters(), A->get_states());
-        for (int j = 0; j < A->get_number_input_characters(); j++) {
-            for (int k = 0; k < A->get_states(); k++) {
-                vect(j, k) = uniform(rng);
-            }
-        }
-        randV.push_back(vect);
-    }
-    return randV;
-}
-
-inline int KieferSchuetzenbergerReduction::get_word_factor(std::vector<uint> word, Eigen::MatrixXi randVector) {
-    int result = 1;
-    for (uint i = 0; i < word.size(); i++) {
-        result *= randVector(word[i], i);
-    }
-    return result;
-}

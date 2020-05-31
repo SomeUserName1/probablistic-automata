@@ -8,6 +8,18 @@ WeightedAutomatonInstance::WeightedAutomatonInstance(int states, int characters,
         : states(states), noInputCharacters(characters), alpha(std::move(alpha)), mu(std::move(mu)),
           eta(std::move(eta)) {}
 
+double WeightedAutomatonInstance::process_word(const std::vector<uint> &word) const {
+    auto intermediate = Eigen::RowVectorXd(*(this->alpha));
+    for (const auto &letter : word) {
+        if ((int)letter >= this->noInputCharacters) {
+            throw std::invalid_argument("The specified word has a letter that is not in the input alphabet!");
+        }
+        intermediate *= *(this->mu[letter]);
+    }
+    return (double)(intermediate * *(this->eta));
+
+}
+
 int WeightedAutomatonInstance::get_states() const {
     return this->states;
 }
@@ -90,20 +102,20 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     int lhsStates = lhs.get_states();
     int rhsStates = rhs.get_states();
     int subStates = lhsStates + rhsStates;
-    int subCharacters = lhs.get_number_input_characters();
+    int subCharacters = std::max(lhs.get_number_input_characters(), rhs.get_number_input_characters());
 
     auto lhsAlpha = lhs.get_alpha();
     auto rhsAlpha = rhs.get_alpha();
     auto subAlpha = std::make_shared<Eigen::RowVectorXd>(lhsAlpha->cols() + rhsAlpha->cols());
     for (i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
-        (*subAlpha)(1, i) = i < lhsAlpha->cols() ? (*lhsAlpha)(1, i) : -(*rhsAlpha)(1, i);
+        (*subAlpha)(0, i) = i < lhsAlpha->cols() ? (*lhsAlpha)(0, i) : -(*rhsAlpha)(0, i - lhsAlpha->cols());
     }
 
     auto lhsEta = lhs.get_eta();
     auto rhsEta = rhs.get_eta();
     auto subEta = std::make_shared<Eigen::VectorXd>(lhsEta->rows() + rhsEta->rows());
     for (i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
-        (*subEta)(1, i) = i < lhsEta->rows() ? (*lhsEta)(i, 1) : -(*rhsEta)(i, 1);
+        (*subEta)(i, 0) = i < lhsEta->rows() ? (*lhsEta)(i, 0) : (*rhsEta)(i - lhsEta->rows(), 0);
     }
 
     std::vector<std::shared_ptr<Eigen::MatrixXd>> subMu = {};
@@ -111,27 +123,14 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     auto rhsMu = rhs.get_mu();
     for (i = 0; i < subCharacters; i++) {
         auto muX = std::make_shared<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(subStates, subStates));
-        (*muX).block(0, 0, lhsStates, lhsStates) = *(lhsMu[i]);
-        (*muX).block(lhsStates + 1, lhsStates + 1, rhsStates, rhsStates);
+        if (i < (int)lhsMu.size()) {
+            (*muX).block(0, 0, lhsStates, lhsStates) = *(lhsMu[i]);
+        }
+        if (i < (int)rhsMu.size()) {
+            (*muX).block(lhsStates, lhsStates, rhsStates, rhsStates) = *(rhsMu[i]);
+        }
         subMu.push_back(muX);
     }
     return std::make_shared<WeightedAutomatonInstance>(subStates, subCharacters, subAlpha, subMu,
                                                        subEta);
-}
-
-inline std::vector<Eigen::RowVectorXi>
-WeightedAutomatonInstance::generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A, int K) {
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    std::uniform_int_distribution<> uniform(1, A->get_states() * K);
-    std::vector<Eigen::RowVectorXi> randV;
-
-    auto vect = Eigen::RowVectorXi(1, A->get_number_input_characters());
-    for (int i = 0; i < A->get_states(); i++) {
-        for (int j = 0; j < A->get_number_input_characters(); j++) {
-            vect(j) = uniform(rng);
-        }
-        randV.push_back(vect);
-    }
-    return randV;
 }

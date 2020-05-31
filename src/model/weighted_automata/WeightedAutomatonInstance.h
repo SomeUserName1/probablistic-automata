@@ -31,6 +31,8 @@ public:
 
     bool operator!=(const WeightedAutomatonInstance &other) const;
 
+    double process_word(const std::vector<uint> &word) const;
+
     [[nodiscard]] int get_states() const;
 
     int get_number_input_characters() const;
@@ -46,8 +48,22 @@ public:
 
     const std::string pretty_print() const override;
 
-    static inline std::vector<Eigen::RowVectorXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &,
-                                                                          int);
+    static inline std::vector<Eigen::RowVectorXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
+                                                                          int K) {
+        std::random_device rd;
+        std::mt19937 rng(rd());
+        std::uniform_int_distribution<> uniform(1, A->get_states() * K);
+        std::vector<Eigen::RowVectorXi> randV;
+
+        for (int i = 0; i < A->get_states(); i++) {
+            auto vect = Eigen::RowVectorXi(1, A->get_number_input_characters());
+            for (int j = 0; j < A->get_number_input_characters(); j++) {
+                vect(j) = uniform(rng);
+            }
+            randV.push_back(vect);
+        }
+        return randV;
+    }
 
     static bool equivalent(const WeightedAutomatonInstance &, const WeightedAutomatonInstance &, int k = 300);
 };

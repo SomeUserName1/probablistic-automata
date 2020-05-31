@@ -96,7 +96,8 @@ int main(int argc, char *argv[]) {
             } else if (iequals(taskStr, "Conversion")) {
                 task = UserInterface::Conversion;
             } else {
-                throw std::invalid_argument("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task");
+                throw std::invalid_argument("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task, you"
+                                            " specified " + taskStr);
             }
             if (iequals(modelStr, "WA") || iequals(modelStr, "WeightedAutomatonModel")
                 || iequals(modelStr, "WeightedAutomaton")) {
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
             } else {
                 throw std::invalid_argument("Specify either 'WA', 'DE', 'WeightedAutomatonModel', "
                                             "'DifferentialEquationModel', 'WeightedAutomaton' or 'DifferentialEquation'"
-                                            " as model', you specified " + taskStr);
+                                            " as model, you specified " + modelStr);
             }
             // currently only two methods are supported, one per model so ignore what the user says and just use it
             // Intentionally bad design, sufficient for now
@@ -122,7 +123,6 @@ int main(int argc, char *argv[]) {
                 throw std::invalid_argument("Please specify a path with a file name to write the results to!");
             }
 
-            inputMethod = UserInterface::IOMethod::File;
             outputMethod = UserInterface::IOMethod::File;
         } else {
             ui = std::make_shared<TextUserInterface>();
@@ -173,8 +173,11 @@ int main(int argc, char *argv[]) {
             }
             case UserInterface::Benchmark:
             case UserInterface::Conversion:
-            case UserInterface::Unselected:
+            case UserInterface::Unselected: {
                 throw NotImplementedException();
+            }
+            case UserInterface::Exit:
+                exit(0);
         }
     } catch (TCLAP::ArgException &e) {
         std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

@@ -15,7 +15,7 @@ UserInterface::Task TextUserInterface::select_task() const {
         std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1 ||
-            (input != "1" && input != "2" && input != "3")) {
+            (input != "1" && input != "2" && input != "3" && input != "4")) {
             std::cout << "Please enter 1, 2 or 3!";
             continue;
         } else {

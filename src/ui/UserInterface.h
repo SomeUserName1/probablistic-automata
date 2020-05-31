@@ -63,7 +63,7 @@ public:
         std::filesystem::path inputPath(path);
         inputPath = std::filesystem::canonical(inputPath);
         if (!inputPath.has_filename() || !std::filesystem::exists(inputPath)) {
-            throw std::invalid_argument("Passed empty file as input with path " + inputPath.string());
+            throw std::invalid_argument("Passed invalid input path " + inputPath.string());
         } else {
             std::cout << "Loading input from " << inputPath << std::endl;
         }
@@ -78,7 +78,6 @@ public:
         in.seekg(0, std::ios::beg);
         in.read(&contents[0], static_cast<std::streamsize>(contents.size()));
         in.close();
-        std::cout << contents << std::endl;
         return contents;
     }
 };

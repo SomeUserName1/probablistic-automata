@@ -74,30 +74,6 @@ std::shared_ptr<RepresentationInterface> WeightedAutomatonModel::validate_model_
     return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
 }
 
-std::tuple<std::string, std::size_t> WeightedAutomatonModel::get_next_line(const std::string &str, std::size_t
-prev) noexcept {
-    std::string line;
-    std::size_t pos = str.find(';', prev);
-    line = str.substr(prev, pos - prev);
-    line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
-    prev = pos + 1;
-    return std::make_tuple(line, prev);
-}
-
-inline std::tuple<float, std::string> WeightedAutomatonModel::extract_one_digit(const std::string &vector) {
-    bool prevDigit = false;
-    int firstDigit = -1;
-    for (int i = 0; i < (int) vector.size(); i++) {
-        if (std::isdigit(vector[i]) && !prevDigit) {
-            prevDigit = true;
-            firstDigit = i;
-        } else if (!std::isdigit(vector[i]) && prevDigit) {
-            return {std::stof(vector.substr(firstDigit, i - 1)), vector.substr(i, vector.size())};
-        }
-    }
-    throw std::invalid_argument("No numbers found in the input!");
-}
-
 std::string WeightedAutomatonModel::summarize_reduction(std::shared_ptr<RepresentationInterface> &A,
                                                         std::shared_ptr<RepresentationInterface> &minA) const {
     std::stringstream result;

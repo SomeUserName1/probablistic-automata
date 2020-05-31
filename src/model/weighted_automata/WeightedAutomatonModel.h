@@ -45,9 +45,28 @@ public:
                "eta=(0,0,0,1);\n";
     }
 
-    static std::tuple<std::string, size_t> get_next_line(const std::string &str, size_t prev) noexcept;
+    inline static std::tuple<std::string, size_t> get_next_line(const std::string &str, size_t prev) noexcept {
+        std::string line;
+        std::size_t pos = str.find(';', prev);
+        line = str.substr(prev, pos - prev);
+        line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
+        prev = pos + 1;
+        return std::make_tuple(line, prev);
+    }
 
-    static std::tuple<float, std::string> extract_one_digit(const std::string &vector);
+    static inline std::tuple<float, std::string> extract_one_digit(const std::string &vector) {
+        bool prevDigit = false;
+        int firstDigit = -1;
+        for (int i = 0; i < (int) vector.size(); i++) {
+            if (std::isdigit(vector[i]) && !prevDigit) {
+                prevDigit = true;
+                firstDigit = i;
+            } else if (!std::isdigit(vector[i]) && prevDigit) {
+                return {std::stof(vector.substr(firstDigit, i - 1)), vector.substr(i, vector.size())};
+            }
+        }
+        throw std::invalid_argument("No numbers found in the input!");
+    }
 };
 
 

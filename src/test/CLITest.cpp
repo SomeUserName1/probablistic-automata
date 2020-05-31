@@ -13,184 +13,167 @@
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/wait.h>
 
 #define PIPE_READ 0
 #define PIPE_WRITE 1
 
-std::string execute(const char*, const char*, std::string);
+std::string execute(std::string, std::vector<std::string>, std::string);
 
 SCENARIO("The program can be called from the command line", "[CLI]") {
     GIVEN("No arguments") {
         WHEN("The program is executed") {
-            std::filesystem::path p("test.txt");
-            if(std::filesystem::exists(p)) {
-                std::remove(p.c_str());
-            }
-            std::string output = execute("./ssm", "./ssm", "0");
-
+            std::string output = execute("./ssm",  {"/.ssm"}, "4\n");
             THEN("The text user interface is launched") {
                 REQUIRE(output.starts_with("Hello"));
             }
         }
     }GIVEN("Incomplete arguments") {
         WHEN("the program is executed ") {
-           /* std::string command("./ssm -t Reduce  -m WA > test.txt");
-            int status = std::system(command.c_str());
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            status = std::system("ps aux | grep ssm | awk '{print $2}' | xargs -I{} kill -9 {}");
-
-            std::stringstream buf;
-            buf << std::ifstream("test.txt").rdbuf();
-*/
+            std::string output = execute("./ssm", {"./ssm", "-t", "Reduce", "-m", "WA"}, "4\n");
             THEN("The text user interface is launched") {
-                // REQUIRE(buf.str().starts_with("Hello"));
+                REQUIRE(output.starts_with("Hello"));
             }
         }
-    }GIVEN("Text and gui switches") {
+    }GIVEN("Text or gui switches") {
         WHEN("The program is called with the gui switch") {
+            std::string output = execute("./ssm", {"./ssm", "-G"}, "");
             THEN("An exception is thrown as its not implemented") {
-
+               REQUIRE(output.ends_with("has not been implemented yet or is not supposed to be implemented\n"));
             }
         }WHEN("The program is called with the TUI switch") {
+            std::string output = execute("./ssm", {"./ssm", "-T"}, "4\n");
             THEN("The TUI is executed") {
-
+                REQUIRE(output.starts_with("Hello"));
             }
         }
-    }GIVEN("All arguments") {
+    } GIVEN("All arguments") {
         WHEN("The arguments are correctly specified") {
+            std::vector<std::string> args = {"./ssm", "-t", "Reduction", "-m", "WA", "-r", "Kiefer", "-i",
+                                   "../src/test/test_input.txt", "-o", "out.txt"};
+            std::string output = execute("./ssm", args, "");
+            THEN("The program executes without error, loading the input, processing and writing the output to file") {
+                std::string line;
+                std::size_t pos, prev = 0;
+                pos = output.find('\n', 0);
+                line = output.substr(prev, pos - prev);
+                prev = pos + 1;
+                REQUIRE(line.starts_with("Loading"));
 
-            THEN("The program executes correctly") {
+                pos = output.find('\n', prev);
+                line = output.substr(prev, pos - prev);
+                prev = pos + 1;
 
+                REQUIRE(line.starts_with("Parsed"));
+
+                pos = output.find('\n', prev);
+                line = output.substr(prev, pos - prev);
+                prev = pos + 1;
+
+                REQUIRE(line.starts_with("Finished"));
+
+                pos = output.find('\n', prev);
+                line = output.substr(prev, pos - prev);
+                prev = pos + 1;
+
+                REQUIRE(line.starts_with("Output"));
             }
         }WHEN("An incorrect task is specified") {
+            std::vector<std::string> args = {"./ssm", "-t", "Reduc", "-m", "WA", "-r", "Kiefer", "-i",
+                                            "../src/test/test_input.txt", "-o", "out.txt"};
+            std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
-
+                REQUIRE(output.ends_with("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task, you "
+                                         "specified Reduc\n"));
             }
         }WHEN("An incorrect model type is specified") {
+            std::vector<std::string> args = {"./ssm", "-t Reduction", "-m VfB", "-r Kiefer", "-i"
+                                             " ../src/test/test_input.txt", "-o out.txt"};
+            std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
-
+                REQUIRE(output.ends_with("as model, you specified VfB\n"));
             }
         }WHEN("A non-existing input path is specified") {
+            std::vector<std::string> args = {"./ssm", "-t", "Reduction", "-m", "WA", "-r", "Kiefer", "-i",
+                                             "/sparseDense", "-o", "out.txt"};
+            std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
-
+                REQUIRE(output.ends_with("No such file or directory [/sparseDense]\n"));
             }
         }WHEN("A badly formatted input path is specified") {
+            std::vector<std::string> args = {"./ssm", "-t", "Reduction", "-m", "WA", "-r", "Kiefer", "-i",
+                                             "-+!?**/", "-o", "out.txt"};
+            std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
-
+                REQUIRE(output.ends_with("No such file or directory [-+!?**/]\n"));
             }
         }WHEN("A badly formatted output path is specified") {
+            std::vector<std::string> args = {"./ssm", "-t", "Reduction", "-m", "WA", "-r", "Kiefer", "-i",
+                                             "../src/test/test_input.txt", "-o", "/home/"};
+            std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
-
+                REQUIRE(output.ends_with("Please specify a path with a file name to write the results to!\n"));
             }
         }
     }
 }
 
-std::string execute(const char* cmd, const char* args, std::string msg) {
-    int aStdinPipe[2];
-    int aStdoutPipe[2];
-    char output[1024];
+std::string execute(std::string cmd, std::vector<std::string> args, std::string msg) {
+    int stdinPipe[2];
+    int stdoutPipe[2];
+    char output;
     int nResult;
-    std::string result;
+    std::string result("");
 
-    if (pipe(aStdinPipe) < 0) {
+    if (pipe(stdinPipe) < 0) {
         throw std::runtime_error("allocating pipe for child input redirect");
     }
-    if (pipe(aStdoutPipe) < 0) {
-        close(aStdinPipe[PIPE_READ]);
-        close(aStdinPipe[PIPE_WRITE]);
+    if (pipe(stdoutPipe) < 0) {
+        close(stdinPipe[PIPE_READ]);
+        close(stdinPipe[PIPE_WRITE]);
         throw std::runtime_error("allocating pipe for child output redirect");
     }
 
     pid_t pid = fork();
-
     if (pid == 0)
     {
-        // redirect stdin
-        if (dup2(aStdinPipe[PIPE_READ], STDIN_FILENO) == -1) {
-            throw std::runtime_error("duplicating stdin failed");
+        if (dup2(stdinPipe[PIPE_READ], STDIN_FILENO) == -1 ||
+            dup2(stdoutPipe[PIPE_WRITE], STDOUT_FILENO) == -1 ||
+            dup2(stdoutPipe[PIPE_WRITE], STDERR_FILENO) == -1) {
+            throw std::runtime_error("duplicating stdin, stdout or stderr failed");
         }
+        close(stdinPipe[PIPE_READ]);
+        close(stdinPipe[PIPE_WRITE]);
+        close(stdoutPipe[PIPE_READ]);
+        close(stdoutPipe[PIPE_WRITE]);
 
-        // redirect stdout
-        if (dup2(aStdoutPipe[PIPE_WRITE], STDOUT_FILENO) == -1) {
-            throw std::runtime_error("duplicating stdout failed");
-        }
+        std::vector<char*> argv;
+        std::transform(std::begin(args), std::end(args),
+                       std::back_inserter(argv),
+                       [](std::string& s){ s.push_back(0); return &s[0]; });
+        argv.push_back(nullptr);
 
-        // redirect stderr
-        if (dup2(aStdoutPipe[PIPE_WRITE], STDERR_FILENO) == -1) {
-            throw std::runtime_error("duplicating stderr failed");
-        }
-
-        // all these are for use by parent only
-        close(aStdinPipe[PIPE_READ]);
-        close(aStdinPipe[PIPE_WRITE]);
-        close(aStdoutPipe[PIPE_READ]);
-        close(aStdoutPipe[PIPE_WRITE]);
-
-        // run child process image
-        // replace this with any exec* function find easier to use ("man exec")
-        nResult = execlp(cmd, args, (char *) NULL);
+        nResult = execvp(cmd.c_str(), argv.data());
         exit(nResult);
-        //std::system(cmd);
     }
     else if (pid > 0) {
-        // close unused file descriptors, these are for child only
-        close(aStdinPipe[PIPE_READ]);
-        close(aStdoutPipe[PIPE_WRITE]);
+        close(stdinPipe[PIPE_READ]);
+        close(stdoutPipe[PIPE_WRITE]);
 
-        write(aStdinPipe[PIPE_WRITE], msg.c_str(), msg.size());
+        write(stdinPipe[PIPE_WRITE], msg.c_str(), msg.size());
 
-        // Just a char by char read here, you can change it accordingly
-        while (read(aStdoutPipe[PIPE_READ], &output, 1024) == 1) {
-            result.append(output);
+        while (read(stdoutPipe[PIPE_READ], &output, 1) == 1) {
+            result += output;
         }
 
-        // done with these in this example program, you would normally keep these
-        // open of course as long as you want to talk to the child
-        close(aStdinPipe[PIPE_WRITE]);
-        close(aStdoutPipe[PIPE_READ]);
+        close(stdinPipe[PIPE_WRITE]);
+        close(stdoutPipe[PIPE_READ]);
     } else {
-        // failed to create child
-        close(aStdinPipe[PIPE_READ]);
-        close(aStdinPipe[PIPE_WRITE]);
-        close(aStdoutPipe[PIPE_READ]);
-        close(aStdoutPipe[PIPE_WRITE]);
+        close(stdinPipe[PIPE_READ]);
+        close(stdinPipe[PIPE_WRITE]);
+        close(stdoutPipe[PIPE_READ]);
+        close(stdoutPipe[PIPE_WRITE]);
         throw std::runtime_error("Fork failed");
     }
-    return output;
+    return result;
 }
-
-/*
- * int aStdinPipe[2];
-    if (pipe(aStdinPipe) < 0) {
-        throw std::runtime_error("allocating pipe for child input redirect failed");
-    }
-
-    pid_t pid = fork();
-
-    if (pid == 0)
-    {
-        if (dup2(aStdinPipe[PIPE_READ], STDIN_FILENO) == -1) {
-            throw std::runtime_error("child input redirect failed");
-        }
-        close(aStdinPipe[PIPE_READ]);
-        close(aStdinPipe[PIPE_WRITE]);
-
-
-        std::system(cmd);
-    }
-    else if (pid > 0)
-    {   std::string msgExit("0");
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        close(aStdinPipe[PIPE_READ]);
-        write(aStdinPipe[PIPE_WRITE], msgExit.c_str(), msgExit.size());
-        close(aStdinPipe[PIPE_WRITE]);
-    }
-    else
-    {
-        close(aStdinPipe[PIPE_READ]);
-        close(aStdinPipe[PIPE_WRITE]);
-        throw std::runtime_error("Fork failed");
-    }
- */
