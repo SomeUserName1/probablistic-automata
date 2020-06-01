@@ -19,8 +19,6 @@ SET(MSAN_OPTIONS detect_leaks=1)
 SET(MSAN_OPTIONS symbolize=1)
 SET(MSAN_SYMBOLIZER_PATH $(which llvm-symbolizer))
 
-INCLUDE_DIRECTORIES(include)
-
 ADD_EXECUTABLE(ssm src/main.cpp
                    src/ui/TextUserInterface.cpp
                    src/model/differential_equations/DifferentialEquationModel.cpp
