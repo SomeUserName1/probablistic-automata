@@ -2,8 +2,10 @@
 #define STOCHASTIC_SYSTEM_MINIMIZATION_USERINTERFACE_H
 
 #include <string>
-#include <ios>
 #include <stdexcept>
+#include <filesystem>
+#include <iostream>
+#include <fstream>
 
 #include "../model/ModelInterface.h"
 
@@ -27,7 +29,7 @@ public:
      * To allow polymorphism in the main, pure virtual is not possible. As the below functions are virtual, we
      * simply throw an exception, when an invalid call to the base class is made.
      */
-    virtual ~UserInterface() = default;
+    virtual ~UserInterface();
 
     [[nodiscard]] virtual Task select_task() const = 0;
 

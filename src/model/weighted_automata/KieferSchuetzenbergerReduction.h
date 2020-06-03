@@ -19,7 +19,7 @@ public:
     const override;
 
     static std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface> &waInstance,
-                                                           int K);
+                                                           uint K);
 
     static std::shared_ptr<WeightedAutomatonInstance> backward_reduction(std::shared_ptr<WeightedAutomatonInstance>
                                                                          &A,
@@ -29,16 +29,16 @@ public:
                                                                         std::vector<Eigen::MatrixXi> randomVectors);
 
     static inline std::vector<Eigen::MatrixXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
-            int K = 300) {
+            uint K = 300) {
         std::random_device rd;
         std::mt19937 rng(rd());
-        std::uniform_int_distribution<> uniform(1, A->get_states() * K);
+        std::uniform_int_distribution<> uniform(1, static_cast<int>(A->get_states() * K));
         std::vector<Eigen::MatrixXi> randV;
 
-        for (int i = 0; i < A->get_states(); i++) {
+        for (uint i = 0; i < A->get_states(); i++) {
             auto vect = Eigen::MatrixXi(A->get_number_input_characters(), A->get_states());
-            for (int j = 0; j < A->get_number_input_characters(); j++) {
-                for (int k = 0; k < A->get_states(); k++) {
+            for (uint j = 0; j < A->get_number_input_characters(); j++) {
+                for (uint k = 0; k < A->get_states(); k++) {
                     vect(j, k) = uniform(rng);
                 }
             }
@@ -63,10 +63,10 @@ public:
     }
 
     static std::vector<std::tuple<std::shared_ptr<Eigen::RowVectorXd>, std::vector<uint>>> generate_words_forwards(
-            std::shared_ptr<WeightedAutomatonInstance> &A, int k);
+            std::shared_ptr<WeightedAutomatonInstance> &A, uint k);
 
     static std::vector<std::tuple<std::shared_ptr<Eigen::VectorXd>, std::vector<uint>>> generate_words_backwards(
-            std::shared_ptr<WeightedAutomatonInstance> &A, int k);
+            std::shared_ptr<WeightedAutomatonInstance> &A, uint k);
 
 
 };

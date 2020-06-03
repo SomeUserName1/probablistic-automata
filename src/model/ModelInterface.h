@@ -14,11 +14,11 @@
 class ModelInterface {
 
 public:
-    virtual ~ModelInterface() = default;
+    virtual ~ModelInterface();
 
     [[nodiscard]] virtual std::string get_name() const = 0;
 
-    [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> validate_model_instance(const std::string &)
+    [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> validate_model_instance(std::string &)
     const = 0;
 
     [[nodiscard]] virtual std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &,

@@ -3,8 +3,8 @@
 #include "../model/weighted_automata/WeightedAutomatonInstance.h"
 
 static std::shared_ptr<WeightedAutomatonInstance> gen_wa();
-static std::vector<Eigen::MatrixXi> gen_fixed_rand_v();
-static std::vector<Eigen::MatrixXi> gen_fixed_rand_v3();
+// static std::vector<Eigen::MatrixXi> gen_fixed_rand_v();
+// static std::vector<Eigen::MatrixXi> gen_fixed_rand_v3();
 static bool double_compare(double x, double y);
 
 SCENARIO("Random Vectors have correct shape") {
@@ -13,7 +13,7 @@ SCENARIO("Random Vectors have correct shape") {
         auto automaton = std::make_shared<WeightedAutomatonInstance>(10, 4, std::make_shared<Eigen::RowVectorXd>(10),
                                                                      mu,
                                                                      std::make_shared<Eigen::VectorXd>(10));
-        int K = 100;
+        uint K = 100;
         WHEN("generating random vectors") {
             auto vectors = WeightedAutomatonInstance::generate_random_vectors(automaton, K);
             THEN("|states| random row vectors of length |characters| are generated") {
@@ -129,7 +129,7 @@ SCENARIO("The equivalence of automata is tested") {
             THEN("They are not equal") {
                 REQUIRE(*wa1 != *wa2);
             }
-        }WHEN("The automata are different in structure but equivalent in semantics") {;
+        }WHEN("The automata are different in structure but equivalent in semantics") {
             int states = 3;
             int characters = 2;
             auto alpha = std::make_shared<Eigen::RowVectorXd>(states);
@@ -194,7 +194,7 @@ std::shared_ptr<WeightedAutomatonInstance> gen_wa() {
     return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
 }
 
-std::vector<Eigen::MatrixXi> gen_fixed_rand_v() {
+/*std::vector<Eigen::MatrixXi> gen_fixed_rand_v() {
     Eigen::MatrixXi mat1(2, 4);
     Eigen::MatrixXi mat2(2, 4);
     Eigen::MatrixXi mat3(2, 4);
@@ -214,7 +214,7 @@ std::vector<Eigen::MatrixXi> gen_fixed_rand_v3() {
     mat2 << 8, 1, 8, 7, 8, 2;
     mat3 << 1, 6, 5, 9, 2, 1;
     return {mat1, mat2, mat3};
-}
+}*/
 
 bool double_compare(double x, double y) {
     double maxXYOne = std::max( { 1.0, std::fabs(x) , std::fabs(y) } ) ;

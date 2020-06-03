@@ -1,9 +1,11 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_MODELCONVERSIONINTERFACE_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_MODELCONVERSIONINTERFACE_H
 
+#include "RepresentationInterface.h"
+
 class ConversionMethodInterface {
 public:
-    virtual ~ConversionMethodInterface() = default;
+    virtual ~ConversionMethodInterface();
 
     virtual std::string get_left_model_name() const = 0;
 

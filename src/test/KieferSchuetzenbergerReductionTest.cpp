@@ -11,6 +11,8 @@ static std::vector<Eigen::MatrixXi> gen_fixed_rand_v();
 
 static std::vector<Eigen::MatrixXi> gen_fixed_rand_v3();
 
+static bool double_compare(double x, double y);
+
 SCENARIO("The word factors are calculated correctly as specified in the paper") {
     GIVEN("Fixed random vectors") {
         auto mat = gen_fixed_rand_v();
@@ -49,7 +51,7 @@ SCENARIO("The random vectors have the correct shape") {
         auto automaton = std::make_shared<WeightedAutomatonInstance>(10, 4, std::make_shared<Eigen::RowVectorXd>(10),
                                                                      mu,
                                                                      std::make_shared<Eigen::VectorXd>(10));
-        int K = 100;
+        uint K = 100;
         WHEN("generating random vectors") {
             auto vectors = KieferSchuetzenbergerReduction::generate_random_vectors(automaton, K);
             THEN("yields |states| random matrices of shape |characters| * |states| are generated") {
@@ -78,7 +80,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->cols() == A->get_states());
                 auto hcVector = Eigen::RowVectorXd(A->get_states());
                 hcVector << 0, 1, 1, 0;
-                REQUIRE((*vector - hcVector).norm() == 0);
+                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
 
                 std::tie(vector, word) = wordsForward[1];
                 REQUIRE(word.size() == 2);
@@ -87,7 +89,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->rows() == 1);
                 REQUIRE(vector->cols() == A->get_states());
                 hcVector << 0, 0, 0, 2;
-                REQUIRE((*vector - hcVector).norm() == 0);
+                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
             }
         }
         WHEN("Generating words backwards") {
@@ -102,7 +104,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->cols() == 1);
                 auto hcVector = Eigen::VectorXd(A->get_states());
                 hcVector << 0, 1, 1, 0;
-                REQUIRE((*vector - hcVector).norm() == 0);
+                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
 
                 std::tie(vector, word) = wordsBackward[1];
                 REQUIRE(word.size() == 2);
@@ -111,7 +113,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->rows() == A->get_states());
                 REQUIRE(vector->cols() == 1);
                 hcVector << 2, 0, 0, 0;
-                REQUIRE((*vector - hcVector).norm() == 0);
+                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
             }
         }
     }
@@ -132,8 +134,8 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
                 v3 << 0, 2, 2, 44;
                 v4 << 0, 4, 4, 72;
                 std::vector<Eigen::MatrixXd> vect = {v1, v2, v3, v4};
-                for (int i = 0; i < A->get_states(); i++) {
-                    REQUIRE((vect[i] - rhoForward[i]).norm() == 0);
+                for (size_t i = 0; i < A->get_states(); i++) {
+                    REQUIRE(double_compare((vect[i] - rhoForward[i]).norm(), 0));
                 }
             }
         }
@@ -149,8 +151,8 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
                 v3 << 44, 1, 1, 0;
                 v4 << 72, 5, 5, 0;
                 std::vector<Eigen::MatrixXd> vect = {v1, v2, v3, v4};
-                for (int i = 0; i < A->get_states(); i++) {
-                    REQUIRE((vect[i] - rhoBackward[i]).norm() == 0);
+                for (size_t i = 0; i < A->get_states(); i++) {
+                    REQUIRE(double_compare((vect[i] - rhoBackward[i]).norm(), 0));
                 }
             }
         }
@@ -168,20 +170,20 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
 
                 auto trueAlpha = Eigen::RowVectorXd(3);
                 trueAlpha << 1, 0, 0;
-                REQUIRE((*(minWA->get_alpha()) - trueAlpha).norm() == 0);
+                REQUIRE(double_compare((*(minWA->get_alpha()) - trueAlpha).norm(), 0));
 
                 auto trueMu1 = Eigen::MatrixXd(3, 3);
                 auto trueMu2 = Eigen::MatrixXd(3, 3);
                 trueMu1 << 0, -1.0 / 24.0, 33.0 / 48.0, 0, 0, 0, 0, 0, 0;
                 trueMu2 << 0, 0, 0, 0, 1.0 / 8.0, -9.0 / 16.0, 0, 1.0 / 36.0, -1.0 / 8.0;
                 std::vector<Eigen::MatrixXd> trueMu = {trueMu1, trueMu2};
-                for (int i = 0; i < 2; i++) {
+                for (size_t i = 0; i < 2; i++) {
                     REQUIRE((minWA->get_mu()[i])->isApprox(trueMu[i]));
                 }
 
                 auto trueEta = Eigen::VectorXd(3);
                 trueEta << 0, 198, 12;
-                REQUIRE((*(minWA->get_eta()) - trueEta).norm() == 0);
+                REQUIRE(double_compare((*(minWA->get_eta()) - trueEta).norm(),0));
             }
         }
         WHEN("calculating the backward reduction") {
@@ -192,20 +194,20 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
 
                 auto trueAlpha = Eigen::RowVectorXd(3);
                 trueAlpha << 0, 198, 12;
-                REQUIRE((*(minWA->get_alpha()) - trueAlpha).norm() == 0);
+                REQUIRE(double_compare((*(minWA->get_alpha()) - trueAlpha).norm(), 0));
 
                 auto trueMu1 = Eigen::MatrixXd(3, 3);
                 auto trueMu2 = Eigen::MatrixXd(3, 3);
                 trueMu1 << 0, 0, 0, 0, 1.0 / 16.0, 1.0 / 8.0, 0, -1.0 / 32.0, -1.0 / 16.0;
                 trueMu2 << 0, 0, 0, -1.0 / 192.0, 0, 0, 11.0 / 128.0, 0, 0;
                 std::vector<Eigen::MatrixXd> trueMu = {trueMu1, trueMu2};
-                for (int i = 0; i < 2; i++) {
+                for (size_t i = 0; i < 2; i++) {
                     REQUIRE((minWA->get_mu()[i])->isApprox(trueMu[i]));
                 }
 
                 auto trueEta = Eigen::VectorXd(3);
                 trueEta << 1, 0, 0;
-                REQUIRE((*(minWA->get_eta()) - trueEta).norm() == 0);
+                REQUIRE(double_compare((*(minWA->get_eta()) - trueEta).norm(), 0));
             }
         }
     }
@@ -230,14 +232,14 @@ SCENARIO("When executing the full reduction") {
 
                 auto trueMu1 = Eigen::MatrixXd(3, 3);
                 auto trueMu2 = Eigen::MatrixXd(3, 3);
-                trueMu1 << (double)5.256737805990320e-20, (double)-1.612066260503700e-18, (double)-2.821115955881475e-18,
-                           (double)2.775557561562891e-17, (double)-28.0/221.0, (double)-49.0/221.0,
-                           0,  (double)16.0/221.0,  (double)28.0/221.0;
-                trueMu2 << (double)2.523234146875356e-18, (double)9.617563887311330e-17, (double)1.193872527811887e-15,
-                           (double)64.0/221.0,  (double)2.775557561562891e-17, (double)6.661338147750939e-16,
-                           (double)-5.0/221.0,  (double)-3.469446951953614e-18, (double)-5.551115123125783e-17;
+                trueMu1 << 5.256737805990320e-20, -1.612066260503700e-18, -2.821115955881475e-18,
+                           2.775557561562891e-17, -28.0/221.0, -49.0/221.0,
+                           0,  16.0/221.0,  28.0/221.0;
+                trueMu2 << 2.523234146875356e-18, 9.617563887311330e-17, 1.193872527811887e-15,
+                           64.0/221.0,  2.775557561562891e-17, 6.661338147750939e-16,
+                           -5.0/221.0,  -3.469446951953614e-18, -5.551115123125783e-17;
                 std::vector<Eigen::MatrixXd> trueMu = {trueMu1, trueMu2};
-                for (int i = 0; i < 2; i++) {
+                for (size_t i = 0; i < 2; i++) {
                     REQUIRE((minWA->get_mu()[i])->isApprox(trueMu[i]));
                 }
 
@@ -290,4 +292,10 @@ std::vector<Eigen::MatrixXi> gen_fixed_rand_v3() {
     mat2 << 8, 1, 8, 7, 8, 2;
     mat3 << 1, 6, 5, 9, 2, 1;
     return {mat1, mat2, mat3};
+}
+
+bool double_compare(double x, double y) {
+    double maxXYOne = std::max( { 1.0, std::fabs(x) , std::fabs(y) } ) ;
+
+    return std::fabs(x - y) <= std::numeric_limits<double>::epsilon()*maxXYOne ;
 }

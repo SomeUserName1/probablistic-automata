@@ -1,7 +1,7 @@
 #include "DifferentialEquationModel.h"
 
 std::shared_ptr<RepresentationInterface>
-DifferentialEquationModel::validate_model_instance(const std::string &) const {
+DifferentialEquationModel::validate_model_instance(std::string &) const {
     throw NotImplementedException();
 }
 

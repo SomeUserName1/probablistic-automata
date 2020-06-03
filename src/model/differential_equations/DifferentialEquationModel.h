@@ -13,7 +13,7 @@ public:
 
     std::string get_name() const override;
 
-    std::shared_ptr<RepresentationInterface> validate_model_instance(const std::string &string) const override;
+    std::shared_ptr<RepresentationInterface> validate_model_instance(std::string &string) const override;
 
     std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &ptr,
                                     std::shared_ptr<RepresentationInterface> &sharedPtr) const override;
