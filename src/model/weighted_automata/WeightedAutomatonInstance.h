@@ -3,7 +3,7 @@
 
 #include <utility>
 #include <vector>
-#include <Eigen/Eigen>
+#include <eigen3/Eigen/Eigen>
 #include <memory>
 #include <iostream>
 #include <sstream>
@@ -13,14 +13,14 @@
 
 class WeightedAutomatonInstance : public RepresentationInterface {
 private:
-    int states{};
-    int noInputCharacters{};
+    uint states{};
+    uint noInputCharacters{};
     std::shared_ptr<Eigen::RowVectorXd> alpha;
     std::vector<std::shared_ptr<Eigen::MatrixXd>> mu;
     std::shared_ptr<Eigen::VectorXd> eta;
 
 public:
-    WeightedAutomatonInstance(int states, int characters, std::shared_ptr<Eigen::RowVectorXd> alpha,
+    WeightedAutomatonInstance(uint states, uint characters, std::shared_ptr<Eigen::RowVectorXd> alpha,
                               std::vector<std::shared_ptr<Eigen::MatrixXd>> mu, std::shared_ptr<Eigen::VectorXd> eta);
 
     WeightedAutomatonInstance() = default;
@@ -33,9 +33,9 @@ public:
 
     double process_word(const std::vector<uint> &word) const;
 
-    [[nodiscard]] int get_states() const;
+    [[nodiscard]] uint get_states() const;
 
-    int get_number_input_characters() const;
+    uint get_number_input_characters() const;
 
     [[nodiscard]] const std::shared_ptr<Eigen::RowVectorXd> &get_alpha() const;
 
@@ -49,15 +49,15 @@ public:
     const std::string pretty_print() const override;
 
     static inline std::vector<Eigen::RowVectorXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance> &A,
-                                                                          int K) {
+                                                                          uint K) {
         std::random_device rd;
         std::mt19937 rng(rd());
-        std::uniform_int_distribution<> uniform(1, A->get_states() * K);
-        std::vector<Eigen::RowVectorXi> randV;
+        std::uniform_int_distribution<> uniform(1, static_cast<int>(A->get_states() * K));
+        std::vector<Eigen::RowVectorXi> randV = {};
 
-        for (int i = 0; i < A->get_states(); i++) {
+        for (uint i = 0; i < A->get_states(); i++) {
             auto vect = Eigen::RowVectorXi(1, A->get_number_input_characters());
-            for (int j = 0; j < A->get_number_input_characters(); j++) {
+            for (uint j = 0; j < A->get_number_input_characters(); j++) {
                 vect(j) = uniform(rng);
             }
             randV.push_back(vect);
@@ -65,7 +65,7 @@ public:
         return randV;
     }
 
-    static bool equivalent(const WeightedAutomatonInstance &, const WeightedAutomatonInstance &, int k = 300);
+    static bool equivalent(const WeightedAutomatonInstance &, const WeightedAutomatonInstance &, uint k = 300);
 };
 
 #endif //STOCHASTIC_SYSTEM_MINIMIZATION_WEIGHTEDAUTOMATONINSTANCE_H

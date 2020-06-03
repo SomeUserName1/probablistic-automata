@@ -6,7 +6,7 @@
 // Used to avoid a cyclic dependency: ModelInterface to ReductionMethodInterface to ModelInterface
 class RepresentationInterface {
 public:
-    virtual ~RepresentationInterface() = default;
+    virtual ~RepresentationInterface();
 
     virtual const std::string pretty_print() const = 0;
 };

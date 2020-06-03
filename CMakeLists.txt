@@ -7,7 +7,8 @@ SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 SET(CMAKE_CXX_STANDARD 20)
 SET(CMAKE_CXX_FLAGS "-Wall -Wpedantic -std=c++20 -fsanitize=undefined,address -fno-omit-frame-pointer \
 -fno-optimize-sibling-calls -Werror=implicit-function-declaration -Wshadow -Wuninitialized -Wunused-label -Wall \
--Wpedantic -Wextra  -ferror-limit=999 -Wno-deprecated-anon-enum-enum-conversion")
+-Wpedantic -Wextra  -ferror-limit=999  -Weverything -Wno-c++98-compat")
+
 #  -fsanitize=memory
 # SET(CMAKE_CXX_FLAGS "-Wall -Wpedantic -std=c++20 -O3")
 
@@ -25,7 +26,12 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/model/weighted_automata/WeightedAutomatonModel.cpp
                    src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp
                    src/model/weighted_automata/WeightedAutomatonInstance.cpp
-                   src/NotImplementedException.cpp)
+                   src/NotImplementedException.cpp
+                   src/model/ModelInterface.cpp
+                   src/model/ConversionMethodInterface.cpp
+                   src/model/ReductionMethodInterface.cpp
+                   src/model/RepresentationInterface.cpp
+                   src/ui/UserInterface.cpp)
 
 find_package(Catch2 REQUIRED)
 add_executable(tests src/test/TestsMain.cpp
@@ -39,7 +45,12 @@ add_executable(tests src/test/TestsMain.cpp
         src/model/weighted_automata/WeightedAutomatonModel.cpp
         src/model/weighted_automata/KieferSchuetzenbergerReduction.cpp
         src/model/weighted_automata/WeightedAutomatonInstance.cpp
-        src/NotImplementedException.cpp)
+        src/NotImplementedException.cpp
+        src/model/ModelInterface.cpp
+        src/model/ConversionMethodInterface.cpp
+        src/model/ReductionMethodInterface.cpp
+        src/model/RepresentationInterface.cpp
+        src/ui/UserInterface.cpp)
 target_link_libraries(tests Catch2::Catch2)
 
 

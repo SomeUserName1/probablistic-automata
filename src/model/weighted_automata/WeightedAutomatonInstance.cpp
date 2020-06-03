@@ -1,30 +1,30 @@
 #include "WeightedAutomatonInstance.h"
 
 
-WeightedAutomatonInstance::WeightedAutomatonInstance(int states, int characters,
-                                                     std::shared_ptr<Eigen::RowVectorXd> alpha,
-                                                     std::vector<std::shared_ptr<Eigen::MatrixXd>> mu,
-                                                     std::shared_ptr<Eigen::VectorXd> eta)
-        : states(states), noInputCharacters(characters), alpha(std::move(alpha)), mu(std::move(mu)),
-          eta(std::move(eta)) {}
+WeightedAutomatonInstance::WeightedAutomatonInstance(uint mStates, uint mCharacters,
+                                                     std::shared_ptr<Eigen::RowVectorXd> mAlpha,
+                                                     std::vector<std::shared_ptr<Eigen::MatrixXd>> mMu,
+                                                     std::shared_ptr<Eigen::VectorXd> mEta)
+        : states(mStates), noInputCharacters(mCharacters), alpha(std::move(mAlpha)), mu(std::move(mMu)),
+          eta(std::move(mEta)) {}
 
 double WeightedAutomatonInstance::process_word(const std::vector<uint> &word) const {
     auto intermediate = Eigen::RowVectorXd(*(this->alpha));
     for (const auto &letter : word) {
-        if ((int)letter >= this->noInputCharacters) {
+        if (letter >= this->noInputCharacters) {
             throw std::invalid_argument("The specified word has a letter that is not in the input alphabet!");
         }
         intermediate *= *(this->mu[letter]);
     }
-    return (double)(intermediate * *(this->eta));
+    return static_cast<double>(intermediate * *(this->eta));
 
 }
 
-int WeightedAutomatonInstance::get_states() const {
+uint WeightedAutomatonInstance::get_states() const {
     return this->states;
 }
 
-int WeightedAutomatonInstance::get_number_input_characters() const {
+uint WeightedAutomatonInstance::get_number_input_characters() const {
     return this->noInputCharacters;
 }
 
@@ -69,7 +69,7 @@ const {
 }
 
 bool WeightedAutomatonInstance::equivalent(const WeightedAutomatonInstance &lhs, const WeightedAutomatonInstance &
-rhs, int K) {
+rhs, uint K) {
     if (lhs.get_number_input_characters() != rhs.get_number_input_characters()) {
         return false;
     }
@@ -84,7 +84,7 @@ rhs, int K) {
     auto sMu = subtractionAutomaton->get_mu();
     auto sAlpha = subtractionAutomaton->get_alpha();
 
-    for (int i = 0; i < subtractionAutomaton->get_states(); i++) {
+    for (size_t i = 0; i < subtractionAutomaton->get_states(); i++) {
         for (uint j = 0; j < sMu.size(); j++) {
             v = v + (randomVectors[i](j) * *(sMu[j]) * v);
         }
@@ -98,35 +98,34 @@ rhs, int K) {
 const std::shared_ptr<WeightedAutomatonInstance>
 WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonInstance &lhs,
                                                         const WeightedAutomatonInstance &rhs) {
-    int i;
-    int lhsStates = lhs.get_states();
-    int rhsStates = rhs.get_states();
-    int subStates = lhsStates + rhsStates;
-    int subCharacters = std::max(lhs.get_number_input_characters(), rhs.get_number_input_characters());
+    uint lhsStates = lhs.get_states();
+    uint rhsStates = rhs.get_states();
+    uint subStates = lhsStates + rhsStates;
+    uint subCharacters = std::max(lhs.get_number_input_characters(), rhs.get_number_input_characters());
 
     auto lhsAlpha = lhs.get_alpha();
     auto rhsAlpha = rhs.get_alpha();
     auto subAlpha = std::make_shared<Eigen::RowVectorXd>(lhsAlpha->cols() + rhsAlpha->cols());
-    for (i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
+    for (long i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
         (*subAlpha)(0, i) = i < lhsAlpha->cols() ? (*lhsAlpha)(0, i) : -(*rhsAlpha)(0, i - lhsAlpha->cols());
     }
 
     auto lhsEta = lhs.get_eta();
     auto rhsEta = rhs.get_eta();
     auto subEta = std::make_shared<Eigen::VectorXd>(lhsEta->rows() + rhsEta->rows());
-    for (i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
+    for (long i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
         (*subEta)(i, 0) = i < lhsEta->rows() ? (*lhsEta)(i, 0) : (*rhsEta)(i - lhsEta->rows(), 0);
     }
 
     std::vector<std::shared_ptr<Eigen::MatrixXd>> subMu = {};
     auto lhsMu = lhs.get_mu();
     auto rhsMu = rhs.get_mu();
-    for (i = 0; i < subCharacters; i++) {
+    for (size_t i = 0; i < subCharacters; i++) {
         auto muX = std::make_shared<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(subStates, subStates));
-        if (i < (int)lhsMu.size()) {
+        if (i < lhsMu.size()) {
             (*muX).block(0, 0, lhsStates, lhsStates) = *(lhsMu[i]);
         }
-        if (i < (int)rhsMu.size()) {
+        if (i < rhsMu.size()) {
             (*muX).block(lhsStates, lhsStates, rhsStates, rhsStates) = *(rhsMu[i]);
         }
         subMu.push_back(muX);

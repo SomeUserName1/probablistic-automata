@@ -50,7 +50,7 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
     } GIVEN("All arguments") {
         WHEN("The arguments are correctly specified") {
             std::vector<std::string> args = {"./ssm", "-t", "Reduction", "-m", "WA", "-r", "Kiefer", "-i",
-                                   "../src/test/test_input.txt", "-o", "out.txt"};
+                                   "../src/test/test_input_sparse.txt", "-o", "out.txt"};
             std::string output = execute("./ssm", args, "");
             THEN("The program executes without error, loading the input, processing and writing the output to file") {
                 std::string line;
@@ -80,7 +80,7 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
             }
         }WHEN("An incorrect task is specified") {
             std::vector<std::string> args = {"./ssm", "-t", "Reduc", "-m", "WA", "-r", "Kiefer", "-i",
-                                            "../src/test/test_input.txt", "-o", "out.txt"};
+                                            "../src/test/test_input_sparse.txt", "-o", "out.txt"};
             std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
                 REQUIRE(output.ends_with("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task, you "
@@ -88,7 +88,7 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
             }
         }WHEN("An incorrect model type is specified") {
             std::vector<std::string> args = {"./ssm", "-t Reduction", "-m VfB", "-r Kiefer", "-i"
-                                             " ../src/test/test_input.txt", "-o out.txt"};
+                                             " ../src/test/test_input_sparse.txt", "-o out.txt"};
             std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
                 REQUIRE(output.ends_with("as model, you specified VfB\n"));
@@ -109,7 +109,7 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
             }
         }WHEN("A badly formatted output path is specified") {
             std::vector<std::string> args = {"./ssm", "-t", "Reduction", "-m", "WA", "-r", "Kiefer", "-i",
-                                             "../src/test/test_input.txt", "-o", "/home/"};
+                                             "../src/test/test_input_sparse.txt", "-o", "/home/"};
             std::string output = execute("./ssm", args, "");
             THEN("An exception is thrown") {
                 REQUIRE(output.ends_with("Please specify a path with a file name to write the results to!\n"));

@@ -1,0 +1,14 @@
+input=sparse;
+states=4;
+characters=2;
+
+alpha: 1 1;
+
+mu:
+0 0 1 1;
+0 0 2 1;
+1 1 3 1;
+1 2 3 1;
+
+eta:
+3 1;
