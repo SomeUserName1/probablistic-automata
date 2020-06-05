@@ -18,6 +18,7 @@ SET(MSAN_OPTIONS symbolize=1)
 SET(MSAN_SYMBOLIZER_PATH $(which llvm-symbolizer))
 
 find_package(Catch2 REQUIRED)
+find_package(Eigen3 REQUIRED)
 include(ProcessorCount)
 include(CTest)
 include(Catch)

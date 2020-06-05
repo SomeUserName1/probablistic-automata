@@ -4,9 +4,7 @@ see ![Proposal](doc/proposal/proposal.pdf) and  ![Presentation](doc/proposal/pre
 For requirements and software design see the appendix of the ![report draft](doc/project_report/0-main.pdf)  
 
 ## TODOs  
-- [x] Implementation of WA minimization algorithm  
-- [X] Implementation of WA equivalence algorithm  
-- [ ] Write Unit Tests for the above  
+- [ ] Implement sparse matrix internals of the algorithm in addition to dense matrices  
 - [ ] Implement Lifting for WAs/Benchmarks  
 - [ ] Presentation on WA paper & implementation  
 - [ ] Execute algorithm with minimal example on paper (DE)  

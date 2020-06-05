@@ -9,6 +9,7 @@
 #include <sstream>
 #include <random>
 #include <mutex>
+#include <variant>
 
 #include "../RepresentationInterface.h"
 
@@ -16,13 +17,17 @@ class WeightedAutomatonInstance : public RepresentationInterface {
 private:
     uint states{};
     uint noInputCharacters{};
-    std::shared_ptr<Eigen::RowVectorXd> alpha;
-    std::vector<std::shared_ptr<Eigen::MatrixXd>> mu;
-    std::shared_ptr<Eigen::VectorXd> eta;
+    std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::RowVectorXd>> alpha;
+    std::vector<std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::MatrixXd>>> mu;
+    std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::VectorXd>> eta;
 
 public:
-    WeightedAutomatonInstance(uint states, uint characters, std::shared_ptr<Eigen::RowVectorXd> alpha,
-                              std::vector<std::shared_ptr<Eigen::MatrixXd>> mu, std::shared_ptr<Eigen::VectorXd> eta);
+    WeightedAutomatonInstance(uint states, uint characters,
+        std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::RowVectorXd>> alpha,
+        std::vector<std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>,
+                Eigen::MatrixXd>>> mu,
+        std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::VectorXd>> eta);
+
 
     WeightedAutomatonInstance() = default;
 
@@ -38,11 +43,15 @@ public:
 
     uint get_number_input_characters() const;
 
-    [[nodiscard]] const std::shared_ptr<Eigen::RowVectorXd> &get_alpha() const;
+    [[nodiscard]] const std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>,
+    Eigen::RowVectorXd>>
+        &get_alpha() const;
 
-    [[nodiscard]] const std::vector<std::shared_ptr<Eigen::MatrixXd>> &get_mu() const;
+    [[nodiscard]] const std::vector<std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>,
+        Eigen::MatrixXd>>> &get_mu() const;
 
-    [[nodiscard]] const std::shared_ptr<Eigen::VectorXd> &get_eta() const;
+    [[nodiscard]] const std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::VectorXd>>
+        &get_eta() const;
 
     static const std::shared_ptr<WeightedAutomatonInstance>
     create_subtraction_automaton(const WeightedAutomatonInstance &lhs, const WeightedAutomatonInstance &rhs);

@@ -1,11 +1,12 @@
 #include "WeightedAutomatonInstance.h"
 
-WeightedAutomatonInstance::WeightedAutomatonInstance(uint mStates, uint mCharacters,
-                                                     std::shared_ptr<Eigen::RowVectorXd> mAlpha,
-                                                     std::vector<std::shared_ptr<Eigen::MatrixXd>> mMu,
-                                                     std::shared_ptr<Eigen::VectorXd> mEta)
-        : states(mStates), noInputCharacters(mCharacters), alpha(std::move(mAlpha)), mu(std::move(mMu)),
-          eta(std::move(mEta)) {}
+WeightedAutomatonInstance::WeightedAutomatonInstance(uint mStates, uint characters,
+        std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::RowVectorXd>> mAlpha,
+        std::vector<std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>,
+                Eigen::MatrixXd>>> mMu,
+        std::shared_ptr<std::variant<Eigen::SparseMatrix<double, Eigen::ColMajor, long>, Eigen::VectorXd>> mEta)
+    : states(mStates), noInputCharacters(characters), alpha(std::move(mAlpha)), mu(std::move(mMu)),
+        eta(std::move(mEta)) {}
 
 double WeightedAutomatonInstance::process_word(const std::vector<uint> &word) const {
     auto intermediate = Eigen::RowVectorXd(*(this->alpha));
