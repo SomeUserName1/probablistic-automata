@@ -1,6 +1,5 @@
 #include "WeightedAutomatonInstance.h"
 
-
 WeightedAutomatonInstance::WeightedAutomatonInstance(uint mStates, uint mCharacters,
                                                      std::shared_ptr<Eigen::RowVectorXd> mAlpha,
                                                      std::vector<std::shared_ptr<Eigen::MatrixXd>> mMu,
@@ -86,7 +85,7 @@ rhs, uint K) {
 
     for (size_t i = 0; i < subtractionAutomaton->get_states(); i++) {
         for (uint j = 0; j < sMu.size(); j++) {
-            v = v + (randomVectors[i](j) * *(sMu[j]) * v);
+            v += (randomVectors[i](j) * *(sMu[j]) * v);
         }
         if (!((*sAlpha * v).isZero())) {
             return false;
@@ -106,6 +105,7 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     auto lhsAlpha = lhs.get_alpha();
     auto rhsAlpha = rhs.get_alpha();
     auto subAlpha = std::make_shared<Eigen::RowVectorXd>(lhsAlpha->cols() + rhsAlpha->cols());
+    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
     for (long i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
         (*subAlpha)(0, i) = i < lhsAlpha->cols() ? (*lhsAlpha)(0, i) : -(*rhsAlpha)(0, i - lhsAlpha->cols());
     }
@@ -113,13 +113,16 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     auto lhsEta = lhs.get_eta();
     auto rhsEta = rhs.get_eta();
     auto subEta = std::make_shared<Eigen::VectorXd>(lhsEta->rows() + rhsEta->rows());
+    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
     for (long i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
         (*subEta)(i, 0) = i < lhsEta->rows() ? (*lhsEta)(i, 0) : (*rhsEta)(i - lhsEta->rows(), 0);
     }
 
     std::vector<std::shared_ptr<Eigen::MatrixXd>> subMu = {};
+    std::mutex subMuMutex = std::mutex();
     auto lhsMu = lhs.get_mu();
     auto rhsMu = rhs.get_mu();
+    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
     for (size_t i = 0; i < subCharacters; i++) {
         auto muX = std::make_shared<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(subStates, subStates));
         if (i < lhsMu.size()) {
@@ -128,6 +131,7 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
         if (i < rhsMu.size()) {
             (*muX).block(lhsStates, lhsStates, rhsStates, rhsStates) = *(rhsMu[i]);
         }
+        std::lock_guard<std::mutex> guard(subMuMutex);
         subMu.push_back(muX);
     }
     return std::make_shared<WeightedAutomatonInstance>(subStates, subCharacters, subAlpha, subMu,

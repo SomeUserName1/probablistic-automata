@@ -132,5 +132,4 @@ dmypy.json
 cmake-build-debug
 *.prj
 
-include/magma-2.5.3
-include/SuiteSparse
+include/

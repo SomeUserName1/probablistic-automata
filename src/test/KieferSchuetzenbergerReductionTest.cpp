@@ -123,6 +123,7 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
         auto A = gen_wa();
         auto randomVectors = gen_fixed_rand_v();
         WHEN("calculating the rho vectors forward") {
+
             auto rhoForward = KieferSchuetzenbergerReduction::calculate_rho_forward_vectors(A, randomVectors);
             THEN("They are the same as when calculating them by hand") {
                 Eigen::RowVectorXd v1(4);
@@ -140,6 +141,7 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
             }
         }
         WHEN("calculating the rho vectors backward") {
+
             auto rhoBackward = KieferSchuetzenbergerReduction::calculate_rho_backward_vectors(A, randomVectors);
             THEN("They are the same as when calculating them by hand") {
                 Eigen::VectorXd v1(4);
@@ -151,6 +153,7 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
                 v3 << 44, 1, 1, 0;
                 v4 << 72, 5, 5, 0;
                 std::vector<Eigen::MatrixXd> vect = {v1, v2, v3, v4};
+
                 for (size_t i = 0; i < A->get_states(); i++) {
                     REQUIRE(double_compare((vect[i] - rhoBackward[i]).norm(), 0));
                 }
@@ -187,6 +190,7 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
             }
         }
         WHEN("calculating the backward reduction") {
+
             auto minWA = KieferSchuetzenbergerReduction::backward_reduction(wa, randV);
             THEN("They are the same as when calculating them by hand") {
                 REQUIRE(minWA->get_states() == 3);
