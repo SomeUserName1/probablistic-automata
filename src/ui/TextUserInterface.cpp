@@ -141,7 +141,7 @@ void TextUserInterface::display(const std::string &output) const {
 }
 
 
-std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_method(
+uint TextUserInterface::select_reduction_method(
         std::shared_ptr<ModelInterface> &selectedModel) const {
     std::cout << "Choose a reduction method" << std::endl;
     uint i = 0;
@@ -158,7 +158,7 @@ std::shared_ptr<ReductionMethodInterface> TextUserInterface::select_reduction_me
         } else {
             for (i = 0; i < selectedModel->get_reduction_methods().size(); i++) {
                 if (input == std::to_string(i)) {
-                    return selectedModel->get_reduction_methods()[i];
+                    return static_cast<uint>(i);
                 }
             }
         }

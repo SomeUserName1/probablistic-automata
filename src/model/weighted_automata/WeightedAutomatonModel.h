@@ -16,25 +16,209 @@ class WeightedAutomatonModel : public ModelInterface {
 private:
     std::vector<std::shared_ptr<ReductionMethodInterface>> reductionMethods;
     std::vector<std::shared_ptr<ConversionMethodInterface>> conversionMethods;
+    size_t dense = 1;
 public:
-    WeightedAutomatonModel() : reductionMethods({std::make_shared<KieferSchuetzenbergerReduction>()}),
+    WeightedAutomatonModel() : reductionMethods({std::make_shared<KieferSchuetzenbergerReduction<Eigen::MatrixXd>>()}),
                                conversionMethods({}) {}
 
-    [[nodiscard]] std::string get_name() const override;
+    ~WeightedAutomatonModel() override;
 
-    std::shared_ptr<RepresentationInterface> validate_model_instance(std::string &string) const override;
+    [[nodiscard]] std::string get_name() const override {
+        return "Weighted Automaton Model";
+    }
 
-    static std::shared_ptr<RepresentationInterface> validate_model_instance_dense(std::string &string);
+    std::shared_ptr<RepresentationInterface> validate_model_instance(std::string &str) override {
+        auto line = get_next_line(str, true);
+        if (line.starts_with("input=dense")) {
+            return validate_model_instance_dense(str);
+        } else if (line.starts_with("input=sparse")) {
+            this->dense = false;
+            this->reductionMethods = {std::make_shared<KieferSchuetzenbergerReduction<MatrixSp>>()};
+            return validate_model_instance_sparse(str);
+        } else {
+            throw std::invalid_argument("The input specification must be either using sparse or dense format and declare "
+                                        "this in the first line as 'sparse' or 'dense'!");
+        }
+    }
 
-    static std::shared_ptr<RepresentationInterface> validate_model_instance_sparse(std::string &string);
+    static std::shared_ptr<RepresentationInterface> validate_model_instance_dense(std::string &str)  {
+        auto line = get_next_line(str, true);
 
-    [[nodiscard]] std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &,
-                                                  std::shared_ptr<RepresentationInterface> &)
-    const override;
+        // states
+        if (!line.starts_with("states")) {
+            throw std::invalid_argument("The states must be specified first!");
+        }
+        int states = std::stoi(line.substr(line.find('=') + 1, line.size()));
+        if (states <= 0) {
+            throw std::invalid_argument("The number of states must be grater than zero!");
+        }
 
-    [[nodiscard]] std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const override;
+        // fetch next line
+        line = get_next_line(str, true);
 
-    [[nodiscard]] std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const override;
+        // characters
+        if (!line.starts_with("characters")) {
+            throw std::invalid_argument("The number of characters must be specified second!");
+        }
+        int characters = std::stoi(line.substr(line.find('=') + 1, line.size()));
+        if (characters <= 0) {
+            throw std::invalid_argument("The number of states must be grater than zero!");
+        }
+
+        // fetch next line
+        line = get_next_line(str, true);
+
+        // alpha
+        if (!line.starts_with("alpha")) {
+            throw std::invalid_argument("The initial vector needs to be specified as 3rd!");
+        }
+        auto alpha = std::make_shared<Eigen::MatrixXd>(1, states);
+        line = line.substr(line.find('=') + 1, line.size());
+        for (int i = 0; i < states; i++) {
+            (*alpha)(0, i) = extract_one_digit<double>(line);
+        }
+
+        // fetch next line
+        line = get_next_line(str, true);
+
+        // mu
+        std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {};
+        for (int k = 0; k < characters; k++) {
+            if (!line.starts_with("mu")) {
+                throw std::invalid_argument("Specify the transition matrices 4th, one for each character!");
+            }
+            std::shared_ptr<Eigen::MatrixXd> muX = std::make_shared<Eigen::MatrixXd>(states, states);
+            line = line.substr(line.find('=') + 1, line.size());
+            for (int i = 0; i < states; i++) {
+                for (int j = 0; j < states; j++) {
+                    (*muX)(i, j) = extract_one_digit<double>(line);
+                }
+            }
+            mu.push_back(muX);
+            // fetch next line
+            line = get_next_line(str, true);
+        }
+
+        if (!line.starts_with("eta")) {
+            throw std::invalid_argument("Please specify the final state vector last");
+        }
+        auto eta = std::make_shared<Eigen::MatrixXd>(states, 1);
+        line = line.substr(line.find("=") + 1, line.size());
+        for (int i = 0; i < states; i++) {
+            (*eta)(i, 0) = extract_one_digit<double>(line);
+        }
+        std::cout << "Parsed Automaton successfully" << std::endl;
+        return std::make_shared<WeightedAutomatonInstance<Eigen::MatrixXd>>(states, characters, alpha, mu, eta);
+    }
+
+
+    static std::shared_ptr<RepresentationInterface> validate_model_instance_sparse(std::string &str) {
+        size_t a;
+        long b, c;
+        double d;
+        auto line = get_next_line(str, false);
+
+        // states
+        if (!line.starts_with("states")) {
+            throw std::invalid_argument("The states must be specified first!");
+        }
+        int states = std::stoi(line.substr(line.find('=') + 1, line.size()));
+        if (states <= 0) {
+            throw std::invalid_argument("The number of states must be grater than zero!");
+        }
+
+        // fetch next line
+        line = get_next_line(str, false);
+
+        // characters
+        if (!line.starts_with("characters")) {
+            throw std::invalid_argument("The number of characters must be specified second!");
+        }
+        int characters = std::stoi(line.substr(line.find('=') + 1, line.size()));
+        if (characters <= 0) {
+            throw std::invalid_argument("The number of states must be grater than zero!");
+        }
+
+        // fetch next line
+        line = get_next_line(str, false);
+
+        // alpha
+        if (!line.starts_with("alpha")) {
+            throw std::invalid_argument("The initial vector needs to be specified as 3rd!");
+        }
+        auto alpha = std::make_shared<MatrixSp>(1, states);
+        line = line.substr(line.find(':') + 1, line.size());
+        b = extract_one_digit<uint>(line);
+        d = extract_one_digit<double>(line);
+        (*alpha)(0, b) = d;
+
+
+        // fetch next line
+        line = get_next_line(str, false);
+
+        // mu
+        std::vector<std::shared_ptr<MatrixSp>> mu = {};
+        if (!line.starts_with("mu")) {
+            throw std::invalid_argument("Specify the transition matrices 4th, one for each character!");
+        }
+        line = line.substr(line.find(':') + 1, line.size());
+        for (int i = 0; i < characters; i++) {
+            mu.emplace_back(std::make_shared<MatrixSp>(states, states));
+        }
+
+        do {
+            a = extract_one_digit<size_t>(line);
+            b = extract_one_digit<long>(line);
+            c = extract_one_digit<long>(line);
+            d = extract_one_digit<double>(line);
+            (*(mu[a]))(b, c) = d;
+
+            // fetch next line
+            line = get_next_line(str, false);
+        } while (!line.starts_with("eta") && !line.empty());
+
+        if (!line.starts_with("eta")) {
+            throw std::logic_error("Unreachable;");
+        }
+        auto eta = std::make_shared<MatrixSp>(states, 1);
+        line = line.substr(line.find(":") + 1, line.size());
+        b = extract_one_digit<uint>(line);
+        d = extract_one_digit<double>(line);
+        (*eta)(b, 0) = d;
+        std::cout << "Parsed Automaton successfully" << std::endl;
+
+        return std::make_shared<WeightedAutomatonInstance<MatrixSp>>(states, characters, alpha, mu, eta);
+    }
+
+    [[nodiscard]] std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &A,
+                                                  std::shared_ptr<RepresentationInterface> &minA) const override {
+        std::stringstream result;
+        if (dense) {
+            auto WA = std::dynamic_pointer_cast<WeightedAutomatonInstance<Eigen::MatrixXd>>(A);
+            auto minWA = std::dynamic_pointer_cast<WeightedAutomatonInstance<Eigen::MatrixXd>>(minA);
+            result << "Before Reduction" << std::endl
+                   << WA->pretty_print()
+                   << "After Reduction" << std::endl
+                   << minWA->pretty_print();
+        } else {
+            auto WA = std::dynamic_pointer_cast<WeightedAutomatonInstance<MatrixSp>>(A);
+            auto minWA = std::dynamic_pointer_cast<WeightedAutomatonInstance<MatrixSp>>(minA);
+            result << "Before Reduction" << std::endl
+                   << WA->pretty_print()
+                   << "After Reduction" << std::endl
+                   << minWA->pretty_print();
+        }
+        return result.str();
+    }
+
+    [[nodiscard]] std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const override {
+        return this->reductionMethods;
+    }
+
+
+    [[nodiscard]] std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const override  {
+        return this->conversionMethods;
+    }
 
 
     std::string get_representation_description() const noexcept override {

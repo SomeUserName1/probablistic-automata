@@ -2,7 +2,7 @@ input=sparse;
 states=4;
 characters=2;
 
-alpha: 1 1;
+alpha: 0 1;
 
 mu:
 0 0 1 1;

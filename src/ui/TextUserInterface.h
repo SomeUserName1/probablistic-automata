@@ -18,7 +18,7 @@ public:
     [[nodiscard]] std::shared_ptr<ModelInterface> select_model(const std::vector<std::shared_ptr<ModelInterface>> &)
     const override;
 
-    [[nodiscard]] std::shared_ptr<ReductionMethodInterface> select_reduction_method(std::shared_ptr<ModelInterface> &)
+    [[nodiscard]] uint select_reduction_method(std::shared_ptr<ModelInterface> &)
     const override;
 
     [[nodiscard]] std::shared_ptr<ConversionMethodInterface> select_conversion_method(std::shared_ptr<ModelInterface> &)

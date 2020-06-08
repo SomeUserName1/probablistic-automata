@@ -36,7 +36,7 @@ public:
     [[nodiscard]] virtual std::shared_ptr<ModelInterface> select_model(const
                                                                        std::vector<std::shared_ptr<ModelInterface>> &) const = 0;
 
-    [[nodiscard]] virtual std::shared_ptr<ReductionMethodInterface> select_reduction_method(
+    [[nodiscard]] virtual uint select_reduction_method(
             std::shared_ptr<ModelInterface> &selectedModel) const = 0;
 
     [[nodiscard]] virtual std::shared_ptr<ConversionMethodInterface> select_conversion_method
