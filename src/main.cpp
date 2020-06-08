@@ -5,11 +5,8 @@
 #include "ui/TextUserInterface.h"
 #include <chrono>
 
-// FIXME when everything is implemented: smart pointers and references wrt functions/passing & returning
-// FIXME see whats inlineable
-// TODO mln have no initial state & no final state
-
-
+// TODO Lifting/Benchmark generation
+// TODO presentation on stage 1
 
 // Lifting to create benchmarks:
 //  start with a minimal automata
@@ -25,8 +22,6 @@
 // implementation
 // how it relates to the next steps (preview/teaser)
 
-// TODO Lifting/Benchmark generation
-// TODO presentation on stage 1
 
 // TODO attach equivalence as extra point to cli
 

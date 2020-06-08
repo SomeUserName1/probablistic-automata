@@ -150,7 +150,36 @@ SCENARIO("The equivalence of automata is tested") {
             THEN("They are equivalent") {
                 REQUIRE(*wa1 == *wa2);
             }
-        }WHEN("The Automata differ in semantics") {
+        }
+        WHEN("The initial and the minimized automata are compared they're equal") {
+            // TODO write test case that executes program, parses the output and checks equivalence with actual input
+            int states = 3;
+            int characters = 2;
+            auto trueAlpha = std::make_shared<Eigen::RowVectorXd>(3);
+            *trueAlpha <<  0,  11020, 928896;
+
+            auto trueMu1 = Eigen::MatrixXd(3, 3);
+            auto trueMu2 = Eigen::MatrixXd(3, 3);
+            trueMu1 <<  0,  3.48317e-20,  2.78653e-20,
+                    0, -0.000600911,  -0.00201305,
+                    0,  0.000179376,  0.000600911;
+            trueMu2 << -1.67192e-19,  -1.7401e-15, -1.46675e-13,
+                    0.0130173, -1.05159e-14, -8.86447e-13,
+                    -0.000154432,  1.24756e-16,  1.05164e-14;
+            std::vector<std::shared_ptr<Eigen::MatrixXd>> trueMu = {std::make_shared<Eigen::MatrixXd>(trueMu1),
+                    std::make_shared<Eigen::MatrixXd>(trueMu2)};
+
+
+            auto trueEta = std::make_shared<Eigen::VectorXd>(3);
+            *trueEta << 1, 0, 0;
+            wa2 = std::make_shared<WeightedAutomatonInstance>(states, characters, trueAlpha, trueMu, trueEta);
+            std::cout << wa1->pretty_print() << std::endl;
+            std::cout << wa2->pretty_print() << std::endl;
+            THEN("They are equivalent") {
+                REQUIRE(*wa1 == *wa2);
+            }
+        }
+        WHEN("The Automata differ in semantics") {
             int states = 3;
             int characters = 2;
             auto alpha = std::make_shared<Eigen::RowVectorXd>(states);
@@ -195,7 +224,7 @@ std::shared_ptr<WeightedAutomatonInstance> gen_wa() {
     return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
 }
 
-/*std::vector<Eigen::MatrixXi> gen_fixed_rand_v() {
+/* std::vector<Eigen::MatrixXi> gen_fixed_rand_v() {
     Eigen::MatrixXi mat1(2, 4);
     Eigen::MatrixXi mat2(2, 4);
     Eigen::MatrixXi mat3(2, 4);
