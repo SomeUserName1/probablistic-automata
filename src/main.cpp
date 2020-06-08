@@ -3,7 +3,7 @@
 #include "model/differential_equations/DifferentialEquationModel.h"
 #include "model/weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.h"
-
+#include <chrono>
 
 // TODO Lifting/Benchmark generation
 // TODO presentation on stage 1
@@ -23,6 +23,7 @@
 // how it relates to the next steps (preview/teaser)
 
 
+// TODO attach equivalence as extra point to cli
 
 
 bool iequals(const std::string &, const std::string &);
@@ -39,7 +40,7 @@ bool iequals(const std::string &str1, const std::string &str2) {
 int main(int argc, char *argv[]) {
     UserInterface::Task task;
     std::shared_ptr<ModelInterface> model;
-    std::shared_ptr<ReductionMethodInterface> reductionMethod;
+    uint reductionMethod = 0;
     UserInterface::IOMethod inputMethod;
     UserInterface::IOMethod outputMethod = UserInterface::IOMethod::Unse;
     std::string outputDestination = "init";
@@ -104,7 +105,7 @@ int main(int argc, char *argv[]) {
             }
             // currently only two methods are supported, one per model so ignore what the user says and just use it
             // Intentionally bad design, sufficient for now
-            reductionMethod = model->get_reduction_methods()[0];
+            reductionMethod = 0;
 
             input = UserInterface::read_file(inputStr);
 
@@ -152,8 +153,11 @@ int main(int argc, char *argv[]) {
         switch (task) {
             case UserInterface::Reduction: {
                 auto representation = model->validate_model_instance(input);
-                auto reduced_representation = reductionMethod->reduce(representation);
-                std::cout << "Finished reduction" << std::endl;
+                auto start = std::chrono::high_resolution_clock::now();
+                auto reduced_representation = model->get_reduction_methods()[reductionMethod]->reduce(representation);
+                auto finish = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double> elapsed = finish - start;
+                std::cout << "Finished reduction in " << elapsed.count() << " s" << std::endl;
                 auto summary = model->summarize_reduction(representation, reduced_representation);
 
                 if (outputMethod == UserInterface::IOMethod::File) {

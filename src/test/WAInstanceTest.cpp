@@ -34,6 +34,7 @@ SCENARIO("Subtraction Automaton is constructed") {
         WHEN("A and B are the (exactly) same automaton") {
             wa2 = gen_wa();
             auto subtractionAutomaton = WeightedAutomatonInstance::create_subtraction_automaton(*wa1, *wa2);
+            // TODO powerset of words up to k as function
             std::vector<std::vector<uint>> words = {{0}, {1}, {0,0}, {0,1}, {1,0}, {1,1}, {0,0,0}, {0,0,1}, {0,1,0},
                                                     {0,1,1}, {1,0,0}, {1,0,1}, {1,1,0}, {1,1,1}};
             THEN("The weight of example words is 0 in the subtraction automaton") {

@@ -18,8 +18,7 @@ public:
 
     [[nodiscard]] virtual std::string get_name() const = 0;
 
-    [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> validate_model_instance(std::string &)
-    const = 0;
+    [[nodiscard]] virtual std::shared_ptr<RepresentationInterface> validate_model_instance(std::string &) = 0;
 
     [[nodiscard]] virtual std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &,
                                                           std::shared_ptr<RepresentationInterface> &)
