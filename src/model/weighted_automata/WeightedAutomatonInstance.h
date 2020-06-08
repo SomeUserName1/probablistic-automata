@@ -75,6 +75,7 @@ public:
 
     static const std::shared_ptr<WeightedAutomatonInstance<M>> create_subtraction_automaton(
             const WeightedAutomatonInstance<M> &lhs, const WeightedAutomatonInstance<M> &rhs) {
+        // TODO if not the same format convert
         uint lhsStates = lhs.get_states();
         uint rhsStates = rhs.get_states();
         uint subStates = lhsStates + rhsStates;
@@ -128,6 +129,7 @@ public:
                << "Transition Matrices: " << std::endl;
         for (const auto &mat : this->mu) {
             result << "Mu" << i << std::endl << Eigen::MatrixXd(*mat).format(fmt) << std::endl;
+            i++;
         }
         result << "Final Vector: " << std::endl
                << Eigen::MatrixXd(*(this->eta)).format(fmt) << std::endl << std::endl;

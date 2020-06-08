@@ -121,6 +121,7 @@ public:
 
     static inline std::vector<Eigen::MatrixXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance<M>> &A,
             uint K = 300) {
+        // TODO seed
         std::random_device rd;
         std::mt19937 rng(rd());
         std::uniform_int_distribution<> uniform(1, static_cast<int>(A->get_states() * K));

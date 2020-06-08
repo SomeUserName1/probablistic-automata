@@ -42,6 +42,7 @@ public:
     }
 
     static std::shared_ptr<RepresentationInterface> validate_model_instance_dense(std::string &str)  {
+        // TODO adapt to dense input
         auto line = get_next_line(str, true);
 
         // states
