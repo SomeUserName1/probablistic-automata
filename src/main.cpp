@@ -4,15 +4,9 @@
 #include "model/weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.h"
 
-// FIXME when everything is implemented: smart pointers and references wrt functions/passing & returning
-// FIXME see whats inlineable
-// TODO use sparse matrices and edge lists
-// TODO mln have no initial state & no final state
 
-// Example
-// 1 1 2 1
-// layer one, nodes one and two, weight 1
-
+// TODO Lifting/Benchmark generation
+// TODO presentation on stage 1
 
 // Lifting to create benchmarks:
 //  start with a minimal automata
@@ -28,8 +22,6 @@
 // implementation
 // how it relates to the next steps (preview/teaser)
 
-// TODO Lifting/Benchmark generation
-// TODO presentation on stage 1
 
 
 

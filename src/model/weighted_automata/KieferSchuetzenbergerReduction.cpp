@@ -26,7 +26,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::backw
     Eigen::MatrixXd rankTemp(A->get_states(), 1 + rhoVectors.size());
 
     rankTemp.col(0) = *(A->get_eta());
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (size_t i = 0; i < rhoVectors.size(); i++) {
         rankTemp.col(static_cast<long>(i + 1)) = rhoVectors[i];
     }
@@ -35,7 +35,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::backw
 
     Eigen::MatrixXd backwardBasis(A->get_states(), rank);
     backwardBasis.col(0) = *(A->get_eta());
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (long i = 0; i < rank - 1; i++) {
         backwardBasis.col(i + 1) = rhoVectors[static_cast<size_t>(i)];
     }
@@ -48,7 +48,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::backw
     std::vector<std::shared_ptr<Eigen::MatrixXd>> muArrow = {};
     std::mutex muArrowMutex = std::mutex();
 
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (size_t i = 0; i < A->get_mu().size(); i++) {
         Eigen::ColPivHouseholderQR<Eigen::MatrixXd> householderX(rank, rank);
         auto muXArrow = std::make_shared<Eigen::MatrixXd>(rank, rank);
@@ -67,7 +67,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forwa
     Eigen::MatrixXd rankTemp(1 + rhoVectors.size(), A->get_states());
 
     rankTemp.row(0) = *(A->get_alpha());
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (size_t i = 0; i < rhoVectors.size(); i++) {
         rankTemp.row(static_cast<long>(i + 1)) = rhoVectors[i];
     }
@@ -76,7 +76,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forwa
 
     Eigen::MatrixXd forwardBasis(rank, A->get_states());
     forwardBasis.row(0) = *(A->get_alpha());
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (long i = 0; i < rank - 1; i++) {
         forwardBasis.row(i + 1) = rhoVectors[static_cast<size_t>(i)];
     }
@@ -89,7 +89,7 @@ std::shared_ptr<WeightedAutomatonInstance> KieferSchuetzenbergerReduction::forwa
     std::vector<std::shared_ptr<Eigen::MatrixXd>> muArrow = {};
     std::mutex muArrowMutex = std::mutex();
 
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (size_t i = 0; i < A->get_mu().size(); i++) {
         Eigen::ColPivHouseholderQR<Eigen::MatrixXd> householderX(rank, rank);
         auto muXArrow = std::make_shared<Eigen::MatrixXd>(rank, rank);
@@ -111,10 +111,10 @@ KieferSchuetzenbergerReduction::calculate_rho_backward_vectors(std::shared_ptr<W
     auto sigmaK = generate_words_backwards(A, A->get_states());
     std::vector<Eigen::VectorXd> result = {};
     std::mutex resultMutex = std::mutex();
-    #pragma omp parallel for num_threads(THREADS) if(!TEST)
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (size_t j = 0; j < randomVectors.size(); j++) {
         Eigen::VectorXd vI = Eigen::MatrixXd::Zero(A->get_states(), 1);
-        #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+        // #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (size_t i = 0; i < sigmaK.size(); i++) {
             vI += (*std::get<0>(sigmaK[i]) * get_word_factor(std::get<1>(sigmaK[i]), randomVectors[j]));
         }
@@ -131,10 +131,10 @@ KieferSchuetzenbergerReduction::calculate_rho_forward_vectors(std::shared_ptr<We
     std::vector<Eigen::RowVectorXd> result = {};
     std::mutex resultMutex = std::mutex();
 
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (size_t j = 0; j < randomVectors.size(); j++) {
         Eigen::RowVectorXd vI = Eigen::MatrixXd::Zero(1, A->get_states());
-        #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+        // #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (size_t i = 0; i < sigmaK.size(); i++) {
             vI += (*std::get<0>(sigmaK[i]) * get_word_factor(std::get<1>(sigmaK[i]), randomVectors[j]));
         }
@@ -152,7 +152,7 @@ KieferSchuetzenbergerReduction::generate_words_backwards(std::shared_ptr<Weighte
 
     if (k == 1) {
         result = {};
-        #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+        // #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (size_t i = 0; i < A->get_mu().size(); i++) {
             auto resultVect = std::make_shared<Eigen::VectorXd>(A->get_states());
             *resultVect = *(A->get_mu()[i]) * *(A->get_eta());
@@ -166,10 +166,10 @@ KieferSchuetzenbergerReduction::generate_words_backwards(std::shared_ptr<Weighte
         result = generate_words_backwards(A, k - 1);
         auto iteratorCopy(result);
 
-        #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+        // #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (size_t j = 0; j < iteratorCopy.size(); j++) {
             if (std::get<1>(iteratorCopy[j]).size() == k - 1) {
-                #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+                // #pragma omp parallel for num_threads(THREADS) if(!TEST)
                 for (size_t i = 0; i < A->get_mu().size(); i++) {
                     auto resultVect = std::make_shared<Eigen::VectorXd>(A->get_states());
                     *resultVect = *(A->get_mu()[i]) * *(std::get<0>(iteratorCopy[j]));
@@ -194,7 +194,7 @@ KieferSchuetzenbergerReduction::generate_words_forwards(std::shared_ptr<Weighted
 
     if (k == 1) {
         result = {};
-        #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+        // #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (size_t i = 0; i < A->get_mu().size(); i++) {
             auto resultVect = std::make_shared<Eigen::RowVectorXd>(A->get_states());
             *resultVect = *(A->get_alpha()) * *(A->get_mu()[i]);
@@ -207,10 +207,10 @@ KieferSchuetzenbergerReduction::generate_words_forwards(std::shared_ptr<Weighted
         result = generate_words_forwards(A, k - 1);
         auto iteratorCopy(result);
 
-        #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+        // #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (size_t j = 0; j < iteratorCopy.size(); j++) {
             if (std::get<1>(iteratorCopy[j]).size() == k - 1) {
-                #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+                // #pragma omp parallel for num_threads(THREADS) if(!TEST)
                 for (size_t i = 0; i < A->get_mu().size(); i++) {
                     auto resultVect = std::make_shared<Eigen::RowVectorXd>(A->get_states());
                     *resultVect = *(std::get<0>(iteratorCopy[j])) * *(A->get_mu()[i]);

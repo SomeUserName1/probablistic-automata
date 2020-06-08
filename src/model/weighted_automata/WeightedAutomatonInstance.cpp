@@ -88,6 +88,7 @@ rhs, uint K) {
             v += (randomVectors[i](j) * *(sMu[j]) * v);
         }
         if (!((*sAlpha * v).isZero())) {
+            std::cout << *sAlpha * v << std::endl;
             return false;
         }
     }
@@ -105,7 +106,7 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     auto lhsAlpha = lhs.get_alpha();
     auto rhsAlpha = rhs.get_alpha();
     auto subAlpha = std::make_shared<Eigen::RowVectorXd>(lhsAlpha->cols() + rhsAlpha->cols());
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (long i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
         (*subAlpha)(0, i) = i < lhsAlpha->cols() ? (*lhsAlpha)(0, i) : -(*rhsAlpha)(0, i - lhsAlpha->cols());
     }
@@ -113,7 +114,7 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     auto lhsEta = lhs.get_eta();
     auto rhsEta = rhs.get_eta();
     auto subEta = std::make_shared<Eigen::VectorXd>(lhsEta->rows() + rhsEta->rows());
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (long i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
         (*subEta)(i, 0) = i < lhsEta->rows() ? (*lhsEta)(i, 0) : (*rhsEta)(i - lhsEta->rows(), 0);
     }
@@ -122,7 +123,7 @@ WeightedAutomatonInstance::create_subtraction_automaton(const WeightedAutomatonI
     std::mutex subMuMutex = std::mutex();
     auto lhsMu = lhs.get_mu();
     auto rhsMu = rhs.get_mu();
-    #pragma omp parallel for num_threads(THREADS) if(!TEST) 
+    // #pragma omp parallel for num_threads(THREADS) if(!TEST)
     for (size_t i = 0; i < subCharacters; i++) {
         auto muX = std::make_shared<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(subStates, subStates));
         if (i < lhsMu.size()) {
