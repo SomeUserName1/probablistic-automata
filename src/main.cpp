@@ -28,6 +28,7 @@
 // TODO Lifting/Benchmark generation
 // TODO presentation on stage 1
 
+// TODO attach equivalence as extra point to cli
 
 
 bool iequals(const std::string &, const std::string &);
