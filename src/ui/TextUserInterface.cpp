@@ -7,16 +7,17 @@ UserInterface::Task TextUserInterface::select_task() const {
               << " or differential equations." << std::endl
               << "What do you want to do?" << std::endl
               << "\t\t 1. Reduce an example" << std::endl
-              << "\t\t 2. Perform a benchmark" << std::endl
-              << "\t\t 3. Convert an example from one model to another" << std::endl
-              << "\t\t 4. to exit" << std::endl;
+              << "\t\t 2. Check if two instances of the same model are equivalent" << std::endl
+              << "\t\t 3. Perform a benchmark" << std::endl
+              << "\t\t 4. Convert an example from one model to another" << std::endl
+              << "\t\t 5. to exit" << std::endl;
 
     do {
         std::string input("");
         std::cin >> input;
         if (input.empty() || input.length() > 1 ||
-            (input != "1" && input != "2" && input != "3" && input != "4")) {
-            std::cout << "Please enter 1, 2 or 3!";
+            (input != "1" && input != "2" && input != "3" && input != "4" && input != "5")) {
+            std::cout << "Please enter 1, 2, 3, 4 or 5!";
             continue;
         } else {
             task = Task(std::stoi(input));

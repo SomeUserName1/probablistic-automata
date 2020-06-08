@@ -34,11 +34,12 @@ public:
         : states(mStates), noInputCharacters(characters), alpha(std::move(mAlpha)), mu(std::move(mMu)),
                                  eta(std::move(mEta)) {}
 
-    bool operator==(const WeightedAutomatonInstance &other) const {
-        return equivalent(*this, other);
+    bool operator==(const RepresentationInterface &other) const override {
+        auto mOther = static_cast<WeightedAutomatonInstance<M>>(other);
+        return equivalent(*this, mOther);
     }
 
-    bool operator!=(const WeightedAutomatonInstance &other) const {
+    bool operator!=(const RepresentationInterface &other) const override {
         return !(*this == other);
     }
 
@@ -83,7 +84,7 @@ public:
 
         auto lhsAlpha = lhs.get_alpha();
         auto rhsAlpha = rhs.get_alpha();
-        auto subAlpha = std::make_shared<Eigen::RowVectorXd>(lhsAlpha->cols() + rhsAlpha->cols());
+        auto subAlpha = std::make_shared<M>(1, lhsAlpha->cols() + rhsAlpha->cols());
 #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (long i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
             (*subAlpha)(0, i) = i < lhsAlpha->cols() ? (*lhsAlpha)(0, i) : -(*rhsAlpha)(0, i - lhsAlpha->cols());
@@ -91,19 +92,19 @@ public:
 
         auto lhsEta = lhs.get_eta();
         auto rhsEta = rhs.get_eta();
-        auto subEta = std::make_shared<Eigen::VectorXd>(lhsEta->rows() + rhsEta->rows());
+        auto subEta = std::make_shared<M>(lhsEta->rows() + rhsEta->rows(), 1);
 #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (long i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
             (*subEta)(i, 0) = i < lhsEta->rows() ? (*lhsEta)(i, 0) : (*rhsEta)(i - lhsEta->rows(), 0);
         }
 
-        std::vector<std::shared_ptr<Eigen::MatrixXd>> subMu = {};
+        std::vector<std::shared_ptr<M>> subMu = {};
         std::mutex subMuMutex = std::mutex();
         auto lhsMu = lhs.get_mu();
         auto rhsMu = rhs.get_mu();
 #pragma omp parallel for num_threads(THREADS) if(!TEST)
         for (size_t i = 0; i < subCharacters; i++) {
-            auto muX = std::make_shared<Eigen::MatrixXd>(Eigen::MatrixXd::Zero(subStates, subStates));
+            auto muX = std::make_shared<M>(MatrixSp(subStates, subStates));
             if (i < lhsMu.size()) {
                 (*muX).block(0, 0, lhsStates, lhsStates) = *(lhsMu[i]);
             }

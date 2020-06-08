@@ -15,9 +15,10 @@ public:
     enum Task {
         Unselected = 0,
         Reduction = 1,
-        Benchmark = 2,
-        Conversion = 3,
-        Exit = 4
+        Equivalence = 2,
+        Benchmark = 3,
+        Conversion = 4,
+        Exit = 5
     };
     enum IOMethod {
         Unse = 0,
@@ -51,7 +52,6 @@ public:
     [[nodiscard]] virtual std::string set_output_destination() const = 0;
 
     static void display_file(const std::string &output, const std::string &file) {
-        // TODO take care of creating the directories if non-existent
         std::ofstream outfile(file);
         outfile << output;
         std::cout << "Output was written to " << file << std::endl;

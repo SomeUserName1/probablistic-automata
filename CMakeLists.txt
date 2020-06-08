@@ -5,13 +5,13 @@ cmake_minimum_required(VERSION 3.14)
 # C++ specifics
 SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 SET(CMAKE_CXX_STANDARD 20)
-SET(CMAKE_CXX_FLAGS "-fopenmp -Wall -Wpedantic -Werror -std=c++20 -fno-omit-frame-pointer \
+SET(CMAKE_CXX_FLAGS "-fopenmp -Wall -Wpedantic -Werror -std=c++20 -fno-omit-frame-pointer -fsanitize=undefined,address \
  -fPIC -fno-optimize-sibling-calls -Wshadow -Wuninitialized -Wunused-label -Wall -Wextra  -ferror-limit=999 -Weffc++ \
 -Weverything -Wno-c++98-compat -ftemplate-backtrace-limit=0")
 
 #thread , -Xclang -disable-O0-optnone -Xclang -load \
 # -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so
-# -O3 -mllvm -polly -mllvm -polly-vectorizer=stripmine -polly-parallel -lgomp -fsanitize=undefined,address
+# -O3 -mllvm -polly -mllvm -polly-vectorizer=stripmine -polly-parallel -lgomp
 SET(ASAN_OPTIONS symbolize=1)
 SET(ASAN_OPTIONS detect_leaks=1)
 SET(ASAN_SYMBOLIZER_PATH $(which llvm-symbolizer))
