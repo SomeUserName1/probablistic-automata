@@ -23,8 +23,6 @@
 // how it relates to the next steps (preview/teaser)
 
 
-// TODO attach equivalence as extra point to cli
-
 
 bool iequals(const std::string &, const std::string &);
 
@@ -45,6 +43,7 @@ int main(int argc, char *argv[]) {
     UserInterface::IOMethod outputMethod = UserInterface::IOMethod::Unse;
     std::string outputDestination = "init";
     std::string input = "init";
+    std::string input1 = "init";
     std::shared_ptr<UserInterface> ui;
 
     try {
@@ -63,10 +62,12 @@ int main(int argc, char *argv[]) {
                                                false, "", "string");
         TCLAP::ValueArg<std::string> inputArg("i", "input", "Path to input file",
                                               false, "", "string");
+        TCLAP::ValueArg<std::string> input1Arg("i1", "input", "Path to second input file for equivalence check",
+                                               false, "", "string");
         TCLAP::ValueArg<std::string> outputArg("o", "output", "path to output file",
                                                false, "", "string");
 
-        for (auto arg : {&taskArg, &modelArg, &methodArg, &inputArg, &outputArg}) {
+        for (auto arg : {&taskArg, &modelArg, &methodArg, &inputArg, &input1Arg, &outputArg}) {
             cmd.add(arg);
         }
         cmd.add(tuiSwitch);
@@ -78,18 +79,21 @@ int main(int argc, char *argv[]) {
         std::string modelStr = modelArg.getValue();
         std::string methodStr = methodArg.getValue();
         std::string inputStr = inputArg.getValue();
+        std::string input1Str = input1Arg.getValue();
         std::string outputStr = outputArg.getValue();
 
-        if (!taskStr.empty() && !modelStr.empty() && !methodStr.empty() && !inputStr.empty() && !outputStr.empty()
-            && !tuiSwitch && !guiSwitch) {
+        if (!taskStr.empty() && !modelStr.empty() && !tuiSwitch && !guiSwitch) {
             if (iequals(taskStr, "Reduction")) {
                 task = UserInterface::Reduction;
+            } else if (iequals(taskStr, "Equivalence")) {
+                task = UserInterface::Equivalence;
             } else if (iequals(taskStr, "Benchmark")) {
                 task = UserInterface::Benchmark;
             } else if (iequals(taskStr, "Conversion")) {
                 task = UserInterface::Conversion;
             } else {
-                throw std::invalid_argument("Specify either 'Reduction', 'Benchmark' or 'Conversion' as task, you"
+                throw std::invalid_argument("Specify either 'Reduction', 'Equivalence', 'Benchmark' or 'Conversion' as "
+                                            "task, you"
                                             " specified " + taskStr);
             }
             if (iequals(modelStr, "WA") || iequals(modelStr, "WeightedAutomatonModel")
@@ -103,20 +107,32 @@ int main(int argc, char *argv[]) {
                                             "'DifferentialEquationModel', 'WeightedAutomaton' or 'DifferentialEquation'"
                                             " as model, you specified " + modelStr);
             }
-            // currently only two methods are supported, one per model so ignore what the user says and just use it
-            // Intentionally bad design, sufficient for now
-            reductionMethod = 0;
 
-            input = UserInterface::read_file(inputStr);
+            if (!inputStr.empty() && !outputStr.empty()) {
+                input = UserInterface::read_file(inputStr);
 
-            std::filesystem::path outputPath(outputStr);
-            if (outputPath.has_filename()) {
-                outputDestination = outputStr;
-            } else {
-                throw std::invalid_argument("Please specify a path with a file name to write the results to!");
+                std::filesystem::path outputPath(outputStr);
+                if (outputPath.has_filename()) {
+                    outputDestination = outputStr;
+                } else {
+                    throw std::invalid_argument("Please specify a path with a file name to write the results to!");
+                }
+
+                outputMethod = UserInterface::IOMethod::File;
             }
 
-            outputMethod = UserInterface::IOMethod::File;
+            if (task == UserInterface::Reduction && !methodStr.empty()) {
+                // currently only two methods are supported, one per model so ignore what the user says and just use it
+                // Intentionally bad design, sufficient for now
+                reductionMethod = 0;
+            }
+            if (task == UserInterface::Equivalence && !input1Str.empty()) {
+                // currently only two methods are supported, one per model so ignore what the user says and just use it
+                // Intentionally bad design, sufficient for now
+                input1 = UserInterface::read_file(input1Str);
+            }
+
+
         } else {
             ui = std::make_shared<TextUserInterface>();
             if (guiSwitch) {
@@ -124,7 +140,9 @@ int main(int argc, char *argv[]) {
             }
             task = ui->select_task();
             switch (task) {
-                case UserInterface::Exit: {exit(0);}
+                case UserInterface::Exit: {
+                    exit(0);
+                }
                 case UserInterface::Reduction: {
                     std::vector<std::shared_ptr<ModelInterface>> models = {std::make_shared<WeightedAutomatonModel>(),
                                                                            std::make_shared<DifferentialEquationModel>()};
@@ -137,6 +155,29 @@ int main(int argc, char *argv[]) {
                         input = ui->file_input();
                     } else {
                         input = ui->stdin_input(model);
+                    }
+                    if (outputMethod == UserInterface::IOMethod::File) {
+                        outputDestination = ui->set_output_destination();
+                    }
+                    break;
+                }
+                case UserInterface::Equivalence: {
+                    std::vector<std::shared_ptr<ModelInterface>> models = {std::make_shared<WeightedAutomatonModel>(),
+                                                                           std::make_shared<DifferentialEquationModel>()};
+                    model = ui->select_model(models);
+                    inputMethod = ui->select_io_method(true);
+                    outputMethod = ui->select_io_method(false);
+
+                    if (inputMethod == UserInterface::IOMethod::File) {
+                        std::cout << "Automaton 1:" << std::endl;
+                        input = ui->file_input();
+                        std::cout << "Automaton 2:" << std::endl;
+                        input1 = ui->file_input();
+                    } else {
+                        std::cout << "Automaton 1:" << std::endl;
+                        input = ui->stdin_input(model);
+                        std::cout << "Automaton 2:" << std::endl;
+                        input1 = ui->stdin_input(model);
                     }
                     if (outputMethod == UserInterface::IOMethod::File) {
                         outputDestination = ui->set_output_destination();
@@ -164,6 +205,18 @@ int main(int argc, char *argv[]) {
                     ui->display_file(summary, outputDestination);
                 } else if (outputMethod == UserInterface::IOMethod::Display) {
                     ui->display(summary);
+                }
+                break;
+            }
+            case UserInterface::Equivalence: {
+                auto representation0 = model->validate_model_instance(input);
+                auto representation1 = model->validate_model_instance(input1);
+                auto result = std::to_string(*representation0 == *representation1);
+                std::cout << "Finished Equivalence check" << std::endl;
+                if (outputMethod == UserInterface::IOMethod::File) {
+                    ui->display_file(result, outputDestination);
+                } else if (outputMethod == UserInterface::IOMethod::Display) {
+                    ui->display(result);
                 }
                 break;
             }
