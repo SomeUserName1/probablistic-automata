@@ -4,6 +4,7 @@
 #include <eigen3/Eigen/Eigen>
 
 class MatrixSp : public Eigen::SparseMatrix<double, 0, long> {
+    // FIXME meml and ub, maybe rc
 public:
     inline MatrixSp(Eigen::Index rows, Eigen::Index cols) : Eigen::SparseMatrix<double, 0, long>(rows, cols) {}
 

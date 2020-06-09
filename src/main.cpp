@@ -5,6 +5,7 @@
 #include "ui/TextUserInterface.h"
 #include <chrono>
 
+// TODO inline, call by const reference, ...
 // TODO Lifting/Benchmark generation
 // TODO presentation on stage 1
 
@@ -14,11 +15,7 @@
 // careful: state s with a/2
 // if split this state distribute weight with weight mass preservance
 
-// updates & presentation on Stage 1:
-//  12 June presentation date
-// start from last presentation to give a high level Intro & motivation / outline on project
-// done so far
-// overview of the algorithm (paper) + example + pseudo code
+// example
 // implementation
 // how it relates to the next steps (preview/teaser)
 

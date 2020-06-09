@@ -15,11 +15,11 @@ public:
     KieferSchuetzenbergerReduction();
     ~KieferSchuetzenbergerReduction() override;
 
-    [[nodiscard]] std::string get_name() const override {
+    std::string get_name() const override {
         return "Random Basis Schützenberger Reduction";
     }
 
-    [[nodiscard]] std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface> &waInstance)
+    std::shared_ptr<RepresentationInterface> reduce(std::shared_ptr<RepresentationInterface> &waInstance)
     const override {
         return reduce(waInstance, 300);
     }
@@ -110,7 +110,7 @@ public:
             // => x = (housholder(A.transpose()).solve(b.transpose())).transpose()
             householderX.compute(forwardBasis.transpose());
             Eigen::MatrixXd newTemp = householderX.solve((forwardBasis * *(A->get_mu()[i])).transpose()).transpose();
-            auto muXArrow = std::make_shared<M>(newTemp);
+            auto muXArrow = std::make_shared<M>(newTemp);m
             std::lock_guard<std::mutex> guard(muArrowMutex);
             muArrow.push_back(muXArrow);
         }
@@ -120,11 +120,15 @@ public:
     }
 
     static inline std::vector<Eigen::MatrixXi> generate_random_vectors(std::shared_ptr<WeightedAutomatonInstance<M>> &A,
-            uint K = 300) {
-        // TODO seed
-        std::random_device rd;
-        std::mt19937 rng(rd());
-        std::uniform_int_distribution<> uniform(1, static_cast<int>(A->get_states() * K));
+            uint K = 300, bool seeded = false, int seed = 0) {
+        std::mt19937 rng;
+        if (seeded) {
+            rnd = std::mt19937(seed)
+        } else {
+            std::random_device rd;
+            rng = std::mt19937(rd)
+        }
+        std::uniform_int_distribution<> uniform(1, static_cast<int>(A->get_states() * A->get_states() * K));
         std::vector<Eigen::MatrixXi> randV;
 
         for (uint i = 0; i < A->get_states(); i++) {

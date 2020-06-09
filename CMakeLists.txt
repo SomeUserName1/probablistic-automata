@@ -43,7 +43,7 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/model/ReductionMethodInterface.cpp
                    src/model/RepresentationInterface.cpp
                    src/ui/UserInterface.cpp
-        )
+        src/model/weighted_automata/WeightedAutomatonBenchmarks.h)
 target_compile_definitions(ssm PUBLIC TEST=0)
 
 

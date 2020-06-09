@@ -217,6 +217,8 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
     }
 }
 
+// TODO test seed rng
+
 SCENARIO("When executing the full reduction") {
     GIVEN("an initial automaton and the random vectors") {
         auto A = gen_wa();

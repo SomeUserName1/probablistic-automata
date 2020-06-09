@@ -138,9 +138,14 @@ public:
     }
 
     static inline std::vector<Eigen::RowVectorXi> generate_random_vectors(
-            std::shared_ptr<WeightedAutomatonInstance<M>> &A, uint K) {
-        std::random_device rd;
-        std::mt19937 rng(rd());
+            std::shared_ptr<WeightedAutomatonInstance<M>> &A, uint K, bool seeded = false, int seed = 0) {
+        std::mt19937 rng;
+        if (seeded) {
+            rnd = std::mt19937(seed)
+        } else {
+            std::random_device rd;
+            rng = std::mt19937(rd)
+        }
         std::uniform_int_distribution<> uniform(1, static_cast<int>(A->get_states() * K));
         std::vector<Eigen::RowVectorXi> randV = {};
 

@@ -1,5 +1,5 @@
 [General]
-kile_livePreviewEnabled=false
+kile_livePreviewEnabled=true
 kile_livePreviewStatusUserSpecified=true
 kile_livePreviewTool=LivePreview-XeLaTeX
 lastDocument=wa_slides.tex
@@ -185,7 +185,7 @@ Mode=LaTeX
 Mode Set By User=false
 
 [document-settings,item:wa_slides.tex]
-Bookmarks=
+Bookmarks=258
 Encoding=UTF-8
 Highlighting=LaTeX
 Highlighting Set By User=false
@@ -225,7 +225,51 @@ order=0
 open=false
 order=-1
 
+[item:beamerthemeKonstanz.sty]
+open=false
+order=-1
+
 [item:de_slides.tex]
+open=false
+order=-1
+
+[item:img/UniKonstanz_Logo_Optimum.pdf]
+open=false
+order=-1
+
+[item:img/class.drawio]
+open=false
+order=-1
+
+[item:img/class.pdf]
+open=false
+order=-1
+
+[item:img/class_compact_wa.drawio]
+open=false
+order=-1
+
+[item:img/class_compact_wa.pdf]
+open=false
+order=-1
+
+[item:img/components.drawio]
+open=false
+order=-1
+
+[item:img/components.pdf]
+open=false
+order=-1
+
+[item:img/logo.pdf]
+open=false
+order=-1
+
+[item:img/sequence_simple.drawio]
+open=false
+order=-1
+
+[item:img/sequence_simple.pdf]
 open=false
 order=-1
 
@@ -253,8 +297,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=0
-CursorLine=35
+CursorColumn=44
+CursorLine=10
 Default Mark Type=1
 Dynamic Word Wrap=false
 Dynamic Word Wrap Align Indent=80
@@ -382,8 +426,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=53
-CursorLine=507
+CursorColumn=12
+CursorLine=272
 Default Mark Type=1
 Dynamic Word Wrap=true
 Dynamic Word Wrap Align Indent=80
@@ -418,7 +462,7 @@ TextFolding=[]
 User Sets Of Chars To Enclose Selection=
 Vi Input Mode Steal Keys=false
 Vi Relative Line Numbers=false
-ViMarks=.,525,175,[,525,175,],525,195
+ViMarks=.,40,37,[,40,29,],40,37
 Word Completion=true
 Word Completion Minimal Word Length=3
 Word Completion Remove Tail=true
@@ -528,8 +572,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=14
-CursorLine=1791
+CursorColumn=37
+CursorLine=41
 Default Mark Type=1
 Dynamic Word Wrap=false
 Dynamic Word Wrap Align Indent=80
@@ -564,7 +608,7 @@ TextFolding=[]
 User Sets Of Chars To Enclose Selection=
 Vi Input Mode Steal Keys=false
 Vi Relative Line Numbers=false
-ViMarks=.,1791,14,[,1791,14,],1791,14
+ViMarks=.,15,22,[,15,22,],15,22
 Word Completion=true
 Word Completion Minimal Word Length=3
 Word Completion Remove Tail=true
@@ -577,8 +621,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=98
-CursorLine=62
+CursorColumn=22
+CursorLine=343
 Default Mark Type=1
 Dynamic Word Wrap=false
 Dynamic Word Wrap Align Indent=80
@@ -613,7 +657,7 @@ TextFolding=[]
 User Sets Of Chars To Enclose Selection=
 Vi Input Mode Steal Keys=false
 Vi Relative Line Numbers=false
-ViMarks=.,62,97,[,62,72,],62,97
+ViMarks=.,357,44,[,357,43,],357,44,a,258,0
 Word Completion=true
 Word Completion Minimal Word Length=3
 Word Completion Remove Tail=true

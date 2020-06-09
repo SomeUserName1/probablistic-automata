@@ -153,6 +153,7 @@ SCENARIO("The equivalence of automata is tested") {
         }
         WHEN("The initial and the minimized automata are compared they're equal") {
             // TODO write test case that executes program, parses the output and checks equivalence with actual input
+            // TODO test seed
             int states = 3;
             int characters = 2;
             auto trueAlpha = std::make_shared<Eigen::RowVectorXd>(3);
