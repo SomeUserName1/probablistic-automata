@@ -50,20 +50,38 @@
         \end{itemize}
     \end{frame}
     
-    \begin{frame}{The Weighted Automaton Minimization Algorithm}
+    \begin{frame}[allowframebreaks]{The Weighted Automaton Minimization Algorithm}
         Weighted Automaton $A = \left( n, \Sigma, \alpha, \mu, \eta \right)$, where
         \begin{itemize}
          \item $n$ the number of states
          \item $\Sigma$ the input alphabet
          \item $\alpha$ the initial vector with a non-zero value for all starting states
          \item $\mu$ the set of transition matrices, one per input character
+         \item $\eta$ the final vector with non-zero values for all ending states
         \end{itemize}
+        \vspace{1cm}
+        Author claims $\mathcal{O}(log^2 n)$ runtime, but this is not correct as we will see later
+        In the following slide we use the notion of a forward reduction, but the backwards reduction is analogous besides minor variations
+        \framebreak
+        
+        \begin{itemize}
+         \item Find a basis $F$ of the prefix space using random vectors $r_i$
+         \begin{itemize}
+          \item Add the vectors of all prefix words up to length n together and multiply this vector by n different factors yielding $\{v_1, \dots, v_n\}$
+          \item Factors are derived by random vectors and structure of prefixes
+          \item Base is then the maximally linear independent subset of $\{ \alpha, v_1, \dots, v_n\}$
+         \end{itemize}
+         \vspace{0.5cm}
+         \item Use basis to do Schützenberger Construction~\autocite{schutz}: $\overrightarrow{A} = (\overrightarrow{n}, \Sigma, \overrightarrow{\alpha}, \overrightarrow{\mu}, \overrightarrow{\eta})$
+            With
+            \begin{itemize}
+             \item $\overrightarrow{\mu} = \overrightarrow{F} \mu \overrightarrow{F}^{-1}$
+             \item $\overrightarrow{\alpha} = e_1$
+             \item $\overrightarrow{\eta} = \overrightarrow{F}\eta$
+             \item $\overrightarrow{n} = \text{rank}(\overrightarrow{\mu})$
+            \end{itemize}
 
-        Intuition:
-        \begin{enumerate}
-         \item Generate $|\text{states}|$ many random matrices $r_i$ with $|\Sigma|$ rows and $|\text{states}|$ columns with values between 1 and , $r$
-        \end{enumerate}
-
+        \end{itemize}
     \end{frame}
 
     \begin{frame}{The Weighted Automaton Minimization Algorithm: Pseudo Code}

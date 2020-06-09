@@ -2,7 +2,7 @@
 kile_livePreviewEnabled=false
 kile_livePreviewStatusUserSpecified=true
 kile_livePreviewTool=LivePreview-XeLaTeX
-lastDocument=05-srsdd.tex
+lastDocument=wa_slides.tex
 
 [document-settings,item:0-main.tex]
 Bookmarks=
@@ -242,8 +242,8 @@ open=false
 order=-1
 
 [item:wa_slides.tex]
-open=false
-order=-1
+open=true
+order=0
 
 [view-settings,view=0,item:0-main.tex]
 Allow Mark Menu=true
@@ -456,12 +456,12 @@ TextFolding=[]
 ViMarks=
 
 [view-settings,view=0,item:de_slides.tex]
-CursorColumn=14
+CursorColumn=16
 CursorLine=8
 Dynamic Word Wrap=false
 JumpList=
 TextFolding=[]
-ViMarks=.,8,13,[,8,6,],8,13
+ViMarks=.,8,15,[,8,11,],8,15
 
 [view-settings,view=0,item:preamble.tex]
 CursorColumn=0
@@ -479,8 +479,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=22
-CursorLine=296
+CursorColumn=13
+CursorLine=311
 Default Mark Type=1
 Dynamic Word Wrap=false
 Dynamic Word Wrap Align Indent=80
@@ -528,8 +528,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=26
-CursorLine=94
+CursorColumn=14
+CursorLine=1791
 Default Mark Type=1
 Dynamic Word Wrap=false
 Dynamic Word Wrap Align Indent=80
@@ -564,7 +564,7 @@ TextFolding=[]
 User Sets Of Chars To Enclose Selection=
 Vi Input Mode Steal Keys=false
 Vi Relative Line Numbers=false
-ViMarks=.,76,21,[,76,21,],76,21
+ViMarks=.,1791,14,[,1791,14,],1791,14
 Word Completion=true
 Word Completion Minimal Word Length=3
 Word Completion Remove Tail=true
@@ -577,8 +577,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=0
-CursorLine=18
+CursorColumn=98
+CursorLine=62
 Default Mark Type=1
 Dynamic Word Wrap=false
 Dynamic Word Wrap Align Indent=80
@@ -613,7 +613,7 @@ TextFolding=[]
 User Sets Of Chars To Enclose Selection=
 Vi Input Mode Steal Keys=false
 Vi Relative Line Numbers=false
-ViMarks=.,8,13,[,8,6,],8,13
+ViMarks=.,62,97,[,62,72,],62,97
 Word Completion=true
 Word Completion Minimal Word Length=3
 Word Completion Remove Tail=true
