@@ -67,8 +67,11 @@
         \end{itemize}
         \vspace{7cm}
         Reduction to Schwarz-Zippel Lemma (Polynomial Identity Testing) provide bounds on correctness $\frac{n}{K}$\\ \vspace{0.5cm}
-        Author claims complexity is in $\mathcal{NC}$, this is not correct (c.f. later) \\ \vspace{0.5cm}
-        In the following slides use forward reduction, the backwards reduction is similar
+        Author claims complexity is in $\mathcal{RNC}$, this is not correct (c.f. later) \\ \vspace{0.5cm}
+        In the following slides use forward reduction, the backwards reduction is similar \\ \vspace{2cm}
+        
+        Basic scheme of the algorithm: \\
+        Apply forward reduction to WA, then apply backward reduction on the output of the former
         \framebreak
         
         \begin{itemize}
@@ -339,6 +342,90 @@
 
         \[\Rightarrow \overrightarrow{\mathcal{A}} = (3, \{a, b\}, \overrightarrow{\mu}, (1,0,0), (0, 198, 12)^T)\]
     \end{frame}
+    
+    \begin{frame}{Weighted Automata Equivalence Algorithm~\autocite{Kiefer2013OnTC}}
+     \begin{minipage}[b][.35\textheight][t]{.47\textwidth}
+        \textbf{Zeroness Problem: $\forall w \in \Sigma^* : A(w) = 0$} \\ \vspace{0.3cm}
+        Polynomial Identity Testing bla bla \\
+        \hspace*{0em plus 1fill} $\Longrightarrow$ \\
+        i.e. plugging in random values to avoid searching the space exahustively?\\
+        
+     \end{minipage}\hfill%
+    \begin{minipage}[b][.35\textheight][t]{.47\textwidth}
+        \hspace*{0em plus 1fill}$ \forall w \in \Sigma^* : A(w) = 0$ \\
+        \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,initial text={},initial distance=0.5cm, on grid,auto] 
+            \node[state,initial, inner sep=4pt,minimum size=0pt]    (z_0)                       {$z_0$}; 
+            \node[state, accepting, inner sep=4pt,minimum size=0pt] (z_1) [above left=of z_0]   {$z_1$};
+            \node[state, inner sep=4pt,minimum size=0pt]            (z_2) [right=of z_0]        {$z_2$}; 
+            \node[state, inner sep=4pt,minimum size=0pt]            (z_3) [right=of z_2]        {$z_3$}; 
+                \path[->] 
+                (z_0) edge  node                {a/1} (z_2)
+                (z_1) edge  node                {b/1} (z_0)
+                (z_2) edge [bend left]  node    {b/1} (z_3)
+                (z_3) edge [bend left] node     {a/1} (z_2);
+                \draw[thick,->] (3.2,1) -- (4.2,2);
+        \end{tikzpicture}  \\            
+            
+    \end{minipage}\\[0.5em]
+    \textbf{Equivalence Problem: $\forall w \in \Sigma^*: A(w) = B(w)$} \\
+    \begin{minipage}[b][.5\textheight][t]{.25\textwidth}
+    \begin{center}
+         \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,initial text={1},initial distance=0.5cm, on grid,auto] 
+                \node[state,initial,inner sep=4pt,minimum size=0pt] (z_0)   {$z_0$}; 
+                    \node[state,inner sep=4pt,minimum size=0pt] (z_1) [above right=of z_0] {$z_1$}; 
+                    \node[state,inner sep=4pt,minimum size=0pt] (z_2) [below right=of z_0] {$z_2$}; 
+                    \node[state,accepting,inner sep=4pt,minimum size=0pt](z_3) [below right=of z_1] {$z_3$};
+                        \path[->] 
+                        (z_0) edge  node {a/1} (z_1)
+                            edge  node [swap] {a/1} (z_2)
+                        (z_1) edge  node  {b/1} (z_3)
+                        (z_2) edge  node [swap] {b/1} (z_3);
+                        \draw[thick,->] (3.2,0) -- (5,-0.7);
+            \end{tikzpicture}  \\ \vfill
+            \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,initial text={2},initial distance=0.5cm, on grid,auto] 
+                \node[state,initial, inner sep=4pt,minimum size=0pt]    (z_0)                       {$z_0$}; 
+                \node[state, inner sep=4pt,minimum size=0pt] (z_1) [right=of z_0]        {$z_1$};
+                \node[state,accepting, inner sep=4pt,minimum size=0pt]  (z_2) [right=of z_1]        {$z_2$}; 
+                    \path[->] 
+                    (z_0) edge  node                {a/1} (z_1)
+                    (z_1) edge  node                {b/1} (z_2);
+                    \draw[thick,->] (3.5,0.7) -- (5,2);
+            \end{tikzpicture}
+            
+    \end{center}
+    \end{minipage}\hfill
+    \begin{minipage}[b][.5\textheight][t]{.32\textwidth}
+    %\vspace{0.3cm} 
+    %Set of words with weights from $\{a, b\}$ \\
+    %\vspace{2.6cm}
+    How to use zeroness to check equivalence?
+    \begin{center}
+     $\Downarrow$ \\
+     $\forall w \in \Sigma^*: A(w) - B(w) = 0$
+     $\swarrow \hspace{2cm} \searrow$
+    \end{center}
+    $\exists w \in \Sigma^*:$ \hfill $\forall w \in \Sigma^*:$\\
+    $C(w) \neq 0$ \hfill $C(w) = 0$\\
+    $\Rightarrow A \neq B$ \hfill $\Rightarrow A = B$
+    \end{minipage}\hfill
+    \begin{minipage}[b][.5\textheight][t]{.32\textwidth}
+    Subtraction Automaton C
+    \begin{center}
+     $n_C = n_A + n_B, \text{  } \Sigma_C = \Sigma_A \cup \Sigma_B$ \\ \vspace{0.3cm}
+     $\alpha_C = (\alpha_Am - \alpha_B)$\\ \vspace{0.3cm}
+     $ \eta_C = (\eta_A, \eta_B)^T$ \\ \vspace{0.3cm}
+     $\mu_C(\sigma) = \begin{pmatrix}
+                                    \mu_A(\sigma) & 0 \\
+                                    0 & \mu_B(\sigma) \\
+                                \end{pmatrix}$
+    \end{center}
+
+    
+    
+    \end{minipage}%
+
+    \end{frame}
+
     
     \begin{frame}[allowframebreaks]{Implementation Details}
         \begin{center}
