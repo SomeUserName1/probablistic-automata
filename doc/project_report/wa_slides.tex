@@ -38,6 +38,7 @@
             \end{itemize}
         \end{itemize}
     \end{frame}
+    
     \begin{frame}{Goals specified}
         \begin{enumerate}
             \item Implement minimization algorithm for weighted automata \autocite{Kiefer2013OnTC}. {\Huge $\checkmark$ }  \\ \vspace{0.7cm}
@@ -59,11 +60,11 @@
     \begin{frame}[allowframebreaks]{The Weighted Automaton Minimization Algorithm~\autocite{Kiefer2013OnTC}}
         Weighted Automaton $A = \left( n, \Sigma, \alpha, \mu, \eta \right)$, where
         \begin{itemize}
-         \item $n$ the number of states
-         \item $\Sigma$ the input alphabet
-         \item $\alpha$ the initial vector with a non-zero value for all starting states
-         \item $\mu$ the set of transition matrices, one per input character
-         \item $\eta$ the final vector with non-zero values for all ending states
+            \item $n$ the number of states
+            \item $\Sigma$ the input alphabet
+            \item $\alpha$ the initial vector with a non-zero value for all starting states
+            \item $\mu$ the set of transition matrices, one per input character
+            \item $\eta$ the final vector with non-zero values for all ending states
         \end{itemize}
         \vspace{7cm}
         Reduction to Schwarz-Zippel Lemma (Polynomial Identity Testing) provide bounds on correctness $\frac{n}{K}$\\ \vspace{0.5cm}
@@ -120,7 +121,6 @@
                 \end{algorithm}
             \end{minipage} 
         \end{center}
-        Array \colorbox{lightgray}{\lstinline{randVs}} has size A.n and matrices $r_i \in \{ 1, \dots, K \cdot n \}^{\Sigma \times n}$
     \framebreak
     
         \begin{center}
@@ -160,7 +160,7 @@
                 \KwOut{Candidate vectors as base of the Forward space}
                 \hrulealg
                 \Begin{
-                    List<(Word, Vector)> words $\leftarrow$ generate\_words\_forward(WA, WA.n)\;
+                    List<Word, Vector> words $\leftarrow$ generate\_words\_forward(WA, WA.n)\;
                     \For{$i = 0$ \KwTo randVs.length - 1}{
                         \For{$j = 0$ \KwTo words.length - 1}{
                             $v_i$ += words[j].vector * get\_word\_factor(words[j].word, randVs[i])\;
@@ -188,6 +188,7 @@
         \vspace{1cm}
     \end{minipage} \hfill
     \end{center}
+    Array \colorbox{lightgray}{\lstinline{randVs}} has size A.n and matrices $r_i \in \{ 1, \dots, K \cdot n \}^{\Sigma \times n}$
     \framebreak
     
     \begin{center}
@@ -249,7 +250,7 @@
                                     0 & 0 & 0 & 0 \\
                                     0 & 0 & 0 & 0 \\
                                     0 & 0 & 0 & 0
-                                \end{pmatrix}$, 
+                                \end{pmatrix}$, \vspace{0.2cm} \\
                     \item $\mu(b)= \begin{pmatrix}
                                     0 & 0 & 0 & 0 \\
                                     0 & 0 & 0 & 1 \\
@@ -314,7 +315,7 @@
         \framebreak
         \[ \overrightarrow{F} \mu(\sigma) = \overrightarrow{\mu}(\sigma)\overrightarrow{F} 
         \equiv \overrightarrow{\mu}(\sigma) = \overrightarrow{F} \mu(\sigma) \overrightarrow{F}^{-1}_R \]
-        
+        \vspace{0.2cm} \\
         \begin{minipage}{0.48\textwidth}
          \[
         \overrightarrow{\mu}(a) = 
@@ -333,37 +334,56 @@
             \end{pmatrix}
         \] 
         \end{minipage}
-        
+        \vspace{0.05cm}
         \[ \overrightarrow{\eta} = \overrightarrow{F} \eta =  \begin{pmatrix}
                                     1 & 0 & 0 & 0 \\
                                     0 & 9 & 9 & 198 \\
                                     0 & 2 & 2 & 12  \\
                                 \end{pmatrix} \cdot (0,0,0,1)^T = (0, 198, 12)^T \]
-
+\vspace{0.5cm}
         \[\Rightarrow \overrightarrow{\mathcal{A}} = (3, \{a, b\}, \overrightarrow{\mu}, (1,0,0), (0, 198, 12)^T)\]
     \end{frame}
     
     \begin{frame}{Weighted Automata Equivalence Algorithm~\autocite{Kiefer2013OnTC}}
-     \begin{minipage}[b][.35\textheight][t]{.47\textwidth}
-        \textbf{Zeroness Problem: $\forall w \in \Sigma^* : A(w) = 0$} \\ \vspace{0.3cm}
-        Polynomial Identity Testing bla bla \\
-        \hspace*{0em plus 1fill} $\Longrightarrow$ \\
-        i.e. plugging in random values to avoid searching the space exahustively?\\
-        
+    \textbf{Zeroness Problem: $\forall w \in \Sigma^* : A(w) = 0$} \vspace{0.2cm}\\ 
+     \begin{minipage}[t][.28\textheight][t]{.19\textwidth}
+        \begin{small}
+        Automaton A \vspace{0.2cm} \\
+         If $A \not\equiv 0$ \vspace{0.3cm}\\
+        $ \Rightarrow \exists w \in \Sigma^{n-1}: A(w) \neq 0$
+        \begin{center}
+          \autocite{tzeng1992polynomial}
+         \end{center}        
+        \end{small}        
      \end{minipage}\hfill%
-    \begin{minipage}[b][.35\textheight][t]{.47\textwidth}
+     \begin{minipage}[t][.28\textheight][t]{.26\textwidth}
+        
+        \begin{footnotesize}
+         Polynomial $P(x)$, random $r_i \in \{1, \dots K n\}$ \vspace{0.4cm} \\
+         $Pr[P(r) = 0 \mid P(x) \not\equiv 0] = \frac{n}{Kn} = \frac{1}{K}$ \hfill $\Longrightarrow$
+         \begin{center}
+          \autocite{zippel1979probabilistic, schwartz1980fast, DEMILLO1978193, ore1922hohere}
+         \end{center}
+        \end{footnotesize}
+     \end{minipage}\hfill%
+     \begin{minipage}[t][.28\textheight][t]{.19\textwidth}
+     \vspace{0.33cm}
+        \begin{small}
+         $P(r) = \sum\limits_{k=0}^{n - 1} \sum\limits_{w \in \Sigma^k} A(w) \cdot r_w$
+        \end{small}
+     \end{minipage}\hfill%
+    \begin{minipage}[t][.28\textheight][t]{.27\textwidth}
         \hspace*{0em plus 1fill}$ \forall w \in \Sigma^* : A(w) = 0$ \\
-        \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,initial text={},initial distance=0.5cm, on grid,auto] 
-            \node[state,initial, inner sep=4pt,minimum size=0pt]    (z_0)                       {$z_0$}; 
-            \node[state, accepting, inner sep=4pt,minimum size=0pt] (z_1) [above left=of z_0]   {$z_1$};
-            \node[state, inner sep=4pt,minimum size=0pt]            (z_2) [right=of z_0]        {$z_2$}; 
-            \node[state, inner sep=4pt,minimum size=0pt]            (z_3) [right=of z_2]        {$z_3$}; 
+        \hfill \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,initial text={},initial distance=0.5cm, on grid,auto] 
+            \node[state,initial, inner sep=4pt,minimum size=0pt, scale=0.8]    (z_0)                       {$z_0$}; 
+            \node[state, accepting, inner sep=4pt,minimum size=0pt, scale=0.8] (z_1) [above left=of z_0]   {$z_1$};
+            \node[state, inner sep=4pt,minimum size=0pt, scale=0.8]            (z_2) [right=of z_0]        {$z_2$}; 
+            \node[state, inner sep=4pt,minimum size=0pt, scale=0.8]            (z_3) [right=of z_2]        {$z_3$}; 
                 \path[->] 
-                (z_0) edge  node                {a/1} (z_2)
-                (z_1) edge  node                {b/1} (z_0)
-                (z_2) edge [bend left]  node    {b/1} (z_3)
-                (z_3) edge [bend left] node     {a/1} (z_2);
-                \draw[thick,->] (3.2,1) -- (4.2,2);
+                (z_0) edge  node   [scale=0.5]              {a/1} (z_2)
+                (z_1) edge  node   [scale=0.5]              {b/1} (z_0)
+                (z_2) edge [bend left]  node  [scale=0.5]   {b/1} (z_3)
+                (z_3) edge [bend left] node   [scale=0.5]   {a/1} (z_2);
         \end{tikzpicture}  \\            
             
     \end{minipage}\\[0.5em]
@@ -371,40 +391,38 @@
     \begin{minipage}[b][.5\textheight][t]{.25\textwidth}
     \begin{center}
          \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,initial text={1},initial distance=0.5cm, on grid,auto] 
-                \node[state,initial,inner sep=4pt,minimum size=0pt] (z_0)   {$z_0$}; 
-                    \node[state,inner sep=4pt,minimum size=0pt] (z_1) [above right=of z_0] {$z_1$}; 
-                    \node[state,inner sep=4pt,minimum size=0pt] (z_2) [below right=of z_0] {$z_2$}; 
-                    \node[state,accepting,inner sep=4pt,minimum size=0pt](z_3) [below right=of z_1] {$z_3$};
+                \node[state,initial,inner sep=4pt,minimum size=0pt, scale=0.8] (z_0)   {$z_0$}; 
+                    \node[state,inner sep=4pt,minimum size=0pt, scale=0.8] (z_1) [above right=of z_0] {$z_1$}; 
+                    \node[state,inner sep=4pt,minimum size=0pt, scale=0.8] (z_2) [below right=of z_0] {$z_2$}; 
+                    \node[state,accepting,inner sep=4pt,minimum size=0pt, scale=0.8](z_3) [below right=of z_1] {$z_3$};
                         \path[->] 
-                        (z_0) edge  node {a/1} (z_1)
-                            edge  node [swap] {a/1} (z_2)
-                        (z_1) edge  node  {b/1} (z_3)
-                        (z_2) edge  node [swap] {b/1} (z_3);
-                        \draw[thick,->] (3.2,0) -- (5,-0.7);
+                        (z_0) edge  node[scale=0.5]  {a/1} (z_1)
+                            edge  node [scale=0.5] [swap] {a/1} (z_2)
+                        (z_1) edge  node [scale=0.5]  {b/1} (z_3)
+                        (z_2) edge  node [scale=0.5] [swap] {b/1} (z_3);
             \end{tikzpicture}  \\ \vfill
             \begin{tikzpicture}[shorten >=1pt,node distance=1.5cm,initial text={2},initial distance=0.5cm, on grid,auto] 
-                \node[state,initial, inner sep=4pt,minimum size=0pt]    (z_0)                       {$z_0$}; 
-                \node[state, inner sep=4pt,minimum size=0pt] (z_1) [right=of z_0]        {$z_1$};
-                \node[state,accepting, inner sep=4pt,minimum size=0pt]  (z_2) [right=of z_1]        {$z_2$}; 
+                \node[state,initial, inner sep=4pt,minimum size=0pt, scale=0.8]    (z_0)                       {$z_0$}; 
+                \node[state, inner sep=4pt,minimum size=0pt, scale=0.8] (z_1) [right=of z_0]        {$z_1$};
+                \node[state,accepting, inner sep=4pt,minimum size=0pt, scale=0.8]  (z_2) [right=of z_1]        {$z_2$}; 
                     \path[->] 
-                    (z_0) edge  node                {a/1} (z_1)
-                    (z_1) edge  node                {b/1} (z_2);
-                    \draw[thick,->] (3.5,0.7) -- (5,2);
+                    (z_0) edge  node    [scale=0.5]             {a/1} (z_1)
+                    (z_1) edge  node    [scale=0.5]             {b/1} (z_2);
             \end{tikzpicture}
             
     \end{center}
     \end{minipage}\hfill
     \begin{minipage}[b][.5\textheight][t]{.32\textwidth}
-    %\vspace{0.3cm} 
-    %Set of words with weights from $\{a, b\}$ \\
-    %\vspace{2.6cm}
-    How to use zeroness to check equivalence?
-    \begin{center}
+    \vspace{0.3cm}
+    \begin{small}
+     How to use zeroness to check equivalence?
+    \end{small}
+    \begin{center}\vspace{-0.3cm}
      $\Downarrow$ \\
      $\forall w \in \Sigma^*: A(w) - B(w) = 0$
      $\swarrow \hspace{2cm} \searrow$
     \end{center}
-    $\exists w \in \Sigma^*:$ \hfill $\forall w \in \Sigma^*:$\\
+    $\exists w \in \Sigma^{n-1}:$ \hfill $\forall w \in \Sigma^{n-1}:$\\
     $C(w) \neq 0$ \hfill $C(w) = 0$\\
     $\Rightarrow A \neq B$ \hfill $\Rightarrow A = B$
     \end{minipage}\hfill
@@ -414,9 +432,9 @@
      $n_C = n_A + n_B, \text{  } \Sigma_C = \Sigma_A \cup \Sigma_B$ \\ \vspace{0.3cm}
      $\alpha_C = (\alpha_Am - \alpha_B)$\\ \vspace{0.3cm}
      $ \eta_C = (\eta_A, \eta_B)^T$ \\ \vspace{0.3cm}
-     $\mu_C(\sigma) = \begin{pmatrix}
-                                    \mu_A(\sigma) & 0 \\
-                                    0 & \mu_B(\sigma) \\
+     $\mu_C = \begin{pmatrix}
+                                    \mu_A & 0 \\
+                                    0 & \mu_B \\
                                 \end{pmatrix}$
     \end{center}
 

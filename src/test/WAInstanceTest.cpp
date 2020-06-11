@@ -1,21 +1,21 @@
 #include <catch2/catch.hpp>
 
-#include "../model/weighted_automata/WeightedAutomatonInstance.h"
+#include "../FloatingPointCompare.h"
+#include "../model/weighted_automata/WeightedAutomaton.h"
 
-static std::shared_ptr<WeightedAutomatonInstance> gen_wa();
+static std::shared_ptr<WeightedAutomaton> gen_wa();
 // static std::vector<Eigen::MatrixXi> gen_fixed_rand_v();
 // static std::vector<Eigen::MatrixXi> gen_fixed_rand_v3();
-static bool double_compare(double x, double y);
 
 SCENARIO("Random Vectors have correct shape") {
     GIVEN("An automaton and a number K") {
         auto mu = {std::make_shared<Eigen::MatrixXd>(10, 10)};
-        auto automaton = std::make_shared<WeightedAutomatonInstance>(10, 4, std::make_shared<Eigen::RowVectorXd>(10),
-                                                                     mu,
-                                                                     std::make_shared<Eigen::VectorXd>(10));
+        auto automaton = std::make_shared<WeightedAutomaton>(10, 4, std::make_shared<Eigen::RowVectorXd>(10),
+                                                             mu,
+                                                             std::make_shared<Eigen::VectorXd>(10));
         uint K = 100;
         WHEN("generating random vectors") {
-            auto vectors = WeightedAutomatonInstance::generate_random_vectors(automaton, K);
+            auto vectors = WeightedAutomaton::generate_random_vectors(automaton, K);
             THEN("|states| random row vectors of length |characters| are generated") {
                 REQUIRE(vectors.size() == 10);
                 for (const auto &vector : vectors) {
@@ -30,16 +30,16 @@ SCENARIO("Random Vectors have correct shape") {
 SCENARIO("Subtraction Automaton is constructed") {
     GIVEN("Two automata A and B") {
         auto wa1 = gen_wa();
-        std::shared_ptr<WeightedAutomatonInstance> wa2;
+        std::shared_ptr<WeightedAutomaton> wa2;
         WHEN("A and B are the (exactly) same automaton") {
             wa2 = gen_wa();
-            auto subtractionAutomaton = WeightedAutomatonInstance::create_subtraction_automaton(*wa1, *wa2);
+            auto subtractionAutomaton = WeightedAutomaton::create_subtraction_automaton(*wa1, *wa2);
             // TODO powerset of words up to k as function
             std::vector<std::vector<uint>> words = {{0}, {1}, {0,0}, {0,1}, {1,0}, {1,1}, {0,0,0}, {0,0,1}, {0,1,0},
                                                     {0,1,1}, {1,0,0}, {1,0,1}, {1,1,0}, {1,1,1}};
             THEN("The weight of example words is 0 in the subtraction automaton") {
                 for (const auto& word : words) {
-                    REQUIRE(double_compare(subtractionAutomaton->process_word(word), 0.0));
+                    REQUIRE(floating_point_compare(subtractionAutomaton->process_word(word), 0.0));
                 }
             }
         }
@@ -66,11 +66,11 @@ SCENARIO("Subtraction Automaton is constructed") {
                     0, 0, 0, 1,
                     0, 0, 0, 0;
             std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {mu1, mu2};
-            wa2 = std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
-            auto subtractionAutomaton = WeightedAutomatonInstance::create_subtraction_automaton(*wa1, *wa2);
+            wa2 = std::make_shared<WeightedAutomaton>(states, characters, alpha, mu, eta);
+            auto subtractionAutomaton = WeightedAutomaton::create_subtraction_automaton(*wa1, *wa2);
             std::vector<uint> word = {0, 2, 2, 2};
             THEN("The subtraction automaton is non-zero") {
-                REQUIRE(double_compare(subtractionAutomaton->process_word(word), 0.0));
+                REQUIRE(floating_point_compare(subtractionAutomaton->process_word(word), 0.0));
             }
         }
         WHEN("B is an empty automaton") {
@@ -82,12 +82,12 @@ SCENARIO("Subtraction Automaton is constructed") {
             auto mu2 = std::make_shared<Eigen::MatrixXd>(states, states);
             auto mu3 = std::make_shared<Eigen::MatrixXd>(states, states);
             std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {mu1, mu2};
-            wa2 = std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
-            auto subtractionAutomaton = WeightedAutomatonInstance::create_subtraction_automaton(*wa1, *wa2);
+            wa2 = std::make_shared<WeightedAutomaton>(states, characters, alpha, mu, eta);
+            auto subtractionAutomaton = WeightedAutomaton::create_subtraction_automaton(*wa1, *wa2);
             std::vector<std::vector<uint>> words = {{0,1}, {0,0}};
             THEN("The subtraction automaton is exactly A (checked by probing two words)") {
-                REQUIRE(double_compare(subtractionAutomaton->process_word(words[0]), wa1->process_word(words[0])));
-                REQUIRE(double_compare(subtractionAutomaton->process_word(words[1]), wa1->process_word(words[1])));
+                REQUIRE(floating_point_compare(subtractionAutomaton->process_word(words[0]), wa1->process_word(words[0])));
+                REQUIRE(floating_point_compare(subtractionAutomaton->process_word(words[1]), wa1->process_word(words[1])));
             }
         }
     }
@@ -96,7 +96,7 @@ SCENARIO("Subtraction Automaton is constructed") {
 SCENARIO("The equivalence of automata is tested") {
     GIVEN("Two Automata A and B") {
         auto wa1 = gen_wa();
-        std::shared_ptr<WeightedAutomatonInstance> wa2;
+        std::shared_ptr<WeightedAutomaton> wa2;
         WHEN("A and B are the exact same automata") {
             wa2 = gen_wa();
             THEN("They are equal") {
@@ -125,7 +125,7 @@ SCENARIO("The equivalence of automata is tested") {
                     0, 0, 0, 1,
                     0, 0, 0, 0;
             std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {mu1, mu2};
-            wa2 = std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
+            wa2 = std::make_shared<WeightedAutomaton>(states, characters, alpha, mu, eta);
 
             THEN("They are not equal") {
                 REQUIRE(*wa1 != *wa2);
@@ -146,7 +146,7 @@ SCENARIO("The equivalence of automata is tested") {
                     0, 0, 1,
                     0, 0, 0;
             std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {mu1, mu2};
-            wa2 = std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
+            wa2 = std::make_shared<WeightedAutomaton>(states, characters, alpha, mu, eta);
             THEN("They are equivalent") {
                 REQUIRE(*wa1 == *wa2);
             }
@@ -173,7 +173,7 @@ SCENARIO("The equivalence of automata is tested") {
 
             auto trueEta = std::make_shared<Eigen::VectorXd>(3);
             *trueEta << 1, 0, 0;
-            wa2 = std::make_shared<WeightedAutomatonInstance>(states, characters, trueAlpha, trueMu, trueEta);
+            wa2 = std::make_shared<WeightedAutomaton>(states, characters, trueAlpha, trueMu, trueEta);
             std::cout << wa1->pretty_print() << std::endl;
             std::cout << wa2->pretty_print() << std::endl;
             THEN("They are equivalent") {
@@ -196,7 +196,7 @@ SCENARIO("The equivalence of automata is tested") {
                     0, 0, 1,
                     0, 0, 0;
             std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {mu1, mu2};
-            wa2 = std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
+            wa2 = std::make_shared<WeightedAutomaton>(states, characters, alpha, mu, eta);
             THEN("They are not equivalent") {
                     REQUIRE(*wa1 != *wa2);
             }
@@ -204,7 +204,7 @@ SCENARIO("The equivalence of automata is tested") {
     }
 }
 
-std::shared_ptr<WeightedAutomatonInstance> gen_wa() {
+std::shared_ptr<WeightedAutomaton> gen_wa() {
     int states = 4;
     int characters = 2;
     auto alpha = std::make_shared<Eigen::RowVectorXd>(states);
@@ -222,7 +222,7 @@ std::shared_ptr<WeightedAutomatonInstance> gen_wa() {
             0, 0, 0, 1,
             0, 0, 0, 0;
     std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {mu1, mu2};
-    return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
+    return std::make_shared<WeightedAutomaton>(states, characters, alpha, mu, eta);
 }
 
 /* std::vector<Eigen::MatrixXi> gen_fixed_rand_v() {
@@ -247,8 +247,3 @@ std::vector<Eigen::MatrixXi> gen_fixed_rand_v3() {
     return {mat1, mat2, mat3};
 }*/
 
-bool double_compare(double x, double y) {
-    double maxXYOne = std::max( { 1.0, std::fabs(x) , std::fabs(y) } ) ;
-
-    return std::fabs(x - y) <= std::numeric_limits<double>::epsilon()*maxXYOne ;
-}

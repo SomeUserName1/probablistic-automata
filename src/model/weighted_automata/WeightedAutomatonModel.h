@@ -5,7 +5,7 @@
 
 #include "../ModelInterface.h"
 #include "KieferSchuetzenbergerReduction.h"
-#include "WeightedAutomatonInstance.h"
+#include "WeightedAutomaton.h"
 
 template<typename T>
 concept Arithmetic = std::is_arithmetic<T>::value;
@@ -33,7 +33,9 @@ public:
             return validate_model_instance_dense(str);
         } else if (line.starts_with("input=sparse")) {
             this->dense = false;
-            this->reductionMethods = {std::make_shared<KieferSchuetzenbergerReduction<MatrixSp>>()};
+            this->reductionMethods = {
+                    std::make_shared<KieferSchuetzenbergerReduction<Eigen::SparseMatrix<double, 0, long>>>()
+            };
             return validate_model_instance_sparse(str);
         } else {
             throw std::invalid_argument("The input specification must be either using sparse or dense format and declare "
@@ -42,7 +44,7 @@ public:
     }
 
     static std::shared_ptr<RepresentationInterface> validate_model_instance_dense(std::string &str)  {
-        // TODO adapt to dense input
+        // TODO adapt to tensor notation
         auto line = get_next_line(str, true);
 
         // states
@@ -76,7 +78,7 @@ public:
         auto alpha = std::make_shared<Eigen::MatrixXd>(1, states);
         line = line.substr(line.find('=') + 1, line.size());
         for (int i = 0; i < states; i++) {
-            (*alpha)(0, i) = extract_one_digit<double>(line);
+            alpha->coeffRef(0, i) = extract_one_digit<double>(line);
         }
 
         // fetch next line
@@ -92,7 +94,7 @@ public:
             line = line.substr(line.find('=') + 1, line.size());
             for (int i = 0; i < states; i++) {
                 for (int j = 0; j < states; j++) {
-                    (*muX)(i, j) = extract_one_digit<double>(line);
+                    muX->coeffRef(i, j) = extract_one_digit<double>(line);
                 }
             }
             mu.push_back(muX);
@@ -106,10 +108,10 @@ public:
         auto eta = std::make_shared<Eigen::MatrixXd>(states, 1);
         line = line.substr(line.find("=") + 1, line.size());
         for (int i = 0; i < states; i++) {
-            (*eta)(i, 0) = extract_one_digit<double>(line);
+            eta->coeffRef(i, 0) = extract_one_digit<double>(line);
         }
         std::cout << "Parsed Automaton successfully" << std::endl;
-        return std::make_shared<WeightedAutomatonInstance<Eigen::MatrixXd>>(states, characters, alpha, mu, eta);
+        return std::make_shared<WeightedAutomaton<Eigen::MatrixXd>>(states, characters, alpha, mu, eta);
     }
 
 
@@ -147,24 +149,24 @@ public:
         if (!line.starts_with("alpha")) {
             throw std::invalid_argument("The initial vector needs to be specified as 3rd!");
         }
-        auto alpha = std::make_shared<MatrixSp>(1, states);
+        auto alpha = std::make_shared<Eigen::SparseMatrix<double, 0, long>>(1, states);
         line = line.substr(line.find(':') + 1, line.size());
         b = extract_one_digit<uint>(line);
         d = extract_one_digit<double>(line);
-        (*alpha)(0, b) = d;
+        alpha->coeffRef(0, b) = d;
 
 
         // fetch next line
         line = get_next_line(str, false);
 
         // mu
-        std::vector<std::shared_ptr<MatrixSp>> mu = {};
+        std::vector<std::shared_ptr<Eigen::SparseMatrix<double, 0, long>>> mu = {};
         if (!line.starts_with("mu")) {
             throw std::invalid_argument("Specify the transition matrices 4th, one for each character!");
         }
         line = line.substr(line.find(':') + 1, line.size());
         for (int i = 0; i < characters; i++) {
-            mu.emplace_back(std::make_shared<MatrixSp>(states, states));
+            mu.emplace_back(std::make_shared<Eigen::SparseMatrix<double, 0, long>>(states, states));
         }
 
         do {
@@ -172,7 +174,7 @@ public:
             b = extract_one_digit<long>(line);
             c = extract_one_digit<long>(line);
             d = extract_one_digit<double>(line);
-            (*(mu[a]))(b, c) = d;
+            mu[a]->coeffRef(b, c) = d;
 
             // fetch next line
             line = get_next_line(str, false);
@@ -181,29 +183,30 @@ public:
         if (!line.starts_with("eta")) {
             throw std::logic_error("Unreachable;");
         }
-        auto eta = std::make_shared<MatrixSp>(states, 1);
+        auto eta = std::make_shared<Eigen::SparseMatrix<double, 0, long>>(states, 1);
         line = line.substr(line.find(":") + 1, line.size());
         b = extract_one_digit<uint>(line);
         d = extract_one_digit<double>(line);
-        (*eta)(b, 0) = d;
+        eta->coeffRef(b, 0) = d;
         std::cout << "Parsed Automaton successfully" << std::endl;
 
-        return std::make_shared<WeightedAutomatonInstance<MatrixSp>>(states, characters, alpha, mu, eta);
+        return std::make_shared<WeightedAutomaton<Eigen::SparseMatrix<double, 0, long>>>(states, characters, alpha, mu,
+                eta);
     }
 
     [[nodiscard]] std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &A,
                                                   std::shared_ptr<RepresentationInterface> &minA) const override {
         std::stringstream result;
         if (dense) {
-            auto WA = std::dynamic_pointer_cast<WeightedAutomatonInstance<Eigen::MatrixXd>>(A);
-            auto minWA = std::dynamic_pointer_cast<WeightedAutomatonInstance<Eigen::MatrixXd>>(minA);
+            auto WA = std::static_pointer_cast<WeightedAutomaton<Eigen::MatrixXd>>(A);
+            auto minWA = std::static_pointer_cast<WeightedAutomaton<Eigen::MatrixXd>>(minA);
             result << "Before Reduction" << std::endl
                    << WA->pretty_print()
                    << "After Reduction" << std::endl
                    << minWA->pretty_print();
         } else {
-            auto WA = std::dynamic_pointer_cast<WeightedAutomatonInstance<MatrixSp>>(A);
-            auto minWA = std::dynamic_pointer_cast<WeightedAutomatonInstance<MatrixSp>>(minA);
+            auto WA = std::static_pointer_cast<WeightedAutomaton<Eigen::SparseMatrix<double, 0, long>>>(A);
+            auto minWA = std::static_pointer_cast<WeightedAutomaton<Eigen::SparseMatrix<double, 0, long>>>(minA);
             result << "Before Reduction" << std::endl
                    << WA->pretty_print()
                    << "After Reduction" << std::endl

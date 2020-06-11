@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="separateTabsFileTypes" value="cpp;h;md;tex;m;" />
+    <option name="excludeDotArtifactDirectory" value="true" />
+    <option name="activateWhenOpenProject" value="true" />
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/cmake-build-debug" />
+        <option value="$PROJECT_DIR$/include" />
+        <option value="$PROJECT_DIR$/literature" />
+      </list>
+    </option>
+  </component>
+</project>

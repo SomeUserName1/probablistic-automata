@@ -3,15 +3,14 @@
 #include <vector>
 #include <iostream>
 
+#include "../FloatingPointCompare.h"
 #include "../model/weighted_automata/KieferSchuetzenbergerReduction.h"
 
-static std::shared_ptr<WeightedAutomatonInstance> gen_wa();
+static std::shared_ptr<WeightedAutomaton> gen_wa();
 
 static std::vector<Eigen::MatrixXi> gen_fixed_rand_v();
 
 static std::vector<Eigen::MatrixXi> gen_fixed_rand_v3();
-
-static bool double_compare(double x, double y);
 
 SCENARIO("The word factors are calculated correctly as specified in the paper") {
     GIVEN("Fixed random vectors") {
@@ -48,9 +47,9 @@ SCENARIO("The word factors are calculated correctly as specified in the paper") 
 SCENARIO("The random vectors have the correct shape") {
     GIVEN("An automaton A and a number K") {
         auto mu = {std::make_shared<Eigen::MatrixXd>(10, 10)};
-        auto automaton = std::make_shared<WeightedAutomatonInstance>(10, 4, std::make_shared<Eigen::RowVectorXd>(10),
-                                                                     mu,
-                                                                     std::make_shared<Eigen::VectorXd>(10));
+        auto automaton = std::make_shared<WeightedAutomaton>(10, 4, std::make_shared<Eigen::RowVectorXd>(10),
+                                                             mu,
+                                                             std::make_shared<Eigen::VectorXd>(10));
         uint K = 100;
         WHEN("generating random vectors") {
             auto vectors = KieferSchuetzenbergerReduction::generate_random_vectors(automaton, K);
@@ -80,7 +79,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->cols() == A->get_states());
                 auto hcVector = Eigen::RowVectorXd(A->get_states());
                 hcVector << 0, 1, 1, 0;
-                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
+                REQUIRE(floating_point_compare((*vector - hcVector).norm(), 0));
 
                 std::tie(vector, word) = wordsForward[1];
                 REQUIRE(word.size() == 2);
@@ -89,7 +88,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->rows() == 1);
                 REQUIRE(vector->cols() == A->get_states());
                 hcVector << 0, 0, 0, 2;
-                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
+                REQUIRE(floating_point_compare((*vector - hcVector).norm(), 0));
             }
         }
         WHEN("Generating words backwards") {
@@ -104,7 +103,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->cols() == 1);
                 auto hcVector = Eigen::VectorXd(A->get_states());
                 hcVector << 0, 1, 1, 0;
-                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
+                REQUIRE(floating_point_compare((*vector - hcVector).norm(), 0));
 
                 std::tie(vector, word) = wordsBackward[1];
                 REQUIRE(word.size() == 2);
@@ -113,7 +112,7 @@ SCENARIO("The generating words yields only valid words") {
                 REQUIRE(vector->rows() == A->get_states());
                 REQUIRE(vector->cols() == 1);
                 hcVector << 2, 0, 0, 0;
-                REQUIRE(double_compare((*vector - hcVector).norm(), 0));
+                REQUIRE(floating_point_compare((*vector - hcVector).norm(), 0));
             }
         }
     }
@@ -136,7 +135,7 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
                 v4 << 0, 4, 4, 72;
                 std::vector<Eigen::MatrixXd> vect = {v1, v2, v3, v4};
                 for (size_t i = 0; i < A->get_states(); i++) {
-                    REQUIRE(double_compare((vect[i] - rhoForward[i]).norm(), 0));
+                    REQUIRE(floating_point_compare((vect[i] - rhoForward[i]).norm(), 0));
                 }
             }
         }
@@ -155,7 +154,7 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
                 std::vector<Eigen::MatrixXd> vect = {v1, v2, v3, v4};
 
                 for (size_t i = 0; i < A->get_states(); i++) {
-                    REQUIRE(double_compare((vect[i] - rhoBackward[i]).norm(), 0));
+                    REQUIRE(floating_point_compare((vect[i] - rhoBackward[i]).norm(), 0));
                 }
             }
         }
@@ -173,7 +172,7 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
 
                 auto trueAlpha = Eigen::RowVectorXd(3);
                 trueAlpha << 1, 0, 0;
-                REQUIRE(double_compare((*(minWA->get_alpha()) - trueAlpha).norm(), 0));
+                REQUIRE(floating_point_compare((*(minWA->get_alpha()) - trueAlpha).norm(), 0));
 
                 auto trueMu1 = Eigen::MatrixXd(3, 3);
                 auto trueMu2 = Eigen::MatrixXd(3, 3);
@@ -186,7 +185,7 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
 
                 auto trueEta = Eigen::VectorXd(3);
                 trueEta << 0, 198, 12;
-                REQUIRE(double_compare((*(minWA->get_eta()) - trueEta).norm(),0));
+                REQUIRE(floating_point_compare((*(minWA->get_eta()) - trueEta).norm(),0));
             }
         }
         WHEN("calculating the backward reduction") {
@@ -198,7 +197,7 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
 
                 auto trueAlpha = Eigen::RowVectorXd(3);
                 trueAlpha << 0, 198, 12;
-                REQUIRE(double_compare((*(minWA->get_alpha()) - trueAlpha).norm(), 0));
+                REQUIRE(floating_point_compare((*(minWA->get_alpha()) - trueAlpha).norm(), 0));
 
                 auto trueMu1 = Eigen::MatrixXd(3, 3);
                 auto trueMu2 = Eigen::MatrixXd(3, 3);
@@ -211,7 +210,7 @@ SCENARIO("The forward and backward reductions are calculated correctly as specif
 
                 auto trueEta = Eigen::VectorXd(3);
                 trueEta << 1, 0, 0;
-                REQUIRE(double_compare((*(minWA->get_eta()) - trueEta).norm(), 0));
+                REQUIRE(floating_point_compare((*(minWA->get_eta()) - trueEta).norm(), 0));
             }
         }
     }
@@ -225,8 +224,8 @@ SCENARIO("When executing the full reduction") {
         auto randomVectors4 = gen_fixed_rand_v();
         auto randomVectors3 = gen_fixed_rand_v3();
         WHEN("Executing the exact same steps as when calling reduce on an WA") {
-            std::shared_ptr<WeightedAutomatonInstance> minWA = KieferSchuetzenbergerReduction::forward_reduction(A,
-                randomVectors4);
+            std::shared_ptr<WeightedAutomaton> minWA = KieferSchuetzenbergerReduction::forward_reduction(A,
+                                                                                                         randomVectors4);
             minWA = KieferSchuetzenbergerReduction::backward_reduction(minWA, randomVectors3);
             THEN("The result is equivalent to what is calculated by hand") {
                 REQUIRE(minWA->get_states() == 3);
@@ -257,7 +256,7 @@ SCENARIO("When executing the full reduction") {
     }
 }
 
-std::shared_ptr<WeightedAutomatonInstance> gen_wa() {
+std::shared_ptr<WeightedAutomaton> gen_wa() {
     int states = 4;
     int characters = 2;
     auto alpha = std::make_shared<Eigen::RowVectorXd>(states);
@@ -275,7 +274,7 @@ std::shared_ptr<WeightedAutomatonInstance> gen_wa() {
             0, 0, 0, 1,
             0, 0, 0, 0;
     std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {mu1, mu2};
-    return std::make_shared<WeightedAutomatonInstance>(states, characters, alpha, mu, eta);
+    return std::make_shared<WeightedAutomaton>(states, characters, alpha, mu, eta);
 }
 
 std::vector<Eigen::MatrixXi> gen_fixed_rand_v() {
@@ -298,10 +297,4 @@ std::vector<Eigen::MatrixXi> gen_fixed_rand_v3() {
     mat2 << 8, 1, 8, 7, 8, 2;
     mat3 << 1, 6, 5, 9, 2, 1;
     return {mat1, mat2, mat3};
-}
-
-bool double_compare(double x, double y) {
-    double maxXYOne = std::max( { 1.0, std::fabs(x) , std::fabs(y) } ) ;
-
-    return std::fabs(x - y) <= std::numeric_limits<double>::epsilon()*maxXYOne ;
 }
