@@ -1,13 +1,13 @@
+#include <chrono>
 #include <tclap/CmdLine.h>
+#include <eigen3/Eigen/Core>
 
 #include "model/differential_equations/DifferentialEquationModel.h"
 #include "model/weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.h"
-#include <chrono>
 
 // TODO inline, call by const reference, ...
 // TODO Lifting/Benchmark generation
-// TODO presentation on stage 1
 
 // Lifting to create benchmarks:
 //  start with a minimal automata
@@ -15,15 +15,9 @@
 // careful: state s with a/2
 // if split this state distribute weight with weight mass preservance
 
-// example
-// implementation
-// how it relates to the next steps (preview/teaser)
+static auto iequals(const std::string & str1, const std::string & str2) -> bool;
 
-
-
-bool iequals(const std::string &, const std::string &);
-
-bool iequals(const std::string &str1, const std::string &str2) {
+static auto iequals(const std::string &str1, const std::string &str2) -> bool {
     return str1.size() == str2.size()
            && std::equal(str1.begin(), str1.end(), str2.begin(),
                          [](auto a, auto b) {
@@ -32,11 +26,14 @@ bool iequals(const std::string &str1, const std::string &str2) {
     );
 }
 
-int main(int argc, char *argv[]) {
-    UserInterface::Task task;
-    std::shared_ptr<ModelInterface> model;
+auto main(int argc, char *argv[]) -> int {
+    omp_set_num_threads(THREADS);
+    Eigen::initParallel();
+
+    UserInterface::Task task = UserInterface::Task::Unselected;
+    std::shared_ptr<ModelInterface> model = nullptr;
     uint reductionMethod = 0;
-    UserInterface::IOMethod inputMethod;
+    UserInterface::IOMethod inputMethod = UserInterface::IOMethod::Unse;
     UserInterface::IOMethod outputMethod = UserInterface::IOMethod::Unse;
     std::string outputDestination = "init";
     std::string input = "init";
@@ -64,7 +61,7 @@ int main(int argc, char *argv[]) {
         TCLAP::ValueArg<std::string> outputArg("o", "output", "path to output file",
                                                false, "", "string");
 
-        for (auto arg : {&taskArg, &modelArg, &methodArg, &inputArg, &input1Arg, &outputArg}) {
+        for (auto *arg : {&taskArg, &modelArg, &methodArg, &inputArg, &input1Arg, &outputArg}) {
             cmd.add(arg);
         }
         cmd.add(tuiSwitch);
@@ -208,7 +205,7 @@ int main(int argc, char *argv[]) {
             case UserInterface::Equivalence: {
                 auto representation0 = model->validate_model_instance(input);
                 auto representation1 = model->validate_model_instance(input1);
-                auto result = std::to_string(*representation0 == *representation1);
+                auto result = std::to_string(representation0 == representation1);
                 std::cout << "Finished Equivalence check" << std::endl;
                 if (outputMethod == UserInterface::IOMethod::File) {
                     ui->display_file(result, outputDestination);

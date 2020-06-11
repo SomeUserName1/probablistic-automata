@@ -26,10 +26,6 @@ public:
         Display = 2
     };
 
-    /*
-     * To allow polymorphism in the main, pure virtual is not possible. As the below functions are virtual, we
-     * simply throw an exception, when an invalid call to the base class is made.
-     */
     virtual ~UserInterface();
 
     [[nodiscard]] virtual Task select_task() const = 0;
