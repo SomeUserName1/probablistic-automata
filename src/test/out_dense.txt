@@ -1,0 +1,36 @@
+Before Reduction
+No. States: 4 , No. Input Characters 2
+Initial Vector :
+[[1, 0, 0, 0]]
+Transition Matrices: 
+Mu0
+[[0, 1, 1, 0];
+ [0, 0, 0, 0];
+ [0, 0, 0, 0];
+ [0, 0, 0, 0]]
+Mu1
+[[0, 0, 0, 0];
+ [0, 0, 0, 1];
+ [0, 0, 0, 1];
+ [0, 0, 0, 0]]
+Final Vector: 
+[[0];
+ [0];
+ [0];
+ [1]]
+
+After Reduction
+No. States: 2 , No. Input Characters 2
+Initial Vector :
+[[-0.409143,     52998]]
+Transition Matrices: 
+Mu0
+[[           0,            0];
+ [-2.14512e-18,            0]]
+Mu1
+[[0.00436161,          0];
+ [         0,          0]]
+Final Vector: 
+[[           1];
+ [-1.83255e-06]]
+

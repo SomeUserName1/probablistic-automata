@@ -2,9 +2,9 @@
 
 class NotImplementedException : public std::logic_error {
 public:
-    NotImplementedException();
+  NotImplementedException();
 
-    ~NotImplementedException() override = default;
+  ~NotImplementedException() override = default;
 
-    const char *what() const noexcept override;
+  [[nodiscard]] auto what() const noexcept -> const char * override;
 };

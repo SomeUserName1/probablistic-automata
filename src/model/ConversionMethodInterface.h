@@ -5,15 +5,17 @@
 
 class ConversionMethodInterface {
 public:
-    virtual ~ConversionMethodInterface();
+  virtual ~ConversionMethodInterface();
 
-    virtual std::string get_left_model_name() const = 0;
+  [[nodiscard]] virtual auto get_left_model_name() const -> std::string = 0;
 
-    virtual std::string get_right_model_name() const = 0;
+  [[nodiscard]] virtual auto get_right_model_name() const -> std::string = 0;
 
-    virtual RepresentationInterface convert_left_to_right(RepresentationInterface) const = 0;
+  [[nodiscard]] virtual auto
+      convert_left_to_right(RepresentationInterface) const -> RepresentationInterface = 0;
 
-    virtual RepresentationInterface convert_right_to_left(RepresentationInterface) const = 0;
+  [[nodiscard]] virtual auto
+      convert_right_to_left(RepresentationInterface) const -> RepresentationInterface = 0;
 };
 
-#endif //STOCHASTIC_SYSTEM_MINIMIZATION_MODELCONVERSIONINTERFACE_H
+#endif // STOCHASTIC_SYSTEM_MINIMIZATION_MODELCONVERSIONINTERFACE_H

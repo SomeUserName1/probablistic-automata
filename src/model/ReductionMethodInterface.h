@@ -6,11 +6,12 @@
 
 class ReductionMethodInterface {
 public:
-    virtual ~ReductionMethodInterface();
+  virtual ~ReductionMethodInterface();
 
-    virtual inline std::string get_name() const = 0;
+  [[nodiscard]] virtual inline auto get_name() const -> std::string = 0;
 
-    virtual inline std::shared_ptr<RepresentationInterface> reduce(const std::shared_ptr<RepresentationInterface> &) const = 0;
+  [[nodiscard]] virtual inline auto
+  reduce(const std::shared_ptr<RepresentationInterface> &) const -> std::shared_ptr<RepresentationInterface> = 0;
 };
 
-#endif //STOCHASTIC_SYSTEM_MINIMIZATION_REDUCTIONMETHODINTERFACE_H
+#endif // STOCHASTIC_SYSTEM_MINIMIZATION_REDUCTIONMETHODINTERFACE_H

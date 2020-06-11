@@ -2,7 +2,7 @@
 kile_livePreviewEnabled=true
 kile_livePreviewStatusUserSpecified=true
 kile_livePreviewTool=LivePreview-XeLaTeX
-lastDocument=wa_slides.tex
+lastDocument=05-srsdd.tex
 
 [document-settings,item:0-main.tex]
 Bookmarks=
@@ -203,7 +203,7 @@ Mode=LaTeX
 Mode Set By User=false
 
 [item:0-main.tex]
-open=false
+open=true
 order=0
 
 [item:01-introduction.tex]
@@ -215,8 +215,8 @@ open=false
 order=-1
 
 [item:03-red_min.tex]
-open=false
-order=-1
+open=true
+order=1
 
 [item:04-eval.tex]
 open=false
@@ -227,8 +227,8 @@ open=false
 order=1
 
 [item:05-srsdd.tex]
-open=false
-order=0
+open=true
+order=3
 
 [item:06-sdd.tex]
 open=false
@@ -291,11 +291,11 @@ open=false
 order=2
 
 [item:themeKonstanz.sty]
-open=false
-order=-1
+open=true
+order=2
 
 [item:wa_slides.tex]
-open=true
+open=false
 order=0
 
 [view-settings,view=0,item:0-main.tex]
@@ -388,12 +388,12 @@ TextFolding=[]
 ViMarks=.,0,34,[,0,24,],0,34
 
 [view-settings,view=0,item:03-red_min.tex]
-CursorColumn=8
-CursorLine=0
+CursorColumn=20
+CursorLine=3
 Dynamic Word Wrap=false
 JumpList=
 TextFolding=[]
-ViMarks=.,0,7,[,0,0,],0,7
+ViMarks=.,3,20,[,3,20,],3,20
 
 [view-settings,view=0,item:04-eval.tex]
 CursorColumn=32
@@ -435,8 +435,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=45
-CursorLine=489
+CursorColumn=0
+CursorLine=529
 Default Mark Type=1
 Dynamic Word Wrap=true
 Dynamic Word Wrap Align Indent=80
@@ -471,7 +471,7 @@ TextFolding=[]
 User Sets Of Chars To Enclose Selection=
 Vi Input Mode Steal Keys=false
 Vi Relative Line Numbers=false
-ViMarks=.,40,37,[,40,29,],40,37
+ViMarks=.,524,124,[,524,124,],524,172
 Word Completion=true
 Word Completion Minimal Word Length=3
 Word Completion Remove Tail=true
@@ -589,8 +589,8 @@ Auto Completion=true
 Backspace Remove Composed Characters=false
 Bookmark Menu Sorting=0
 Chars To Enclose Selection=
-CursorColumn=37
-CursorLine=41
+CursorColumn=1
+CursorLine=94
 Default Mark Type=1
 Dynamic Word Wrap=false
 Dynamic Word Wrap Align Indent=80
@@ -625,7 +625,7 @@ TextFolding=[]
 User Sets Of Chars To Enclose Selection=
 Vi Input Mode Steal Keys=false
 Vi Relative Line Numbers=false
-ViMarks=.,15,22,[,15,22,],15,22
+ViMarks=.,94,0,[,94,0,],94,0
 Word Completion=true
 Word Completion Minimal Word Length=3
 Word Completion Remove Tail=true

@@ -3,18 +3,18 @@ project(stochastic-system-minimization)
 cmake_minimum_required(VERSION 3.14)
 
 # C++ specifics
-#SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
- SET(CMAKE_CXX_COMPILER "../include/LLOV/bin/clang++")
+SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+# SET(CMAKE_CXX_COMPILER "../include/LLOV/bin/clang++")
 SET(CMAKE_CXX_STANDARD 20)
-SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include -Xclang -disable-O0-optnone -Xclang -load \
- -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so")
-#SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include \
-#    -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall \
-#    -Wpedantic -Werror -Wextra -Weffc++ -Weverything -Wno-c++98-compat")
+#SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include -Xclang -disable-O0-optnone -Xclang -load \
+# -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so")
+SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include \
+    -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall \
+    -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat")
 
 #thread , -Xclang -disable-O0-optnone -Xclang -load \
 # -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so
-# find_package( OpenMP )
+# find_package( OpenMP ) -Werror
 # release flags
 # SET(CMAKE_CXX_FLAGS " -I${MKLROOT}/include -O3 -mllvm -polly -mllvm \
 # -polly-vectorizer=stripmine -polly-parallel -lgomp  \
@@ -54,7 +54,7 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/model/ReductionMethodInterface.cpp
                    src/model/RepresentationInterface.cpp
                    src/ui/UserInterface.cpp
-        src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/FloatingPointCompare.h)
+        src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/FloatingPointCompare.h src/TypeDefs.h)
 target_compile_definitions(ssm PUBLIC TEST=0)
 target_link_libraries(ssm  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
  ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -lspqr -lcholmod)
@@ -63,9 +63,7 @@ target_link_libraries(ssm  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel
 enable_testing()
 add_executable(tests src/test/TestsMain.cpp
         src/test/CLITest.cpp
-        src/test/TUITest.cpp
-        src/test/WAModelTest.cpp
-        src/test/WAInstanceTest.cpp
+        src/test/WATest.cpp
         src/test/KieferSchuetzenbergerReductionTest.cpp
         src/ui/TextUserInterface.cpp
         src/model/weighted_automata/WeightedAutomatonModel.cpp
@@ -75,7 +73,8 @@ add_executable(tests src/test/TestsMain.cpp
         src/model/ReductionMethodInterface.cpp
         src/model/RepresentationInterface.cpp
         src/ui/UserInterface.cpp
-        )
-target_link_libraries(tests Catch2::Catch2)
+        src/test/TestUtils.h src/TypeDefs.h)
+target_link_libraries(tests Catch2::Catch2 -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
+        ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -lspqr -lcholmod)
 target_compile_definitions(tests PUBLIC TEST=1)
 catch_discover_tests(tests)

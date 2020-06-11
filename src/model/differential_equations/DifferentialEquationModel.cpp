@@ -1,3 +1,3 @@
 #include "DifferentialEquationModel.h"
 
-DifferentialEquationModel::~DifferentialEquationModel() {}
+DifferentialEquationModel::~DifferentialEquationModel() = default;

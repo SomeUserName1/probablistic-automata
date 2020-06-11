@@ -1,44 +1,44 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
 
-
 #include "../ModelInterface.h"
 #include "../RepresentationInterface.h"
 
 class DifferentialEquationModel : public ModelInterface {
 public:
-    DifferentialEquationModel() = default;
+  DifferentialEquationModel() = default;
 
-    ~DifferentialEquationModel() override;
+  ~DifferentialEquationModel() override;
 
-    std::string get_name() const override {
-        return "Differential Equation Model";
-    }
+  [[nodiscard]] auto get_name() const -> std::string override {
+    return "Differential Equation Model";
+  }
 
-    std::shared_ptr<RepresentationInterface> validate_model_instance(std::string &string) override {
-        auto a = string;
-        throw NotImplementedException();
-    }
+  auto
+  validate_model_instance(std::string &string) -> std::shared_ptr<RepresentationInterface> override {
+    throw NotImplementedException();
+  }
 
-    std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &ptr,
-                                    std::shared_ptr<RepresentationInterface> &sharedPtr) const override {
-        auto a = ptr;
-        auto b = sharedPtr;
-        throw NotImplementedException();
-    }
+  auto summarize_reduction(
+      std::shared_ptr<RepresentationInterface> &ptr,
+      std::shared_ptr<RepresentationInterface> &sharedPtr) const -> std::string override {
 
-    std::vector<std::shared_ptr<ReductionMethodInterface>> get_reduction_methods() const override {
-        throw NotImplementedException();
-    }
+    throw NotImplementedException();
+  }
 
-    std::vector<std::shared_ptr<ConversionMethodInterface>> get_conversion_methods() const override {
-        throw NotImplementedException();
-    }
+  auto
+  get_reduction_methods() const -> std::vector<std::shared_ptr<ReductionMethodInterface>> override {
+    throw NotImplementedException();
+  }
 
-    std::string get_representation_description() const noexcept override {
-        return "TODO";
-    }
+  auto
+  get_conversion_methods() const -> std::vector<std::shared_ptr<ConversionMethodInterface>> override {
+    throw NotImplementedException();
+  }
+
+  auto get_representation_description() const noexcept -> std::string override {
+    return "TODO";
+  }
 };
 
-
-#endif //STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
+#endif // STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
