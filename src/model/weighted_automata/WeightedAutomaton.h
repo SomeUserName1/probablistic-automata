@@ -10,7 +10,7 @@
 #include <variant>
 #include <vector>
 
-#define EIGEN_USE_MKL_ALL
+#define EIGEN_USE_MKL_ALL 1
 #include <eigen3/Eigen/Eigen>
 #include <eigen3/Eigen/SPQRSupport>
 
@@ -24,42 +24,27 @@ using MatSpIPtr = std::shared_ptr<Eigen::SparseMatrix<int, 0, long>>;
 using MatSpI = Eigen::SparseMatrix<int, 0, long>;
 using MatSpD = Eigen::SparseMatrix<double, 0, long>;
 
-template <typename T>
-concept Matrix = requires(T a, T b, long i, long j,
-                          Eigen::SparseMatrix<double, 0, long> c) {
-  a.coeffRef(i, j);
-  a *b;
-  a + b;
-  a.rows();
-  a.cols();
-  std::cout << a;
-  a *c;
-  a + c;
-  a.transpose();
-  a.sum();
-  a.col(0);
-};
 
-template <Matrix M> class WeightedAutomaton : public RepresentationInterface {
+class WeightedAutomaton : public RepresentationInterface {
 private:
   uint states{};
   uint noInputCharacters{};
-  std::shared_ptr<M> alpha;
-  std::vector<std::shared_ptr<M>> mu{};
-  std::shared_ptr<M> eta;
+  MatSpDPtr alpha;
+  std::vector<MatSpDPtr> mu{};
+  MatSpDPtr eta;
 
 public:
   WeightedAutomaton();
   ~WeightedAutomaton() override;
-  WeightedAutomaton(uint mStates, uint characters, std::shared_ptr<M> mAlpha,
-                    std::vector<std::shared_ptr<M>> mMu,
-                    std::shared_ptr<M> mEta)
+  WeightedAutomaton(uint mStates, uint characters, MatSpDPtr mAlpha,
+                    std::vector<MatSpDPtr> mMu,
+                    MatSpDPtr mEta)
       : states(mStates), noInputCharacters(characters),
         alpha(std::move(mAlpha)), mu(std::move(mMu)), eta(std::move(mEta)) {}
 
   auto operator==(const std::shared_ptr<RepresentationInterface> &other) const
       -> bool override {
-    auto mOther = std::static_pointer_cast<WeightedAutomaton<M>>(other);
+    auto mOther = std::static_pointer_cast<WeightedAutomaton>(other);
     return equivalent(*this, *mOther);
   }
 
@@ -70,7 +55,7 @@ public:
 
   [[nodiscard]] inline auto process_word(const std::vector<uint> &word) const
       -> double {
-    M intermediate = *(this->alpha);
+    MatSpD intermediate = *(this->alpha);
     for (const auto &letter : word) {
       if (letter >= this->noInputCharacters) {
         throw std::invalid_argument("The specified word has a letter that is "
@@ -78,7 +63,8 @@ public:
       }
       intermediate = (intermediate * *(this->mu[letter])).eval();
     }
-    return static_cast<double>((intermediate * *(this->eta)).eval());
+    intermediate = (intermediate * *(this->eta)).eval();
+    return intermediate.sum();
   }
 
   [[nodiscard]] inline auto get_states() const -> uint { return this->states; }
@@ -87,32 +73,32 @@ public:
     return this->noInputCharacters;
   }
 
-  [[nodiscard]] inline auto get_alpha() const -> const std::shared_ptr<M> & {
+  [[nodiscard]] inline auto get_alpha() const -> const MatSpDPtr & {
     return this->alpha;
   }
 
   [[nodiscard]] inline auto get_mu() const
-      -> const std::vector<std::shared_ptr<M>> & {
+      -> const std::vector<MatSpDPtr> & {
     return this->mu;
   }
 
-  [[nodiscard]] inline auto get_eta() const -> const std::shared_ptr<M> & {
+  [[nodiscard]] inline auto get_eta() const -> const MatSpDPtr & {
     return this->eta;
   }
 
-  static auto create_subtraction_automaton(const WeightedAutomaton<M> &lhs,
-                                           const WeightedAutomaton<M> &rhs)
-      -> std::shared_ptr<WeightedAutomaton<M>> {
+  static auto create_subtraction_automaton(const WeightedAutomaton &lhs,
+                                           const WeightedAutomaton &rhs)
+      -> std::shared_ptr<WeightedAutomaton> {
     uint lhsStates = lhs.get_states();
     uint rhsStates = rhs.get_states();
     uint subStates = lhsStates + rhsStates;
     uint subCharacters = std::max(lhs.get_number_input_characters(),
                                   rhs.get_number_input_characters());
 
-    std::shared_ptr<M> lhsAlpha = lhs.get_alpha();
-    std::shared_ptr<M> rhsAlpha = rhs.get_alpha();
-    std::shared_ptr<M> subAlpha =
-        std::make_shared<M>(1, lhsAlpha->cols() + rhsAlpha->cols());
+    MatSpDPtr lhsAlpha = lhs.get_alpha();
+    MatSpDPtr rhsAlpha = rhs.get_alpha();
+    MatSpDPtr subAlpha =
+        std::make_shared<MatSpD>(1, lhsAlpha->cols() + rhsAlpha->cols());
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
     shared(subAlpha, lhsAlpha, rhsAlpha)
     for (long i = 0; i < lhsAlpha->cols() + rhsAlpha->cols(); i++) {
@@ -123,10 +109,10 @@ public:
       }
     }
 
-    std::shared_ptr<M> lhsEta = lhs.get_eta();
-    std::shared_ptr<M> rhsEta = rhs.get_eta();
-    std::shared_ptr<M> subEta =
-        std::make_shared<M>(lhsEta->rows() + rhsEta->rows(), 1);
+    MatSpDPtr lhsEta = lhs.get_eta();
+    MatSpDPtr rhsEta = rhs.get_eta();
+    MatSpDPtr subEta =
+        std::make_shared<MatSpD>(lhsEta->rows() + rhsEta->rows(), 1);
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
     shared(subEta, lhsEta, rhsEta)
     for (long i = 0; i < lhsEta->rows() + rhsEta->rows(); i++) {
@@ -137,15 +123,15 @@ public:
       }
     }
 
-    std::vector<std::shared_ptr<M>> subMu = {};
+    std::vector<MatSpDPtr> subMu = {};
     std::mutex subMuMutex = std::mutex();
-    std::vector<std::shared_ptr<M>> lhsMu = lhs.get_mu();
-    std::vector<std::shared_ptr<M>> rhsMu = rhs.get_mu();
-    std::shared_ptr<M> muX;
+    std::vector<MatSpDPtr> lhsMu = lhs.get_mu();
+    std::vector<MatSpDPtr> rhsMu = rhs.get_mu();
+    MatSpDPtr muX;
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
     shared(subMu, subMuMutex, lhsMu, rhsMu, subStates, rhs, lhsStates, subCharacters, lhsStates, rhsStates) private(muX)
     for (size_t i = 0; i < subCharacters; i++) {
-      muX = std::make_shared<M>(subStates, subStates);
+      muX = std::make_shared<MatSpD>(subStates, subStates);
       if (i < lhsMu.size()) {
         set_block(0, 0, lhsStates, lhsMu[i], muX);
       }
@@ -155,13 +141,13 @@ public:
       std::lock_guard<std::mutex> guard(subMuMutex);
       subMu.push_back(muX);
     }
-    return std::make_shared<WeightedAutomaton<M>>(subStates, subCharacters,
+    return std::make_shared<WeightedAutomaton>(subStates, subCharacters,
                                                   subAlpha, subMu, subEta);
   }
 
   static inline void set_block(long startX, long startY, uint length,
-                               const std::shared_ptr<M> &source,
-                               const std::shared_ptr<M> &target) {
+                               const MatSpDPtr &source,
+                               const MatSpDPtr &target) {
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
     shared(startX, startY, length, source, target)
     for (long i = 0; i < length; i++) {
@@ -196,7 +182,7 @@ public:
   }
 
   static inline auto
-  generate_random_vectors(std::shared_ptr<WeightedAutomaton<M>> &A, uint K,
+  generate_random_vectors(std::shared_ptr<WeightedAutomaton> &A, uint K,
                           bool seeded = false, uint seed = 0)
       -> std::vector<MatSpIPtr> {
     std::mt19937 rng = std::mt19937(seed);
@@ -225,8 +211,8 @@ public:
     return randV;
   }
 
-  static auto equivalent(const WeightedAutomaton<M> &lhs,
-                         const WeightedAutomaton<M> &rhs,
+  static auto equivalent(const WeightedAutomaton &lhs,
+                         const WeightedAutomaton &rhs,
                          uint K = DEFAULT_RANDOM_RANGE_FACTOR) -> bool {
     if (lhs.get_number_input_characters() !=
         rhs.get_number_input_characters()) {
@@ -242,9 +228,9 @@ public:
 
     std::vector<MatSpIPtr> randomVectors =
         generate_random_vectors(subtractionAutomaton, K);
-    M v = *(subtractionAutomaton->get_eta());
-    std::vector<std::shared_ptr<M>> sMu = subtractionAutomaton->get_mu();
-    std::shared_ptr<M> sAlpha = subtractionAutomaton->get_alpha();
+    MatSpD v = *(subtractionAutomaton->get_eta());
+    std::vector<MatSpDPtr> sMu = subtractionAutomaton->get_mu();
+    MatSpDPtr sAlpha = subtractionAutomaton->get_alpha();
 
     for (size_t i = 0; i < subtractionAutomaton->get_states(); i++) {
       for (uint j = 0; j < sMu.size(); j++) {
@@ -259,8 +245,8 @@ public:
   }
 };
 
-template <Matrix M> WeightedAutomaton<M>::WeightedAutomaton() {}
+WeightedAutomaton::WeightedAutomaton() {}
 
-template <Matrix M> WeightedAutomaton<M>::~WeightedAutomaton() {}
+WeightedAutomaton::~WeightedAutomaton() {}
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_WEIGHTEDAUTOMATON_H
