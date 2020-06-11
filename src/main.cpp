@@ -56,7 +56,7 @@ auto main(int argc, char *argv[]) -> int {
                                                false, "", "string");
         TCLAP::ValueArg<std::string> inputArg("i", "input", "Path to input file",
                                               false, "", "string");
-        TCLAP::ValueArg<std::string> input1Arg("i1", "input", "Path to second input file for equivalence check",
+        TCLAP::ValueArg<std::string> input1Arg("c", "input1", "Path to second input file fto compare first to",
                                                false, "", "string");
         TCLAP::ValueArg<std::string> outputArg("o", "output", "path to output file",
                                                false, "", "string");

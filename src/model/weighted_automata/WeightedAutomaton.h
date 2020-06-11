@@ -24,7 +24,7 @@ using MatSpIPtr = std::shared_ptr<Eigen::SparseMatrix<int, 0, long>>;
 using MatSpI = Eigen::SparseMatrix<int, 0, long>;
 using MatSpD = Eigen::SparseMatrix<double, 0, long>;
 
-template <typename T>
+/*template <typename T>
 concept Matrix = requires(T a, T b, long i, long j,
                           Eigen::SparseMatrix<double, 0, long> c) {
   a.coeffRef(i, j);
@@ -39,23 +39,25 @@ concept Matrix = requires(T a, T b, long i, long j,
   a.sum();
   a.col(0);
 };
+*/
 
-template <Matrix M> class WeightedAutomaton : public RepresentationInterface {
+template <typename M> class WeightedAutomaton : public RepresentationInterface {
 private:
   uint states{};
   uint noInputCharacters{};
   std::shared_ptr<M> alpha;
   std::vector<std::shared_ptr<M>> mu{};
   std::shared_ptr<M> eta;
+  size_t dense;
 
 public:
   WeightedAutomaton();
   ~WeightedAutomaton() override;
   WeightedAutomaton(uint mStates, uint characters, std::shared_ptr<M> mAlpha,
                     std::vector<std::shared_ptr<M>> mMu,
-                    std::shared_ptr<M> mEta)
+                    std::shared_ptr<M> mEta, size_t mDense)
       : states(mStates), noInputCharacters(characters),
-        alpha(std::move(mAlpha)), mu(std::move(mMu)), eta(std::move(mEta)) {}
+        alpha(std::move(mAlpha)), mu(std::move(mMu)), eta(std::move(mEta)), dense(mDense) {}
 
   auto operator==(const std::shared_ptr<RepresentationInterface> &other) const
       -> bool override {
@@ -98,6 +100,10 @@ public:
 
   [[nodiscard]] inline auto get_eta() const -> const std::shared_ptr<M> & {
     return this->eta;
+  }
+
+  [[nodiscard]] inline auto is_dense() const -> bool {
+    return this->dense;
   }
 
   static auto create_subtraction_automaton(const WeightedAutomaton<M> &lhs,
@@ -156,7 +162,7 @@ public:
       subMu.push_back(muX);
     }
     return std::make_shared<WeightedAutomaton<M>>(subStates, subCharacters,
-                                                  subAlpha, subMu, subEta);
+                                                  subAlpha, subMu, subEta, lhs.is_dense());
   }
 
   static inline void set_block(long startX, long startY, uint length,
@@ -259,8 +265,8 @@ public:
   }
 };
 
-template <Matrix M> WeightedAutomaton<M>::WeightedAutomaton() {}
+template <typename M> WeightedAutomaton<M>::WeightedAutomaton() {}
 
-template <Matrix M> WeightedAutomaton<M>::~WeightedAutomaton() {}
+template <typename M> WeightedAutomaton<M>::~WeightedAutomaton() {}
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_WEIGHTEDAUTOMATON_H

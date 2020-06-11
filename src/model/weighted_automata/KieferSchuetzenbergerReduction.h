@@ -10,7 +10,7 @@
 #include "../ReductionMethodInterface.h"
 #include "WeightedAutomaton.h"
 
-template <Matrix M>
+template <typename M>
 class KieferSchuetzenbergerReduction : public ReductionMethodInterface {
 public:
   KieferSchuetzenbergerReduction();
@@ -66,29 +66,29 @@ public:
     return randV;
   }
 
-  template <typename U, Matrix T, Matrix V>
-  requires(std::is_arithmetic_v<U>) static inline void fill_row(
-      U rowSource, U rowTarget, const std::shared_ptr<T> &source,
-      const std::shared_ptr<V> &target) {
+  template <typename T>
+  static inline void fill_row(long rowSource, long rowTarget,
+                              const std::shared_ptr<T> &source,
+                              MatSpD *target) {
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
     shared(rowSource, rowTarget, source, target)
-    for (size_t k = 0; k < source->cols(); k++) {
+    for (long k = 0; k < source->cols(); k++) {
       target->coeffRef(rowTarget, k) = source->coeff(rowSource, k);
     }
   }
 
-  template <typename U, Matrix T, Matrix V>
-  requires(std::is_arithmetic_v<U>) static inline void fill_col(
-      U colSource, U colTarget, const std::shared_ptr<T> &source,
-      const std::shared_ptr<V> &target) {
+  template <typename T>
+  static inline void fill_col(long colSource, long colTarget,
+                              const std::shared_ptr<T> &source,
+                              MatSpD *target) {
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
     shared(source, target, colSource, colTarget)
-    for (size_t k = 0; k < source->rows(); k++) {
+    for (long k = 0; k < source->rows(); k++) {
       target->coeffRef(k, colTarget) = source->coeff(k, colSource);
     }
   }
 
-  inline auto
+  [[nodiscard]] inline auto
   reduce(const std::shared_ptr<RepresentationInterface> &waInstance) const
       -> std::shared_ptr<RepresentationInterface> override {
     return reduce(waInstance, DEFAULT_RANDOM_RANGE_FACTOR);
@@ -133,32 +133,33 @@ public:
 
     std::vector<std::shared_ptr<M>> muArrow = {};
     std::mutex muArrowMutex = std::mutex();
-    std::shared_ptr<M> muXArrow;
+    Eigen::MatrixXd muXArrow;
+    Eigen::MatrixXd b;
     Eigen::SPQR<MatSpD> qrX;
     qrX.compute(backwardBasis);
 
 #pragma omp parallel for default(none)                                         \
-    num_threads(THREADS) if (!TEST) private(qrX, muXArrow)                     \
+    num_threads(THREADS) if (!TEST) private(qrX, muXArrow, b)                  \
         shared(muArrow, backwardBasis, A, muArrowMutex)
     for (size_t i = 0; i < A->get_mu().size(); i++) {
-      muXArrow = std::make_shared<M>(
-          (qrX.solve((*(A->get_mu()[i]) * backwardBasis).eval())).eval());
+      b = (*(A->get_mu()[i]) * backwardBasis).eval();
+      muXArrow = (qrX.solve(b)).eval();
+
       std::lock_guard<std::mutex> guard(muArrowMutex);
-      muArrow.push_back(muXArrow);
+      muArrow.push_back(convert_dense_M(muXArrow));
     }
     return std::make_shared<WeightedAutomaton<M>>(
         static_cast<uint>(rank), A->get_number_input_characters(), alphaArrow,
-        muArrow, etaArrow);
+        muArrow, etaArrow, A->is_dense());
   }
-
-  // FIXME Dense Sparse init for places with M
 
   static auto forward_reduction(const std::shared_ptr<WeightedAutomaton<M>> &A,
                                 const std::vector<MatSpIPtr> &randomVectors)
       -> std::shared_ptr<WeightedAutomaton<M>> {
     std::vector<MatSpDPtr> rhoVectors =
         calculate_rho_forward_vectors(A, randomVectors);
-    MatSpD forwardBasis(1 + static_cast<long>(rhoVectors.size()), A->get_states());
+    MatSpD forwardBasis(1 + static_cast<long>(rhoVectors.size()),
+                        A->get_states());
 
     fill_row(0, 0, A->get_alpha(), &forwardBasis);
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
@@ -183,8 +184,8 @@ public:
     std::vector<std::shared_ptr<M>> muArrow = {};
     std::mutex muArrowMutex = std::mutex();
     Eigen::SPQR<MatSpD> qrX;
-    MatSpD b;
-    std::shared_ptr<M> muXArrow;
+    Eigen::MatrixXd b;
+    Eigen::MatrixXd muXArrow;
     qrX.compute(forwardBasis);
 
 #pragma omp parallel for default(none)                                         \
@@ -194,14 +195,14 @@ public:
       // x*A = b <=> A.transpose() * z = b.transpose(); x = z.transpose()
       // => x = (housholder(A.transpose()).solve(b.transpose())).transpose()
       b = (((forwardBasis * *(A->get_mu()[i])).eval()).transpose()).eval();
-      muXArrow =
-          std::make_shared<M>((((qrX.solve(b)).eval()).transpose()).eval());
+      muXArrow = (((qrX.solve(b)).eval()).transpose()).eval();
+
       std::lock_guard<std::mutex> guard(muArrowMutex);
-      muArrow.push_back(muXArrow);
+      muArrow.push_back(convert_dense_M(muXArrow));
     }
     return std::make_shared<WeightedAutomaton<M>>(
         static_cast<uint>(rank), A->get_number_input_characters(), alphaArrow,
-        muArrow, etaArrow);
+        muArrow, etaArrow, A->is_dense());
   }
 
   static auto calculate_rho_backward_vectors(
@@ -269,9 +270,10 @@ public:
 
     if (k == 1) {
       result = {};
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST) shared(A, resultMutex, result) private(resultVect)
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(A, resultMutex, result) private(resultVect)
       for (size_t i = 0; i < A->get_mu().size(); i++) {
-        resultVect = std::make_shared<MatSpD>(
+        resultVect = convert_dense_sparse(
             (*(A->get_alpha()) * *(A->get_mu()[i])).eval());
 
         if (!floating_point_compare(resultVect->sum(), 0.0)) {
@@ -284,13 +286,15 @@ public:
       std::vector<std::tuple<MatSpDPtr, std::vector<uint>>> iteratorCopy(
           result);
 
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST) shared(A, resultMutex, result) private(resultVect)
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(A, resultMutex, result, iteratorCopy, k) private(resultVect)
       for (size_t j = 0; j < iteratorCopy.size(); j++) {
         if (std::get<1>(iteratorCopy[j]).size() == k - 1) {
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST) shared(A, resultMutex, result) private(resultVect)
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(A, resultMutex, result, j, iteratorCopy) private(resultVect)
           for (size_t i = 0; i < A->get_mu().size(); i++) {
             resultVect = std::make_shared<MatSpD>(1, A->get_states());
-            *resultVect = MatSpD(
+            resultVect = convert_dense_sparse(
                 (*(std::get<0>(iteratorCopy[j])) * *(A->get_mu()[i])).eval());
             if (!floating_point_compare(resultVect->sum(), 0.0)) {
               std::vector<uint> temp = std::get<1>(iteratorCopy[j]);
@@ -305,8 +309,6 @@ public:
     return result;
   }
 
-  // FIXME data sharing, multiply by alpha/eta/mu may not yield sparse
-
   static auto
   generate_words_backwards(const std::shared_ptr<WeightedAutomaton<M>> &A,
                            uint k)
@@ -317,10 +319,11 @@ public:
 
     if (k == 1) {
       result = {};
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST) shared(A, resultMutex, result) private(resultVect)
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(A, resultMutex, result) private(resultVect)
       for (size_t i = 0; i < A->get_mu().size(); i++) {
-        resultVect = std::make_shared<MatSpD>(A->get_states(), 1);
-        *resultVect = MatSpD((*(A->get_mu()[i]) * *(A->get_eta())).eval());
+        resultVect = convert_dense_sparse(
+            (*(A->get_mu()[i]) * *(A->get_eta())).eval());
         if (!floating_point_compare(resultVect->sum(), 0.0)) {
           std::lock_guard<std::mutex> guard(resultMutex);
           result.emplace_back(resultVect, std::vector({static_cast<uint>(i)}));
@@ -328,14 +331,16 @@ public:
       }
     } else {
       result = generate_words_backwards(A, k - 1);
-      auto iteratorCopy(result);
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST) shared(A, resultMutex, result) private(resultVect)
+      std::vector<std::tuple<MatSpDPtr, std::vector<uint>>> iteratorCopy(
+          result);
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(A, resultMutex, result, iteratorCopy, k) private(resultVect)
       for (size_t j = 0; j < iteratorCopy.size(); j++) {
         if (std::get<1>(iteratorCopy[j]).size() == k - 1) {
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST) shared(A, resultMutex, result) private(resultVect)
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(A, resultMutex, result, iteratorCopy, j) private(resultVect)
           for (size_t i = 0; i < A->get_mu().size(); i++) {
-            resultVect = std::make_shared<MatSpD>(A->get_states(), 1);
-            *resultVect = MatSpD(
+            resultVect = convert_dense_sparse(
                 (*(A->get_mu()[i]) * *(std::get<0>(iteratorCopy[j]))).eval());
             if (!floating_point_compare(resultVect->sum(), 0.0)) {
               auto temp = std::get<1>(iteratorCopy[j]);
@@ -349,12 +354,43 @@ public:
     }
     return result;
   }
+
+  static inline auto convert_dense_sparse(const M &mat) -> MatSpDPtr {
+    std::shared_ptr<MatSpD> result =
+        std::make_shared<MatSpD>(mat.rows(), mat.cols());
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(result, mat)
+    for (long i = 0; i < mat.rows(); i++) {
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(result, mat, i)
+      for (long j = 0; j < mat.cols(); j++) {
+        result->coeffRef(i, j) = mat.coeff(i, j);
+      }
+    }
+    result->makeCompressed();
+    return result;
+  }
+
+  static inline auto convert_dense_M(const Eigen::MatrixXd &mat)
+      -> std::shared_ptr<M> {
+    std::shared_ptr<M> result = std::make_shared<M>(mat.rows(), mat.cols());
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(result, mat)
+    for (long i = 0; i < mat.rows(); i++) {
+#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
+    shared(result, mat, i)
+      for (long j = 0; j < mat.cols(); j++) {
+        result->coeffRef(i, j) = mat.coeff(i, j);
+      }
+    }
+    return result;
+  }
 };
 
-template <Matrix M>
+template <typename M>
 KieferSchuetzenbergerReduction<M>::KieferSchuetzenbergerReduction() {}
 
-template <Matrix M>
+template <typename M>
 KieferSchuetzenbergerReduction<M>::~KieferSchuetzenbergerReduction() {}
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_KIEFERSCHUETZENBERGERREDUCTION_H

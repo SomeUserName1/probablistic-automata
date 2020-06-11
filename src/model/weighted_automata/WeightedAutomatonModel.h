@@ -7,8 +7,8 @@
 #include "KieferSchuetzenbergerReduction.h"
 #include "WeightedAutomaton.h"
 
-template<typename T>
-concept Arithmetic = std::is_arithmetic<T>::value;
+/*template<typename T>
+concept Arithmetic = std::is_arithmetic<T>::value;*/
 
 typedef unsigned int uint;
 
@@ -44,81 +44,95 @@ public:
     }
 
     static std::shared_ptr<RepresentationInterface> validate_model_instance_dense(std::string &str)  {
-        // TODO adapt to tensor notation
-        auto line = get_next_line(str, true);
+      auto line = get_next_line(str, true);
 
-        // states
-        if (!line.starts_with("states")) {
-            throw std::invalid_argument("The states must be specified first!");
-        }
-        int states = std::stoi(line.substr(line.find('=') + 1, line.size()));
-        if (states <= 0) {
-            throw std::invalid_argument("The number of states must be grater than zero!");
-        }
+      // states
+      if (!line.starts_with("states")) {
+        throw std::invalid_argument("The states must be specified first!");
+      }
+      int states = std::stoi(line.substr(line.find('=') + 1, line.size()));
+      if (states <= 0) {
+        throw std::invalid_argument(
+            "The number of states must be grater than zero!");
+      }
 
-        // fetch next line
-        line = get_next_line(str, true);
+      // fetch next line
+      line = get_next_line(str, true);
 
-        // characters
-        if (!line.starts_with("characters")) {
-            throw std::invalid_argument("The number of characters must be specified second!");
-        }
-        int characters = std::stoi(line.substr(line.find('=') + 1, line.size()));
-        if (characters <= 0) {
-            throw std::invalid_argument("The number of states must be grater than zero!");
-        }
+      // characters
+      if (!line.starts_with("characters")) {
+        throw std::invalid_argument(
+            "The number of characters must be specified second!");
+      }
+      int characters = std::stoi(line.substr(line.find('=') + 1, line.size()));
+      if (characters <= 0) {
+        throw std::invalid_argument(
+            "The number of states must be grater than zero!");
+      }
 
-        // fetch next line
-        line = get_next_line(str, true);
+      // fetch next line
+      line = get_next_line(str, true);
 
-        // alpha
-        if (!line.starts_with("alpha")) {
-            throw std::invalid_argument("The initial vector needs to be specified as 3rd!");
-        }
-        auto alpha = std::make_shared<Eigen::MatrixXd>(1, states);
-        line = line.substr(line.find('=') + 1, line.size());
+      // alpha
+      if (!line.starts_with("alpha")) {
+        throw std::invalid_argument(
+            "The initial vector needs to be specified as 3rd!");
+      }
+      std::shared_ptr<Eigen::MatrixXd> alpha = std::make_shared<Eigen::MatrixXd>(1, states);
+      line = line.substr(line.find('=') + 1, line.size());
+      for (int i = 0; i < states; i++) {
+        alpha->coeffRef(0, i) = extract_one_digit<double>(line);
+      }
+
+      // fetch next line
+      line = get_next_line(str, true);
+
+      // mu
+      std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {};
+      if (!line.starts_with("mu=(")) {
+        throw std::invalid_argument(
+            "Specify the transition matrices 4th, one for each character!");
+      }
+      line = line.substr(line.find('=') + 1, line.size());
+
+      std::shared_ptr<Eigen::MatrixXd> muX;
+      muX = std::make_shared<Eigen::MatrixXd>(states, states);
+      do {
+
         for (int i = 0; i < states; i++) {
-            alpha->coeffRef(0, i) = extract_one_digit<double>(line);
+          for (int j = 0; j < states; j++) {
+            muX->coeffRef(i, j) = extract_one_digit<double>(line);
+          }
         }
+        mu.push_back(muX);
 
-        // fetch next line
-        line = get_next_line(str, true);
+        if (!line.starts_with("))")) {
+          throw std::invalid_argument("A transition matrix should end here but "
+                                      "read something different than ')),(('!");
+        }
+      } while (!line.starts_with(")));") && !line.empty());
 
-        // mu
-        std::vector<std::shared_ptr<Eigen::MatrixXd>> mu = {};
-        for (int k = 0; k < characters; k++) {
-            if (!line.starts_with("mu")) {
-                throw std::invalid_argument("Specify the transition matrices 4th, one for each character!");
-            }
-            std::shared_ptr<Eigen::MatrixXd> muX = std::make_shared<Eigen::MatrixXd>(states, states);
-            line = line.substr(line.find('=') + 1, line.size());
-            for (int i = 0; i < states; i++) {
-                for (int j = 0; j < states; j++) {
-                    muX->coeffRef(i, j) = extract_one_digit<double>(line);
-                }
-            }
-            mu.push_back(muX);
-            // fetch next line
-            line = get_next_line(str, true);
-        }
+      // fetch next line
+      line = get_next_line(str, true);
 
-        if (!line.starts_with("eta")) {
-            throw std::invalid_argument("Please specify the final state vector last");
-        }
-        auto eta = std::make_shared<Eigen::MatrixXd>(states, 1);
-        line = line.substr(line.find("=") + 1, line.size());
-        for (int i = 0; i < states; i++) {
-            eta->coeffRef(i, 0) = extract_one_digit<double>(line);
-        }
-        std::cout << "Parsed Automaton successfully" << std::endl;
-        return std::make_shared<WeightedAutomaton<Eigen::MatrixXd>>(states, characters, alpha, mu, eta);
+      if (!line.starts_with("eta")) {
+        throw std::invalid_argument("Please specify the final state vector last");
+      }
+      std::shared_ptr<Eigen::MatrixXd> eta = std::make_shared<Eigen::MatrixXd>(states, 1);
+      line = line.substr(line.find('=') + 1, line.size());
+      for (int i = 0; i < states; i++) {
+        eta->coeffRef(i, 0) = extract_one_digit<double>(line);
+      }
+      std::cout << "Parsed Automaton successfully" << std::endl;
+      return std::make_shared<WeightedAutomaton<Eigen::MatrixXd>>(states, characters, alpha, mu,
+                                                 eta, 1);
     }
 
 
     static std::shared_ptr<RepresentationInterface> validate_model_instance_sparse(std::string &str) {
-        size_t a;
-        long b, c;
-        double d;
+        size_t a = 0;
+        long b = 0, c = 0;
+        double d = 0.0;
         auto line = get_next_line(str, false);
 
         // states
@@ -184,14 +198,14 @@ public:
             throw std::logic_error("Unreachable;");
         }
         auto eta = std::make_shared<Eigen::SparseMatrix<double, 0, long>>(states, 1);
-        line = line.substr(line.find(":") + 1, line.size());
+        line = line.substr(line.find(':') + 1, line.size());
         b = extract_one_digit<uint>(line);
         d = extract_one_digit<double>(line);
         eta->coeffRef(b, 0) = d;
         std::cout << "Parsed Automaton successfully" << std::endl;
 
         return std::make_shared<WeightedAutomaton<Eigen::SparseMatrix<double, 0, long>>>(states, characters, alpha, mu,
-                eta);
+                eta, 0);
     }
 
     [[nodiscard]] std::string summarize_reduction(std::shared_ptr<RepresentationInterface> &A,
@@ -225,7 +239,7 @@ public:
     }
 
 
-    std::string get_representation_description() const noexcept override {
+    [[nodiscard]] std::string get_representation_description() const noexcept override {
         return "You need to specify one flag and 5 variables: \n "
                "The input type: input"
                "The number of states by: states\n"
@@ -238,8 +252,10 @@ public:
                "states=4;\n"
                "characters=2;\n"
                "alpha=(1,0,0,0);\n"
-               "mu1=((0,1,1,0),(0,0,0,0),(0,0,0,0),(0,0,0,0));\n"
-               "mu2=((0,0,0,0),(0,0,0,1),(0,0,0,1),(0,0,0,0));\n"
+               "mu=(\n"
+               "  ((0,1,1,0),(0,0,0,0),(0,0,0,0),(0,0,0,0)),\n"
+               "  ((0,0,0,0),(0,0,0,1),(0,0,0,1),(0,0,0,0)),\n"
+               "  );\n"
                "eta=(0,0,0,1);\n\n\n"
                "Example for the sparse type:\n"
                "input=sparse\n"
@@ -269,7 +285,7 @@ public:
     }
 
 
-    template<Arithmetic T>
+    template<typename T>
     static inline T extract_one_digit(std::string &vector) {
         bool prevDigit = false;
         size_t firstDigit = 0;
