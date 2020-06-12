@@ -12,6 +12,8 @@ SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std
     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall \
     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat")
 
+SET(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
 #thread , -Xclang -disable-O0-optnone -Xclang -load \
 # -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so
 # find_package( OpenMP ) -Werror
@@ -56,8 +58,9 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/ui/UserInterface.cpp
         src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/FloatingPointCompare.h src/TypeDefs.h)
 target_compile_definitions(ssm PUBLIC TEST=0)
-target_link_libraries(ssm  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
- ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -lspqr -lcholmod)
+target_link_libraries(ssm  -lm -ldl -lspqr -lcholmod)
+# -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
+# ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread
 
 
 enable_testing()
@@ -74,7 +77,8 @@ add_executable(tests src/test/TestsMain.cpp
         src/model/RepresentationInterface.cpp
         src/ui/UserInterface.cpp
         src/test/TestUtils.h src/TypeDefs.h)
-target_link_libraries(tests Catch2::Catch2 -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
-        ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl -lspqr -lcholmod)
+target_link_libraries(tests Catch2::Catch2  -lspqr -lcholmod)
+# -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
+#        ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl
 target_compile_definitions(tests PUBLIC TEST=1)
 catch_discover_tests(tests)

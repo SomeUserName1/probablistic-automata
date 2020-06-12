@@ -1,9 +1,10 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_TYPEDEFS_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_TYPEDEFS_H
 
-#include <eigen3/Eigen/src/SparseCore/SparseMatrix.h>
+#include <eigen3/Eigen/Eigen>
 #include <iostream>
-const uint DEFAULT_RANDOM_RANGE_FACTOR = 30;
+#include <memory>
+const uint DEFAULT_RANDOM_RANGE_FACTOR = 3;
 
 using MatSpDPtr = std::shared_ptr<Eigen::SparseMatrix<double, 0, long>>;
 using MatSpIPtr = std::shared_ptr<Eigen::SparseMatrix<int, 0, long>>;

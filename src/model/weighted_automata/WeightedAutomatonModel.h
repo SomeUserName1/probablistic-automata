@@ -111,6 +111,7 @@ public:
       mu.push_back(muX);
 
       if (!line.starts_with("))")) {
+          std::cout << line << std::endl;
         throw std::invalid_argument("A transition matrix should end here but "
                                     "read something different than ')),(('!");
       }
@@ -307,10 +308,10 @@ public:
     bool prevDigit = false;
     size_t firstDigit = 0;
     for (size_t i = 0; i < vector.size(); i++) {
-      if (std::isdigit(vector[i]) && !prevDigit) {
+      if ((std::isdigit(vector[i]) || vector[i] == 'e' || vector[i] == '-' || vector[i] == '+' || vector[i] == '.') && !prevDigit) {
         prevDigit = true;
         firstDigit = i;
-      } else if (!std::isdigit(vector[i]) && prevDigit) {
+      } else if (!(std::isdigit(vector[i]) || vector[i] == 'e' || vector[i] == '-' || vector[i] == '+' || vector[i] == '.') && prevDigit) {
         T result = static_cast<T>(std::stod(vector.substr(firstDigit, i)));
         vector.erase(0, i);
         return result;

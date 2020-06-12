@@ -17,6 +17,7 @@
 #include <thread>
 #include <unistd.h>
 
+#include "../ui/UserInterface.h"
 #include "TestUtils.h"
 
 constexpr uint PIPE_READ = 0;
@@ -99,7 +100,6 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
           "-o",     "out.txt"};
       std::string output = execute("./ssm", args, "");
       THEN("An error message is displayed") {
-        std::cout << output << std::endl;
         REQUIRE(output.ends_with("you  specified Reduc\n"));
       }
     }
@@ -147,6 +147,48 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
     }
   }
 }
+
+/*SCENARIO("Equivalence") {
+  GIVEN("The running example and a program reduced version") {
+    std::vector<std::string> args = {"./ssm",
+                                     "-t",
+                                     "Reduction",
+                                     "-m",
+                                     "WA",
+                                     "-r",
+                                     "Kiefer",
+                                     "-i",
+                                     "../src/test/test_input_dense.txt",
+                                     "-o",
+                                     "out_eq_test.txt"};
+    execute("./ssm", args, "");
+    WHEN("Using the output of the program ") {
+      std::string progOutput = UserInterface::read_file("out_eq_test.txt");
+      std::string minimized = progOutput.substr(
+          progOutput.find("After Reduction\n") + 16, progOutput.size());
+      UserInterface::display_file(minimized, "result.txt");
+      THEN("It's equivalent to the original automaton") {
+        args = {"./ssm",
+                "-t",
+                "Equivalence",
+                "-m",
+                "WA",
+                "-i",
+                "../src/test/test_input_dense.txt",
+                "-c",
+                "result.txt",
+                "-o",
+                "out_result.txt"};
+        minimized = execute("./ssm", args, "");
+        progOutput = UserInterface::read_file("out_result.txt");
+        std::string check("equivalent");
+        std::cout << minimized << std::endl;
+        REQUIRE(std::equal(progOutput.begin(), progOutput.end(), check.begin(),
+                           [](auto a, auto b) { return a == b; }));
+      }
+    }
+  }
+}*/
 
 static auto execute(const std::string &cmd, std::vector<std::string> args,
                     const std::string &msg) -> std::string {

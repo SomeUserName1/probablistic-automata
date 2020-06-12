@@ -10,13 +10,14 @@
 #include <variant>
 #include <vector>
 
-#define EIGEN_USE_MKL_ALL
+// #define EIGEN_USE_MKL_ALL
 #include <eigen3/Eigen/Eigen>
 #include <eigen3/Eigen/OrderingMethods>
 #include <eigen3/Eigen/SPQRSupport>
 
-#include "../../TypeDefs.h"
 #include "../../FloatingPointCompare.h"
+#include "../../TypeDefs.h"
+#include "../../ui/UserInterface.h"
 #include "../RepresentationInterface.h"
 
 template <Matrix M> class WeightedAutomaton : public RepresentationInterface {
@@ -116,6 +117,7 @@ public:
            subCharacters, lhsStates, rhsStates) private(muX)
     for (size_t i = 0; i < subCharacters; i++) {
       muX = std::make_shared<M>(subStates, subStates);
+      muX->setZero();
       if (i < lhsMu.size()) {
         set_block(0, 0, lhsStates, lhsMu[i], muX);
       }
@@ -142,22 +144,23 @@ public:
 
   [[nodiscard]] inline auto pretty_print() const -> std::string override {
     std::stringstream result;
-    Eigen::IOFormat fmt(Eigen::StreamPrecision, 0, ", ", ";\n", "[", "]", "[",
-                        "]");
-    int i = 0;
-
-    result << "No. States: " << this->states << " , No. Input Characters "
-           << this->noInputCharacters << std::endl
-           << "Initial Vector :" << std::endl
-           << MatDenD(*(this->alpha)).format(fmt) << std::endl
-           << "Transition Matrices: " << std::endl;
+    size_t i = 0;
+    Eigen::IOFormat fmt(Eigen::StreamPrecision, 0, ", ", ",\n\t", "(", ")", "(",
+                        ")");
+    result << "input=dense;\n"
+           << "states=" << this->states
+           << ";\ncharacters=" << this->noInputCharacters << ";\n"
+           << "alpha=" << MatDenD(*(this->alpha)).format(fmt) << ";\n"
+           << "mu=(" << std::endl;
     for (const auto &mat : this->mu) {
-      result << "Mu" << i << std::endl
-             << MatDenD(*mat).format(fmt) << std::endl;
+      result << "\t" << MatDenD(*mat).format(fmt);
       i++;
+      if (i < (this->mu).size()) {
+        result << ",\n\n";
+      }
     }
-    result << "Final Vector: " << std::endl
-           << MatDenD(*(this->eta)).format(fmt) << std::endl
+    result << "\n);\n"
+           << "eta=\n\t" << MatDenD(*(this->eta)).format(fmt) << ";\n"
            << std::endl;
     return result.str();
   }
@@ -190,7 +193,9 @@ public:
     return randV;
   }
 
-  [[nodiscard]] auto equivalent(const std::shared_ptr<RepresentationInterface> &other) const -> bool override {
+  [[nodiscard]] auto
+  equivalent(const std::shared_ptr<RepresentationInterface> &other) const
+      -> bool override {
     auto rhs = std::static_pointer_cast<WeightedAutomaton<M>>(other);
     return equivalent(*this, *rhs);
   }
@@ -210,21 +215,52 @@ public:
                                      .eval())
                                     .sum(),
                                 0.0)) {
+      UserInterface::display_file("epsilon " +
+          std::to_string(((*(subtractionAutomaton->get_alpha()) *
+                           *(subtractionAutomaton->get_eta()))
+                              .eval())
+                             .sum()),
+          "offby.txt");
       return false;
     }
 
     std::vector<MatSpIPtr> randomVectors =
         generate_random_vectors(subtractionAutomaton, K);
     M v = *(subtractionAutomaton->get_eta());
+    std::vector<double> sums;
+    std::vector<double> balancers;
+    std::vector<double> ys;
+    std::vector<double> ts;
+
+    for (int l = 0; l < v.rows(); l++) {
+      sums.push_back(0.0);
+      balancers.push_back(0.0);
+      ys.push_back(0.0);
+      ts.push_back(0.0);
+    }
+
     std::vector<std::shared_ptr<M>> sMu = subtractionAutomaton->get_mu();
     std::shared_ptr<M> sAlpha = subtractionAutomaton->get_alpha();
+    M temp;
+    double result;
 
     for (size_t i = 0; i < subtractionAutomaton->get_states(); i++) {
       for (uint j = 0; j < sMu.size(); j++) {
-        v += ((randomVectors[i])->coeffRef(0, j) * (*(sMu[j]) * v).eval())
-                 .eval();
+        temp =
+            ((randomVectors[i])->coeff(0, j) * (*(sMu[j]) * v).eval()).eval();
+
+        for (size_t k = 0; k < sums.size(); k++) {
+          ys[k] = temp.coeffRef(static_cast<long>(k), 0) - balancers[k];
+          ts[k] = sums[k] + ys[k];
+          balancers[k] = (ts[k] - sums[k]) - ys[k];
+          sums[k] = ts[k];
+          v.coeffRef(static_cast<long>(k), 0) = sums[k];
+        }
       }
-      if (!floating_point_compare(((*sAlpha * v).eval()).sum(), 0.0)) {
+      result = ((*sAlpha * v).eval()).sum();
+      if (!floating_point_compare(result, 0.0)) {
+        UserInterface::display_file("non-empty " +
+            std::to_string(result), "offby.txt");
         return false;
       }
     }

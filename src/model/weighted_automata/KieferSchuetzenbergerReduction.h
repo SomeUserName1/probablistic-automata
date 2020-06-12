@@ -66,6 +66,7 @@ public:
     std::shared_ptr<M> alphaArrow =
         std::make_shared<M>((*(WA->get_alpha()) * backwardBasis).eval());
     std::shared_ptr<M> etaArrow = std::make_shared<M>(rank, 1);
+    etaArrow->setZero();
     etaArrow->coeffRef(0, 0) = 1;
 
     std::vector<std::shared_ptr<M>> muArrow = {};
@@ -112,6 +113,7 @@ public:
     std::shared_ptr<M> etaArrow =
         std::make_shared<M>((forwardBasis * *(WA->get_eta())).eval());
     std::shared_ptr<M> alphaArrow = std::make_shared<M>(1, rank);
+    alphaArrow->setZero();
     alphaArrow->coeffRef(0, 0) = 1;
 
     std::vector<std::shared_ptr<M>> muArrow = {};
@@ -163,7 +165,7 @@ public:
                   .eval();
       }
       std::lock_guard<std::mutex> guard(resultMutex);
-      result.push_back(std::make_shared<MatSpD>(vI.transpose()));
+      result.push_back(std::make_shared<MatSpD>(vI));
     }
     return result;
   }

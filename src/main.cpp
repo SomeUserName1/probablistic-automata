@@ -1,12 +1,17 @@
 #include <chrono>
 #include <eigen3/Eigen/Core>
+#include <filesystem>
+#include <omp.h>
 #include <tclap/CmdLine.h>
 
 #include "model/differential_equations/DifferentialEquationModel.h"
 #include "model/weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.h"
 
-// TODO inline, call by const reference, ...
+#ifndef THREADS
+#define THREADS 1
+#endif
+
 // TODO Lifting/Benchmark generation
 
 // Lifting to create benchmarks:
@@ -76,8 +81,10 @@ auto main(int argc, char *argv[]) -> int {
     std::string inputStr = inputArg.getValue();
     std::string input1Str = input1Arg.getValue();
     std::string outputStr = outputArg.getValue();
+    bool tuiBool = tuiSwitch.getValue();
+    bool guiBool = guiSwitch.getValue();
 
-    if (!taskStr.empty() && !modelStr.empty() && !tuiSwitch && !guiSwitch &&
+    if (!taskStr.empty() && !modelStr.empty() && !tuiBool && !guiBool &&
         !inputStr.empty() && !outputStr.empty()) {
       if (iequals(taskStr, "Reduction")) {
         task = UserInterface::Reduction;
@@ -88,7 +95,8 @@ auto main(int argc, char *argv[]) -> int {
       } else if (iequals(taskStr, "Conversion")) {
         task = UserInterface::Conversion;
       } else {
-        std::cerr << "Specify either 'Reduction', 'Equivalence', 'Benchmark' or "
+        std::cerr
+            << "Specify either 'Reduction', 'Equivalence', 'Benchmark' or "
             << "'Conversion' as task, you  specified " + taskStr << std::endl;
         exit(-1);
       }
@@ -102,10 +110,9 @@ auto main(int argc, char *argv[]) -> int {
         model = std::make_shared<DifferentialEquationModel>();
       } else {
         std::cerr << "Specify either 'WA', 'DE', 'WeightedAutomatonModel', "
-            << "'DifferentialEquationModel', 'WeightedAutomaton' or "
-            << "'DifferentialEquation'"
-            << " as model, you specified " +
-            modelStr << std::endl;
+                  << "'DifferentialEquationModel', 'WeightedAutomaton' or "
+                  << "'DifferentialEquation'"
+                  << " as model, you specified " + modelStr << std::endl;
         exit(-1);
       }
 
@@ -116,7 +123,7 @@ auto main(int argc, char *argv[]) -> int {
         outputDestination = outputStr;
       } else {
         std::cerr << "Please specify a path with a file name "
-        << "to write the results to!" << std::endl;
+                  << "to write the results to!" << std::endl;
         exit(-1);
       }
 
@@ -134,7 +141,7 @@ auto main(int argc, char *argv[]) -> int {
 
     } else {
       ui = std::make_shared<TextUserInterface>();
-      if (guiSwitch) {
+      if (guiBool) {
         std::cerr << "NotImplemented" << std::endl;
         exit(-1);
       }
@@ -218,8 +225,9 @@ auto main(int argc, char *argv[]) -> int {
     case UserInterface::Equivalence: {
       auto representation0 = model->validate_model_instance(input);
       auto representation1 = model->validate_model_instance(input1);
-      const auto *result =
-          representation0 == representation1 ? "equivalenc" : "not equivalent";
+      const auto *result = representation0->equivalent(representation1)
+                               ? "equivalent"
+                               : "not equivalent";
       std::cout << "Finished Equivalence check" << std::endl;
       if (outputMethod == UserInterface::IOMethod::File) {
         ui->display_file(result, outputDestination);

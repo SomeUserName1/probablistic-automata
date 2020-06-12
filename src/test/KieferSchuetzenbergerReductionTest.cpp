@@ -175,10 +175,6 @@ SCENARIO("The rho vectors are calculated correctly as specified in the paper") {
             convert_N_M<MatSpD>(v3), convert_N_M<MatSpD>(v4)};
 
         for (size_t i = 0; i < A->get_states(); i++) {
-          std::cout << "Rows " << (rhoBackward[i])->rows() << " Cols "
-            << (rhoBackward[i])->cols() << std::endl;
-          std::cout << MatDenD(*(rhoBackward[i])) << std::endl;
-
           REQUIRE(floating_point_compare(
               (*(vect[i]) - *(rhoBackward[i])).norm(), 0.0));
         }
@@ -251,7 +247,6 @@ SCENARIO("The forward and backward reductions are calculated correctly as "
   }
 }
 
-// TODO test seed rng
 
 SCENARIO("When executing the full reduction") {
   GIVEN("an initial automaton and the random vectors") {

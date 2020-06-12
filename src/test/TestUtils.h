@@ -14,6 +14,23 @@ static inline auto convert_N_M(const N &mat) -> std::shared_ptr<M> {
   return result;
 }
 
+static inline auto gen_wa_min_dense()
+-> std::shared_ptr<WeightedAutomaton<MatDenD>> {
+    uint states = 3;
+    uint characters = 2;
+    MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
+    *alpha << 0,  800, 3600;
+    MatDenDPtr eta = std::make_shared<MatDenD>(states, 1);
+    *eta << 1, 0, 0;
+    MatDenDPtr mu1 = std::make_shared<MatDenD>(states, states);
+    *mu1 << -1.54231e-31,  -6.2105e-16, -8.33515e-16, -1.49588e-17, -0.06, -0.08, 1.12191e-17, 0.045, 0.06;
+    MatDenDPtr mu2 = std::make_shared<MatDenD>(states, states);
+    *mu2 << 1.63434e-17,  1.94083e-16,  2.59748e-16, 0.0249307, -3.27224e-16, -8.22317e-17, -0.00554017,  7.27164e-17,  1.82737e-17;
+    std::vector<MatDenDPtr> mu = {mu1, mu2};
+    return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters, alpha,
+                                                        mu, eta, 1);
+}
+
 static inline auto gen_wa_dense()
     -> std::shared_ptr<WeightedAutomaton<MatDenD>> {
   uint states = 4;

@@ -1,0 +1,112 @@
+[
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/test/TestsMain.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/test/TestsMain.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/test/TestsMain.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/test/CLITest.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/test/CLITest.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/test/CLITest.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/test/WATest.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/test/WATest.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/test/WATest.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/test/KieferSchuetzenbergerReductionTest.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/test/KieferSchuetzenbergerReductionTest.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/test/KieferSchuetzenbergerReductionTest.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/ui/TextUserInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/ui/TextUserInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/ui/TextUserInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/model/weighted_automata/WeightedAutomatonModel.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/weighted_automata/WeightedAutomatonModel.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/weighted_automata/WeightedAutomatonModel.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/NotImplementedException.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/NotImplementedException.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/NotImplementedException.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/model/ModelInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/ModelInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/ModelInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/model/ConversionMethodInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/ConversionMethodInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/ConversionMethodInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/model/ReductionMethodInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/ReductionMethodInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/ReductionMethodInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/model/RepresentationInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/RepresentationInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/RepresentationInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=1 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/tests.dir/src/ui/UserInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/ui/UserInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/ui/UserInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/main.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/main.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/main.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/ui/TextUserInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/ui/TextUserInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/ui/TextUserInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/model/weighted_automata/WeightedAutomatonModel.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/weighted_automata/WeightedAutomatonModel.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/weighted_automata/WeightedAutomatonModel.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/model/differential_equations/DifferentialEquationModel.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/differential_equations/DifferentialEquationModel.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/differential_equations/DifferentialEquationModel.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/NotImplementedException.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/NotImplementedException.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/NotImplementedException.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/model/ModelInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/ModelInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/ModelInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/model/ConversionMethodInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/ConversionMethodInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/ConversionMethodInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/model/ReductionMethodInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/ReductionMethodInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/ReductionMethodInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/model/RepresentationInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/model/RepresentationInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/model/RepresentationInterface.cpp"
+},
+{
+  "directory": "/home/someusername/bwsync/workspace/uni/master/cmake-build-debug",
+  "command": "/usr/bin/clang++  -DTEST=0 -DTHREADS=4/2  -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat   -std=gnu++2a -o CMakeFiles/ssm.dir/src/ui/UserInterface.cpp.o -c /home/someusername/bwsync/workspace/uni/master/src/ui/UserInterface.cpp",
+  "file": "/home/someusername/bwsync/workspace/uni/master/src/ui/UserInterface.cpp"
+}
+]
