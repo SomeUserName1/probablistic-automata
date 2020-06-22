@@ -12,38 +12,38 @@ SCENARIO(
   GIVEN("Fixed random vectors") {
     auto mat = gen_fixed_rand_v();
     WHEN("Calculating the word factor") {
-      int factor1 =
+      double factor1 =
           KieferSchuetzenbergerReduction<MatDenD>::get_word_factor({0}, mat[0]);
-      int factor2 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
+      double factor2 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
           {0, 1}, mat[0]);
 
-      int factor3 =
+      double factor3 =
           KieferSchuetzenbergerReduction<MatDenD>::get_word_factor({0}, mat[1]);
-      int factor4 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
+      double factor4 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
           {0, 1}, mat[1]);
 
-      int factor5 =
+      double factor5 =
           KieferSchuetzenbergerReduction<MatDenD>::get_word_factor({0}, mat[2]);
-      int factor6 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
+      double factor6 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
           {0, 1}, mat[2]);
 
-      int factor7 =
+      double factor7 =
           KieferSchuetzenbergerReduction<MatDenD>::get_word_factor({0}, mat[3]);
-      int factor8 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
+      double factor8 = KieferSchuetzenbergerReduction<MatDenD>::get_word_factor(
           {0, 1}, mat[3]);
 
       THEN("Is the same as when computed by hand") {
-        REQUIRE(factor1 == 9);
-        REQUIRE(factor2 == 99);
+        REQUIRE(floating_point_compare(factor1, 9.0));
+        REQUIRE(floating_point_compare(factor2, 99.0));
 
-        REQUIRE(factor3 == 2);
-        REQUIRE(factor4 == 6);
+        REQUIRE(floating_point_compare(factor3, 2.0));
+        REQUIRE(floating_point_compare(factor4, 6.0));
 
-        REQUIRE(factor5 == 2);
-        REQUIRE(factor6 == 22);
+        REQUIRE(floating_point_compare(factor5, 2.0));
+        REQUIRE(floating_point_compare(factor6, 22.0));
 
-        REQUIRE(factor7 == 4);
-        REQUIRE(factor8 == 36);
+        REQUIRE(floating_point_compare(factor7, 4.0));
+        REQUIRE(floating_point_compare(factor8, 36.0));
       }
     }
   }

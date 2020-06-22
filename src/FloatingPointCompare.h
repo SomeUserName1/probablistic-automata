@@ -8,7 +8,7 @@
 template <typename T>
 requires(std::is_floating_point_v<T>) static auto floating_point_compare(T x,
                                                                          T y) -> bool {
-  return std::fabs(x - y) <= 1e-9 *
+  return std::fabs(x - y) <= 1e-6 *
                                  std::max({1.0, std::fabs(x), std::fabs(y)});
 }
 

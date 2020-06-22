@@ -12,7 +12,7 @@ SCENARIO("Random Vectors have correct shape") {
         std::make_shared<MatDenD>(10, 1), 1);
     uint K = 100;
     WHEN("generating random vectors") {
-      std::vector<MatSpIPtr> vectors =
+      std::vector<MatSpDPtr> vectors =
           WeightedAutomaton<MatDenD>::generate_random_vectors(automaton, K);
       THEN("|states| random row vectors of length |characters| are "
            "generated") {

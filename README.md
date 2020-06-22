@@ -10,4 +10,7 @@ For requirements and software design see the appendix of the ![report draft](doc
 - [ ] Execute algorithm with minimal example on paper (DE)  
 - [ ] Implementation of DE algorithm  
 - [ ] Presentation on DE paper & implementation  
-- [ ] Write Report & final project presentation   
+- [ ] Compare minimizations, in terms of time & coherrence   
+
+Optional:  
+- [ ] Normalize by biggest factor or use (0, 1)

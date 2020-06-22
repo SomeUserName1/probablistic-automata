@@ -168,24 +168,25 @@ public:
   static inline auto
   generate_random_vectors(std::shared_ptr<WeightedAutomaton<M>> &A, uint K,
                           bool seeded = false, uint seed = 0)
-      -> std::vector<MatSpIPtr> {
+      -> std::vector<MatSpDPtr> {
     auto rng = std::mt19937(seed);
     if (!seeded) {
       std::random_device rd;
       rng = std::mt19937(rd());
     }
-    std::uniform_int_distribution<> uniform(
-        1, static_cast<int>(A->get_states() * A->get_states() * K));
-    std::vector<MatSpIPtr> randV = {};
-    MatSpIPtr vect;
+    int max = static_cast<int>(A->get_states() * A->get_states() * K);
+    std::uniform_int_distribution<> uniform(1, max);
+    std::vector<MatSpDPtr> randV = {};
+    MatSpDPtr vect;
     std::mutex randVMutex = std::mutex();
 
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
-    shared(A, uniform, randV, rng, randVMutex) private(vect)
+    shared(A, uniform, randV, rng, randVMutex, max) private(vect)
     for (uint i = 0; i < A->get_states(); i++) {
-      vect = std::make_shared<MatSpI>(1, A->get_number_input_characters());
+      vect = std::make_shared<MatSpD>(1, A->get_number_input_characters());
       for (uint j = 0; j < A->get_number_input_characters(); j++) {
-        vect->coeffRef(0, j) = uniform(rng);
+        vect->coeffRef(0, j) =
+            (static_cast<double>(uniform(rng)) / static_cast<double>(max));
       }
       std::lock_guard<std::mutex> guard(randVMutex);
       randV.push_back(vect);
@@ -215,16 +216,10 @@ public:
                                      .eval())
                                     .sum(),
                                 0.0)) {
-      UserInterface::display_file("epsilon " +
-          std::to_string(((*(subtractionAutomaton->get_alpha()) *
-                           *(subtractionAutomaton->get_eta()))
-                              .eval())
-                             .sum()),
-          "offby.txt");
       return false;
     }
 
-    std::vector<MatSpIPtr> randomVectors =
+    std::vector<MatSpDPtr> randomVectors =
         generate_random_vectors(subtractionAutomaton, K);
     M v = *(subtractionAutomaton->get_eta());
     std::vector<double> sums;
@@ -242,7 +237,7 @@ public:
     std::vector<std::shared_ptr<M>> sMu = subtractionAutomaton->get_mu();
     std::shared_ptr<M> sAlpha = subtractionAutomaton->get_alpha();
     M temp;
-    double result;
+    double result = 0.0;
 
     for (size_t i = 0; i < subtractionAutomaton->get_states(); i++) {
       for (uint j = 0; j < sMu.size(); j++) {
@@ -259,8 +254,6 @@ public:
       }
       result = ((*sAlpha * v).eval()).sum();
       if (!floating_point_compare(result, 0.0)) {
-        UserInterface::display_file("non-empty " +
-            std::to_string(result), "offby.txt");
         return false;
       }
     }

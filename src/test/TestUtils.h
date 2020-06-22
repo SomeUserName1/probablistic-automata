@@ -67,31 +67,31 @@ static inline auto gen_wa_sparse()
                                                      mu, eta, 0);
 }
 
-static inline auto gen_fixed_rand_v() -> std::vector<MatSpIPtr> {
-  MatDenI mat1(2, 4);
-  MatDenI mat2(2, 4);
-  MatDenI mat3(2, 4);
-  MatDenI mat4(2, 4);
+static inline auto gen_fixed_rand_v() -> std::vector<MatSpDPtr> {
+  MatDenD mat1(2, 4);
+  MatDenD mat2(2, 4);
+  MatDenD mat3(2, 4);
+  MatDenD mat4(2, 4);
   mat1 << 9, 5, 5, 7, 6, 11, 2, 1;
   mat2 << 2, 3, 1, 2, 12, 3, 9, 4;
   mat3 << 2, 7, 9, 10, 1, 11, 2, 6;
   mat4 << 4, 5, 2, 10, 5, 9, 5, 5;
 
   return {
-      convert_N_M<MatSpI, MatDenI>(mat1), convert_N_M<MatSpI, MatDenI>(mat2),
-      convert_N_M<MatSpI, MatDenI>(mat3), convert_N_M<MatSpI, MatDenI>(mat4)};
+      convert_N_M<MatSpD, MatDenD>(mat1), convert_N_M<MatSpD, MatDenD>(mat2),
+      convert_N_M<MatSpD, MatDenD>(mat3), convert_N_M<MatSpD, MatDenD>(mat4)};
 }
 
-static inline auto gen_fixed_rand_v3() -> std::vector<MatSpIPtr> {
-  MatDenI mat1(2, 3);
-  MatDenI mat2(2, 3);
-  MatDenI mat3(2, 3);
+static inline auto gen_fixed_rand_v3() -> std::vector<MatSpDPtr> {
+  MatDenD mat1(2, 3);
+  MatDenD mat2(2, 3);
+  MatDenD mat3(2, 3);
   mat1 << 1, 6, 2, 4, 5, 4;
   mat2 << 8, 1, 8, 7, 8, 2;
   mat3 << 1, 6, 5, 9, 2, 1;
 
-  return {convert_N_M<MatSpI, MatDenI>(mat1),
-          convert_N_M<MatSpI, MatDenI>(mat2),
-          convert_N_M<MatSpI, MatDenI>(mat3)};
+  return {convert_N_M<MatSpD, MatDenD>(mat1),
+          convert_N_M<MatSpD, MatDenD>(mat2),
+          convert_N_M<MatSpD, MatDenD>(mat3)};
 }
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_TESTUTILS_H

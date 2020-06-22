@@ -4,4 +4,7 @@
 #include <memory>
 #include <vector>
 
+class ReductionNetwork : public RepresentationInterface {
+};
+
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_REACTIONNETWORK_H

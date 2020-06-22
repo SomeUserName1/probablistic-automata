@@ -1,5 +1,5 @@
 #include "MaximalAggregation.h"
-#include "DifferentialEquation.h"
+#include "../differential_equations/DifferentialEquation.h"
 
 MaximalAggregation::~MaximalAggregation() = default;
 

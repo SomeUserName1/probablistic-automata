@@ -34,7 +34,7 @@ public:
                      uint K, bool seed = false)
       -> std::shared_ptr<RepresentationInterface> {
     auto WA = std::static_pointer_cast<WeightedAutomaton<M>>(waInstance);
-    std::vector<MatSpIPtr> randomVectors = generate_random_vectors(WA, K, seed);
+    std::vector<MatSpDPtr> randomVectors = generate_random_vectors(WA, K, seed);
     std::shared_ptr<WeightedAutomaton<M>> minWA =
         forward_reduction(WA, randomVectors);
     randomVectors = generate_random_vectors(minWA, K, seed);
@@ -44,7 +44,7 @@ public:
 
   static auto
   backward_reduction(const std::shared_ptr<WeightedAutomaton<M>> &WA,
-                     const std::vector<MatSpIPtr> &randomVectors)
+                     const std::vector<MatSpDPtr> &randomVectors)
       -> std::shared_ptr<WeightedAutomaton<M>> {
     std::vector<MatSpDPtr> rhoVectors =
         calculate_rho_backward_vectors(WA, randomVectors);
@@ -92,7 +92,7 @@ public:
   }
 
   static auto forward_reduction(const std::shared_ptr<WeightedAutomaton<M>> &WA,
-                                const std::vector<MatSpIPtr> &randomVectors)
+                                const std::vector<MatSpDPtr> &randomVectors)
       -> std::shared_ptr<WeightedAutomaton<M>> {
     std::vector<MatSpDPtr> rhoVectors =
         calculate_rho_forward_vectors(WA, randomVectors);
@@ -144,7 +144,7 @@ public:
 
   static auto calculate_rho_backward_vectors(
       const std::shared_ptr<WeightedAutomaton<M>> &WA,
-      const std::vector<std::shared_ptr<Eigen::SparseMatrix<int, 0, long>>>
+      const std::vector<MatSpDPtr>
           &randomVectors) -> std::vector<MatSpDPtr> {
     std::vector<std::tuple<MatSpDPtr, std::vector<uint>>> sigmaK =
         generate_words_backwards(WA, WA->get_states());
@@ -172,7 +172,7 @@ public:
 
   static auto calculate_rho_forward_vectors(
       const std::shared_ptr<WeightedAutomaton<M>> &WA,
-      const std::vector<std::shared_ptr<Eigen::SparseMatrix<int, 0, long>>>
+      const std::vector<MatSpDPtr>
           &randomVectors)
       -> std::vector<std::shared_ptr<Eigen::SparseMatrix<double, 0, long>>> {
     std::vector<std::tuple<MatSpDPtr, std::vector<uint>>> sigmaK =
@@ -305,8 +305,7 @@ public:
     return result;
   }
 
-  static inline auto convert_dense_M(const MatDenD &mat)
-      -> std::shared_ptr<M> {
+  static inline auto convert_dense_M(const MatDenD &mat) -> std::shared_ptr<M> {
     std::shared_ptr<M> result = std::make_shared<M>(mat.rows(), mat.cols());
     for (long i = 0; i < mat.rows(); i++) {
       for (long j = 0; j < mat.cols(); j++) {
@@ -318,9 +317,9 @@ public:
 
   static inline auto get_word_factor(
       const std::vector<uint> &word,
-      const std::shared_ptr<Eigen::SparseMatrix<int, 0, long>> &randVector)
-      -> int {
-    int result = 1;
+      const MatSpDPtr &randVector)
+      -> double {
+    double result = 1.0;
     for (uint i = 0; i < word.size(); i++) {
       result = result * randVector->coeffRef(word[i], i);
     }
@@ -330,29 +329,30 @@ public:
   static inline auto
   generate_random_vectors(const std::shared_ptr<WeightedAutomaton<M>> &WA,
                           uint K, bool seeded = false, uint seed = 0)
-      -> std::vector<MatSpIPtr> {
+      -> std::vector<MatSpDPtr> {
     auto rng = std::mt19937(seed);
     if (!seeded) {
       std::random_device rd;
       rng = std::mt19937(rd());
     }
-    std::uniform_int_distribution<> uniform(
-        1, static_cast<int>(WA->get_states() * WA->get_states() * K));
-    std::vector<MatSpIPtr> randV = {};
-    MatSpI vect;
+    int max = static_cast<int>(WA->get_states() * WA->get_states() * K);
+    std::uniform_int_distribution<> uniform(1, max);
+    std::vector<MatSpDPtr> randV = {};
+    MatSpDPtr vect;
     std::mutex randVMutex = std::mutex();
 
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
-    shared(WA, uniform, randV, rng, randVMutex) private(vect)
+    shared(WA, uniform, randV, rng, randVMutex, max) private(vect)
     for (uint i = 0; i < WA->get_states(); i++) {
-      vect = MatSpI(WA->get_number_input_characters(), WA->get_states());
+      vect = std::make_shared<MatSpD>(WA->get_number_input_characters(), WA->get_states());
       for (uint j = 0; j < WA->get_number_input_characters(); j++) {
         for (uint k = 0; k < WA->get_states(); k++) {
-          vect.coeffRef(j, k) = uniform(rng);
+          vect->coeffRef(j, k) =
+              (static_cast<double>(uniform(rng)) / static_cast<double>(max));
         }
       }
       std::lock_guard<std::mutex> guard(randVMutex);
-      randV.push_back(std::make_shared<MatSpI>(vect));
+      randV.push_back(vect);
     }
     return randV;
   }

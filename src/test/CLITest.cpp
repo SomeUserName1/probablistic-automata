@@ -148,7 +148,7 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
   }
 }
 
-/*SCENARIO("Equivalence") {
+SCENARIO("Equivalence") {
   GIVEN("The running example and a program reduced version") {
     std::vector<std::string> args = {"./ssm",
                                      "-t",
@@ -188,7 +188,7 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
       }
     }
   }
-}*/
+}
 
 static auto execute(const std::string &cmd, std::vector<std::string> args,
                     const std::string &msg) -> std::string {
