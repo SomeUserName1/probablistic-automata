@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
-#include "../FloatingPointCompare.h"
 #include "../model/weighted_automata/WeightedAutomaton.h"
+#include "../util/FloatingPointCompare.h"
 #include "TestUtils.h"
 
 SCENARIO("Random Vectors have correct shape") {

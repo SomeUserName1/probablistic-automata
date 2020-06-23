@@ -2,8 +2,13 @@
 #define STOCHASTIC_SYSTEM_MINIMIZATION_REWRITESYSTEMMODEL_H
 
 #include "../ModelInterface.h"
+#include "../../util/ParseUtils.h"
 
 class RewriteSystemModel : public ModelInterface {
+private:
+  std::vector<std::shared_ptr<ReductionMethodInterface>> reductionMethods;
+  std::vector<std::shared_ptr<ConversionMethodInterface>> conversionMethods;
+
 public:
   RewriteSystemModel() = default;
   ~RewriteSystemModel() override;
@@ -15,6 +20,7 @@ public:
 
   auto parse(
       std::string &string) -> std::shared_ptr<RepresentationInterface> override {
+    // TODO continue here
     return std::shared_ptr<RepresentationInterface>();
   }
 

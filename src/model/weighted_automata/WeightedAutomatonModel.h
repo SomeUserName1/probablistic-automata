@@ -3,6 +3,7 @@
 
 #include <utility>
 
+#include "../../util/ParseUtils.h"
 #include "../ModelInterface.h"
 #include "KieferSchuetzenbergerReduction.h"
 #include "WeightedAutomaton.h"
@@ -27,7 +28,7 @@ public:
 
   auto parse(std::string &str)
       -> std::shared_ptr<RepresentationInterface> override {
-    auto line = get_next_line(str, true);
+    auto line = get_next_line(str, ';', TrimWhiteSpace);;
     if (!line.starts_with("input=dense")) {
       if (line.starts_with("input=sparse")) {
         this->dense = 0;
@@ -41,14 +42,13 @@ public:
           "format and declare "
           "this in the first line as 'sparse' or 'dense'!");
 
-    } else {
-      return validate_model_instance_dense(str);
     }
+    return validate_model_instance_dense(str);
   }
 
   static auto validate_model_instance_dense(std::string &str)
       -> std::shared_ptr<RepresentationInterface> {
-    auto line = get_next_line(str, true);
+    auto line = get_next_line(str, ';', TrimWhiteSpace);;
 
     // states
     if (!line.starts_with("states")) {
@@ -61,7 +61,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, true);
+    line = get_next_line(str, ';', TrimWhiteSpace);;
 
     // characters
     if (!line.starts_with("characters")) {
@@ -75,7 +75,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, true);
+    line = get_next_line(str, ';', TrimWhiteSpace);;
 
     // alpha
     if (!line.starts_with("alpha")) {
@@ -89,7 +89,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, true);
+    line = get_next_line(str, ';', TrimWhiteSpace);;
 
     // mu
     std::vector<MatDenDPtr> mu = {};
@@ -117,7 +117,7 @@ public:
     } while (!line.starts_with(")));") && !line.empty());
 
     // fetch next line
-    line = get_next_line(str, true);
+    line = get_next_line(str, ';', TrimWhiteSpace);;
 
     if (!line.starts_with("eta")) {
       throw std::invalid_argument("Please specify the final state vector last");
@@ -138,7 +138,7 @@ public:
     long b = 0;
     long c = 0;
     double d = 0.0;
-    auto line = get_next_line(str, false);
+    auto line = get_next_line(str, ';', TrimNewLines);;
 
     // states
     if (!line.starts_with("states")) {
@@ -151,7 +151,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, false);
+    line = get_next_line(str, ';', TrimNewLines);;
 
     // characters
     if (!line.starts_with("characters")) {
@@ -165,7 +165,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, false);
+    line = get_next_line(str, ';', TrimNewLines);
 
     // alpha
     if (!line.starts_with("alpha")) {
@@ -180,7 +180,7 @@ public:
     alpha->coeffRef(0, b) = d;
 
     // fetch next line
-    line = get_next_line(str, false);
+    line = get_next_line(str, ';', TrimNewLines);;
 
     // mu
     std::vector<std::shared_ptr<Eigen::SparseMatrix<double, 0, long>>> mu = {};
@@ -202,7 +202,7 @@ public:
       mu[a]->coeffRef(b, c) = d;
 
       // fetch next line
-      line = get_next_line(str, false);
+      line = get_next_line(str, ';', TrimNewLines);;
     } while (!line.starts_with("eta") && !line.empty());
 
     if (!line.starts_with("eta")) {
@@ -263,21 +263,7 @@ public:
            "eta: 3 1;\n";
   }
 
-  inline static auto get_next_line(std::string &str, bool trimSpaces) noexcept
-      -> std::string {
-    std::string line;
-    std::size_t pos = str.find(';');
-    line = str.substr(0, pos + 1);
-    str.erase(0, pos + 1);
-    if (trimSpaces) {
-      line.erase(std::remove_if(line.begin(), line.end(), ::isspace),
-                 line.end());
-    } else {
-      line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
-    }
-    return line;
-  }
-
+// FIXME move to parse utils
   template <Arithmetic T>
   static inline auto extract_one_digit(std::string &vector) -> T {
     bool prevDigit = false;

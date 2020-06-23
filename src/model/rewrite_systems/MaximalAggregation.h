@@ -2,16 +2,26 @@
 #define STOCHASTIC_SYSTEM_MINIMIZATION_MAXIMALAGGREGATION_H
 
 #include "../ReductionMethodInterface.h"
+#include "../differential_equations/DifferentialEquation.h"
 #include <vector>
 
 class MaximalAggregation : public ReductionMethodInterface {
 public:
   ~MaximalAggregation() override;
 
-  [[nodiscard]] std::string get_name() const override;
+  [[nodiscard]] std::string MaximalAggregation::get_name() const {
+    return "Maximal Aggregation";
+  }
 
-  std::shared_ptr<RepresentationInterface>
-  reduce(std::shared_ptr<RepresentationInterface> &ptr) const override;
+  std::shared_ptr<RepresentationInterface> MaximalAggregation::reduce(
+      std::shared_ptr<RepresentationInterface> &ptr) const {
+    std::shared_ptr<DifferentialEquation> diffEq =
+        std::dynamic_pointer_cast<DifferentialEquation>(ptr);
+    std::shared_ptr<ReactionNetwork> reactionNet =
+        ReactionNetwork::convertDifferentialEquation(
+            (diffEq);) return std::shared_ptr<RepresentationInterface>();
+  }
+
 
   void largest_equivalence();
   void init();

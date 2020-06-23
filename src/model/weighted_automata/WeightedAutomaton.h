@@ -15,9 +15,9 @@
 #include <eigen3/Eigen/OrderingMethods>
 #include <eigen3/Eigen/SPQRSupport>
 
-#include "../../FloatingPointCompare.h"
-#include "../../TypeDefs.h"
 #include "../../ui/UserInterface.h"
+#include "../../util/FloatingPointCompare.h"
+#include "../../util/TypeDefs.h"
 #include "../RepresentationInterface.h"
 
 template <Matrix M> class WeightedAutomaton : public RepresentationInterface {

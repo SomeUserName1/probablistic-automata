@@ -5,6 +5,10 @@
 #include "../RepresentationInterface.h"
 
 class DifferentialEquationModel : public ModelInterface {
+private:
+  std::vector<std::shared_ptr<ReductionMethodInterface>> reductionMethods = {};
+  std::vector<std::shared_ptr<ConversionMethodInterface>> conversionMethods;
+
 public:
   DifferentialEquationModel() = default;
   ~DifferentialEquationModel() override;
@@ -15,6 +19,7 @@ public:
 
   auto
   parse(std::string &string) -> std::shared_ptr<RepresentationInterface> override {
+    // TODO continue here
     throw NotImplementedException();
   }
 

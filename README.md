@@ -15,7 +15,11 @@ For requirements and software design see the appendix of the ![report draft](doc
 - [ ] Compare minimizations, in terms of time & coherrence   
 
 Optional:  
+- WA:  
 - [x] Normalize by K * n^2 to deminish numerical error but keeping the prob, bounds of Schwarz-Zippel  
 - [ ] Check if Q matrix (i.e. product of householder reflectors) helps with basis   
     (with F forward basis: QF = F' such that F' triangular, thus F'mu more sparse)  
 - [ ] Kahan sum for rho vectors to improve numerical stability  
+- ERODE:
+- [ ] Ask Stefano DE vs RNE?  
+- [ ] When really fast: impl. DE with z3    

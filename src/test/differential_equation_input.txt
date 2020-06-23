@@ -1,0 +1,12 @@
+begin ode
+    d(Au)	= -Au + 2*Ap - 3*Au*B + 4*AuB
+    d(Ap)	=  Au - 2*Ap - 3*Ap*B + 4*ApB
+    d(B)	= -3*Au*B + 4*AuB - 3*Ap*B + 4*ApB
+    d(AuB)	=  3*Au*B - 4*AuB
+    d(ApB)	=  3*Ap*B - 4*ApB
+end ode
+
+
+
+
+

@@ -6,7 +6,7 @@
 #include <random>
 #include <string>
 
-#include "../../FloatingPointCompare.h"
+#include "../../util/FloatingPointCompare.h"
 #include "../ReductionMethodInterface.h"
 #include "WeightedAutomaton.h"
 

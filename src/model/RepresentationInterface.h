@@ -1,7 +1,7 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_MODELREPRESENTATIONINTERFACE_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_MODELREPRESENTATIONINTERFACE_H
 
-#include "../NotImplementedException.h"
+#include "../util/NotImplementedException.h"
 #include <memory>
 
 // Used to avoid a cyclic dependency: ModelInterface to ReductionMethodInterface

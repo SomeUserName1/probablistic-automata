@@ -50,13 +50,13 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/ui/TextUserInterface.cpp
                    src/model/weighted_automata/WeightedAutomatonModel.cpp
                    src/model/differential_equations/DifferentialEquationModel.cpp
-                   src/NotImplementedException.cpp
+        src/util/NotImplementedException.cpp
                    src/model/ModelInterface.cpp
                    src/model/ConversionMethodInterface.cpp
                    src/model/ReductionMethodInterface.cpp
                    src/model/RepresentationInterface.cpp
                    src/ui/UserInterface.cpp
-        src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/FloatingPointCompare.h src/TypeDefs.h src/model/conversions/DifferentialEquationRuleNetworkConversion.cpp src/model/conversions/DifferentialEquationRuleNetworkConversion.h src/model/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/model/conversions/WeightedAutomatonRuleNetworkConversion.h src/model/rewrite_systems/RewriteSystem.cpp src/model/rewrite_systems/RewriteSystemModel.cpp src/model/rewrite_systems/RewriteSystemModel.h src/model/differential_equations/DifferentialEquation.cpp)
+        src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/util/FloatingPointCompare.h src/util/TypeDefs.h src/model/conversions/DifferentialEquationRuleNetworkConversion.cpp src/model/conversions/DifferentialEquationRuleNetworkConversion.h src/model/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/model/conversions/WeightedAutomatonRuleNetworkConversion.h src/model/rewrite_systems/RewriteSystem.cpp src/model/rewrite_systems/RewriteSystemModel.cpp src/model/rewrite_systems/RewriteSystemModel.h src/model/differential_equations/DifferentialEquation.cpp src/util/ParseUtils.h)
 target_compile_definitions(ssm PUBLIC TEST=0)
 target_link_libraries(ssm  -lm -ldl -lspqr -lcholmod)
 # -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
@@ -70,13 +70,13 @@ add_executable(tests src/test/TestsMain.cpp
         src/test/KieferSchuetzenbergerReductionTest.cpp
         src/ui/TextUserInterface.cpp
         src/model/weighted_automata/WeightedAutomatonModel.cpp
-        src/NotImplementedException.cpp
+        src/util/NotImplementedException.cpp
         src/model/ModelInterface.cpp
         src/model/ConversionMethodInterface.cpp
         src/model/ReductionMethodInterface.cpp
         src/model/RepresentationInterface.cpp
         src/ui/UserInterface.cpp
-        src/test/TestUtils.h src/TypeDefs.h)
+        src/test/TestUtils.h src/util/TypeDefs.h)
 target_link_libraries(tests Catch2::Catch2  -lspqr -lcholmod)
 # -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
 #        ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl

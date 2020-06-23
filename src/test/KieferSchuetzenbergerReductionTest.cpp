@@ -3,8 +3,8 @@
 #include <sstream>
 #include <vector>
 
-#include "../FloatingPointCompare.h"
 #include "../model/weighted_automata/WeightedAutomatonModel.h"
+#include "../util/FloatingPointCompare.h"
 #include "TestUtils.h"
 
 SCENARIO(

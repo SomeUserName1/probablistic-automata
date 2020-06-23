@@ -1,0 +1,26 @@
+begin model ExampleDAE
+ begin parameters
+  r1 = 1.0 r2 = 2.0
+ end parameters
+ begin init
+  Au = 1.0 Ap = 2.0 B = 3.0
+  AuB ApB
+ end init
+ begin alginit
+  B = 3.0
+ end alginit
+ begin partition
+  {Au,Ap}, {AuB}, {B,ApB}
+ end partition
+ begin ODE
+  // C-style comments
+  d(Au)		= -r1*Au + r2*Ap - 3*Au*B + 4*AuB
+  d(Ap)		=  r1*Au - r2*Ap - 3*Ap*B + 4*ApB
+  d(B)		= -3*Au*B + 4*AuB - 3*Ap*B + 4*ApB
+  d(AuB)	=  3*Au*B - 4*AuB
+  d(ApB)	=  3*Ap*B - 4*ApB
+ end ODE
+ begin algebraic
+ B		= 3 - AuB - ApB
+ end algebraic
+end model

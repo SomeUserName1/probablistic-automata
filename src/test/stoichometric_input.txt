@@ -1,0 +1,13 @@
+begin reactions
+  Au     -> Ap	 	, 1.0
+  Ap     -> Au	 	, 2.0
+  Au + B -> AuB	 	, 3.0
+  AuB    -> Au + B	, 4.0
+  Ap + B -> ApB	 	, 3.0
+  ApB    -> Ap + B 	, 4.0
+end reactions
+
+
+
+
+
