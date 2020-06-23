@@ -56,7 +56,7 @@ ADD_EXECUTABLE(ssm src/main.cpp
                    src/model/ReductionMethodInterface.cpp
                    src/model/RepresentationInterface.cpp
                    src/ui/UserInterface.cpp
-        src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/FloatingPointCompare.h src/TypeDefs.h src/model/conversions/DifferentialEquationRuleNetworkConversion.cpp src/model/conversions/DifferentialEquationRuleNetworkConversion.h src/model/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/model/conversions/WeightedAutomatonRuleNetworkConversion.h)
+        src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/FloatingPointCompare.h src/TypeDefs.h src/model/conversions/DifferentialEquationRuleNetworkConversion.cpp src/model/conversions/DifferentialEquationRuleNetworkConversion.h src/model/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/model/conversions/WeightedAutomatonRuleNetworkConversion.h src/model/rewrite_systems/RewriteSystem.cpp src/model/rewrite_systems/RewriteSystemModel.cpp src/model/rewrite_systems/RewriteSystemModel.h src/model/differential_equations/DifferentialEquation.cpp)
 target_compile_definitions(ssm PUBLIC TEST=0)
 target_link_libraries(ssm  -lm -ldl -lspqr -lcholmod)
 # -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a

@@ -4,8 +4,6 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/include/LLOV" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/include/SuiteSparse" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/include/armadillo-code" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/include/eigen" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/include/spack" vcs="Git" />
   </component>
 </project>

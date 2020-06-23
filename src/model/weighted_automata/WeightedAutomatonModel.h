@@ -15,8 +15,8 @@ private:
 
 public:
   WeightedAutomatonModel()
-      : reductionMethods({std::make_shared<
-            KieferSchuetzenbergerReduction<MatDenD>>()}),
+      : reductionMethods(
+            {std::make_shared<KieferSchuetzenbergerReduction<MatDenD>>()}),
         conversionMethods({}) {}
 
   ~WeightedAutomatonModel() override;
@@ -25,7 +25,7 @@ public:
     return "Weighted Automaton Model";
   }
 
-  auto validate_model_instance(std::string &str)
+  auto parse(std::string &str)
       -> std::shared_ptr<RepresentationInterface> override {
     auto line = get_next_line(str, true);
     if (!line.starts_with("input=dense")) {
@@ -35,12 +35,12 @@ public:
             std::make_shared<KieferSchuetzenbergerReduction<
                 Eigen::SparseMatrix<double, 0, long>>>()};
         return validate_model_instance_sparse(str);
-      } else {
-        throw std::invalid_argument(
-            "The input specification must be either using sparse or dense "
-            "format and declare "
-            "this in the first line as 'sparse' or 'dense'!");
       }
+      throw std::invalid_argument(
+          "The input specification must be either using sparse or dense "
+          "format and declare "
+          "this in the first line as 'sparse' or 'dense'!");
+
     } else {
       return validate_model_instance_dense(str);
     }
@@ -82,8 +82,7 @@ public:
       throw std::invalid_argument(
           "The initial vector needs to be specified as 3rd!");
     }
-    MatDenDPtr alpha =
-        std::make_shared<MatDenD>(1, states);
+    MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
     line = line.substr(line.find('=') + 1, line.size());
     for (int i = 0; i < states; i++) {
       alpha->coeffRef(0, i) = extract_one_digit<double>(line);
@@ -111,7 +110,7 @@ public:
       mu.push_back(muX);
 
       if (!line.starts_with("))")) {
-          std::cout << line << std::endl;
+        std::cout << line << std::endl;
         throw std::invalid_argument("A transition matrix should end here but "
                                     "read something different than ')),(('!");
       }
@@ -123,15 +122,14 @@ public:
     if (!line.starts_with("eta")) {
       throw std::invalid_argument("Please specify the final state vector last");
     }
-    MatDenDPtr eta =
-        std::make_shared<MatDenD>(states, 1);
+    MatDenDPtr eta = std::make_shared<MatDenD>(states, 1);
     line = line.substr(line.find('=') + 1, line.size());
     for (int i = 0; i < states; i++) {
       eta->coeffRef(i, 0) = extract_one_digit<double>(line);
     }
     std::cout << "Parsed Automaton successfully" << std::endl;
-    return std::make_shared<WeightedAutomaton<MatDenD>>(
-        states, characters, alpha, mu, eta, 1);
+    return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
+                                                        alpha, mu, eta, 1);
   }
 
   static auto validate_model_instance_sparse(std::string &str)
@@ -223,41 +221,18 @@ public:
         states, characters, alpha, mu, eta, 0);
   }
 
-  [[nodiscard]] std::string summarize_reduction(
-      std::shared_ptr<RepresentationInterface> &A,
-      std::shared_ptr<RepresentationInterface> &minA) const override {
-    std::stringstream result;
-    if (dense) {
-      auto WA = std::static_pointer_cast<WeightedAutomaton<MatDenD>>(A);
-      auto minWA =
-          std::static_pointer_cast<WeightedAutomaton<MatDenD>>(minA);
-      result << "Before Reduction" << std::endl
-             << WA->pretty_print() << "After Reduction" << std::endl
-             << minWA->pretty_print();
-    } else {
-      auto WA = std::static_pointer_cast<
-          WeightedAutomaton<Eigen::SparseMatrix<double, 0, long>>>(A);
-      auto minWA = std::static_pointer_cast<
-          WeightedAutomaton<Eigen::SparseMatrix<double, 0, long>>>(minA);
-      result << "Before Reduction" << std::endl
-             << WA->pretty_print() << "After Reduction" << std::endl
-             << minWA->pretty_print();
-    }
-    return result.str();
-  }
-
-  [[nodiscard]] std::vector<std::shared_ptr<ReductionMethodInterface>>
-  get_reduction_methods() const override {
+  [[nodiscard]] auto get_reduction_methods() const
+      -> std::vector<std::shared_ptr<ReductionMethodInterface>> override {
     return this->reductionMethods;
   }
 
-  [[nodiscard]] std::vector<std::shared_ptr<ConversionMethodInterface>>
-  get_conversion_methods() const override {
+  [[nodiscard]] auto get_conversion_methods() const
+      -> std::vector<std::shared_ptr<ConversionMethodInterface>> override {
     return this->conversionMethods;
   }
 
-  [[nodiscard]] std::string get_representation_description() const
-      noexcept override {
+  [[nodiscard]] auto get_representation_description() const noexcept
+      -> std::string override {
     return "You need to specify one flag and 5 variables: \n "
            "The input type: input"
            "The number of states by: states\n"
@@ -288,8 +263,8 @@ public:
            "eta: 3 1;\n";
   }
 
-  inline static std::string get_next_line(std::string &str,
-                                          bool trimSpaces) noexcept {
+  inline static auto get_next_line(std::string &str, bool trimSpaces) noexcept
+      -> std::string {
     std::string line;
     std::size_t pos = str.find(';');
     line = str.substr(0, pos + 1);
@@ -304,14 +279,18 @@ public:
   }
 
   template <Arithmetic T>
-  static inline T extract_one_digit(std::string &vector) {
+  static inline auto extract_one_digit(std::string &vector) -> T {
     bool prevDigit = false;
     size_t firstDigit = 0;
     for (size_t i = 0; i < vector.size(); i++) {
-      if ((std::isdigit(vector[i]) || vector[i] == 'e' || vector[i] == '-' || vector[i] == '+' || vector[i] == '.') && !prevDigit) {
+      if ((std::isdigit(vector[i]) || vector[i] == 'e' || vector[i] == '-' ||
+           vector[i] == '+' || vector[i] == '.') &&
+          !prevDigit) {
         prevDigit = true;
         firstDigit = i;
-      } else if (!(std::isdigit(vector[i]) || vector[i] == 'e' || vector[i] == '-' || vector[i] == '+' || vector[i] == '.') && prevDigit) {
+      } else if (!(std::isdigit(vector[i]) || vector[i] == 'e' ||
+                   vector[i] == '-' || vector[i] == '+' || vector[i] == '.') &&
+                 prevDigit) {
         T result = static_cast<T>(std::stod(vector.substr(firstDigit, i)));
         vector.erase(0, i);
         return result;

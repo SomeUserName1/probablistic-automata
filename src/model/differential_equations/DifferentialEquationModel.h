@@ -7,7 +7,6 @@
 class DifferentialEquationModel : public ModelInterface {
 public:
   DifferentialEquationModel() = default;
-
   ~DifferentialEquationModel() override;
 
   [[nodiscard]] auto get_name() const -> std::string override {
@@ -15,28 +14,21 @@ public:
   }
 
   auto
-  validate_model_instance(std::string &string) -> std::shared_ptr<RepresentationInterface> override {
+  parse(std::string &string) -> std::shared_ptr<RepresentationInterface> override {
     throw NotImplementedException();
   }
 
-  auto summarize_reduction(
-      std::shared_ptr<RepresentationInterface> &ptr,
-      std::shared_ptr<RepresentationInterface> &sharedPtr) const -> std::string override {
-
-    throw NotImplementedException();
-  }
-
-  auto
+  [[nodiscard]] auto
   get_reduction_methods() const -> std::vector<std::shared_ptr<ReductionMethodInterface>> override {
     throw NotImplementedException();
   }
 
-  auto
+  [[nodiscard]] auto
   get_conversion_methods() const -> std::vector<std::shared_ptr<ConversionMethodInterface>> override {
     throw NotImplementedException();
   }
 
-  auto get_representation_description() const noexcept -> std::string override {
+  [[nodiscard]] auto get_representation_description() const noexcept -> std::string override {
     return "TODO";
   }
 };

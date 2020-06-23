@@ -1,3 +1,3 @@
 #include "WeightedAutomatonModel.h"
 
-WeightedAutomatonModel::~WeightedAutomatonModel() {}
+WeightedAutomatonModel::~WeightedAutomatonModel() = default;

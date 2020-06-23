@@ -5,6 +5,13 @@
 #include <iostream>
 #include <memory>
 const uint DEFAULT_RANDOM_RANGE_FACTOR = 3;
+const uint PRINT_PRECISION = 4;
+const std::array<unsigned long long int> FACTORIALS = {
+    1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362800, 3628800,
+    39916800, 479001600,  6227020800, 87178291200, 1307674368000,
+    20922789888000, 355687428096000, 6402373705728000, 121645100408832000,
+    2432902008176640000
+};
 
 using MatSpDPtr = std::shared_ptr<Eigen::SparseMatrix<double, 0, long>>;
 using MatSpIPtr = std::shared_ptr<Eigen::SparseMatrix<int, 0, long>>;

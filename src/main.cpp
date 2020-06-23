@@ -203,7 +203,7 @@ auto main(int argc, char *argv[]) -> int {
 
     switch (task) {
     case UserInterface::Reduction: {
-      auto representation = model->validate_model_instance(input);
+      auto representation = model->parse(input);
       auto start = std::chrono::high_resolution_clock::now();
       auto reduced_representation =
           model->get_reduction_methods()[reductionMethod]->reduce(
@@ -223,8 +223,8 @@ auto main(int argc, char *argv[]) -> int {
       break;
     }
     case UserInterface::Equivalence: {
-      auto representation0 = model->validate_model_instance(input);
-      auto representation1 = model->validate_model_instance(input1);
+      auto representation0 = model->parse(input);
+      auto representation1 = model->parse(input1);
       const auto *result = representation0->equivalent(representation1)
                                ? "equivalent"
                                : "not equivalent";
