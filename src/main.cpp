@@ -12,14 +12,6 @@
 #define THREADS 1
 #endif
 
-// TODO Lifting/Benchmark generation
-
-// Lifting to create benchmarks:
-//  start with a minimal automata
-// copy each state
-// careful: state s with a/2
-// if split this state distribute weight with weight mass preservance
-
 static auto iequals(const std::string &str1, const std::string &str2) -> bool;
 
 static auto iequals(const std::string &str1, const std::string &str2) -> bool {
@@ -220,6 +212,10 @@ auto main(int argc, char *argv[]) -> int {
       } else if (outputMethod == UserInterface::IOMethod::Display) {
         ui->display(summary);
       }
+      const auto *const result = reduced_representation->equivalent(representation)
+                           ? "equivalent"
+                           : "not equivalent";
+      std::cout << "Finished Equivalence check: " << result << std::endl;
       break;
     }
     case UserInterface::Equivalence: {
@@ -228,7 +224,7 @@ auto main(int argc, char *argv[]) -> int {
       const auto *result = representation0->equivalent(representation1)
                                ? "equivalent"
                                : "not equivalent";
-      std::cout << "Finished Equivalence check" << std::endl;
+      std::cout << "Finished Equivalence check: " << result << std::endl;
       if (outputMethod == UserInterface::IOMethod::File) {
         ui->display_file(result, outputDestination);
       } else if (outputMethod == UserInterface::IOMethod::Display) {

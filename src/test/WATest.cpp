@@ -4,12 +4,35 @@
 #include "../util/FloatingPointCompare.h"
 #include "TestUtils.h"
 
+SCENARIO("Lifting an automaton") {
+  GIVEN("Our running example in minimized version") {
+    auto wa = gen_wa_hand_min_dense();
+    WHEN("Lifting it as done before") {
+      auto liftedWA = lift_wa<MatDenD>(wa, {1}, {1});
+      THEN("We get the same as done by hand") {
+        auto waEx = gen_wa_dense();
+        REQUIRE(waEx->get_states() == liftedWA->get_states());
+        REQUIRE(waEx->get_number_input_characters() ==
+                liftedWA->get_number_input_characters());
+        REQUIRE(floating_point_compare(
+            (*(waEx->get_alpha()) - *(liftedWA->get_alpha())).sum(), 0.0));
+        REQUIRE(floating_point_compare(
+            (*(waEx->get_eta()) - *(liftedWA->get_eta())).sum(), 0.0));
+        for (size_t i = 0; i < waEx->get_mu().size(); i++) {
+          REQUIRE(floating_point_compare(
+              (*(waEx->get_mu()[i]) - *(liftedWA->get_mu()[i])).sum(), 0.0));
+        }
+      }
+    }
+  }
+}
+
 SCENARIO("Random Vectors have correct shape") {
   GIVEN("An automaton and a number K") {
     auto mu = {std::make_shared<MatDenD>(10, 10)};
     auto automaton = std::make_shared<WeightedAutomaton<MatDenD>>(
         10, 4, std::make_shared<MatDenD>(1, 10), mu,
-        std::make_shared<MatDenD>(10, 1), 1);
+        std::make_shared<MatDenD>(10, 1));
     uint K = 100;
     WHEN("generating random vectors") {
       std::vector<MatSpDPtr> vectors =
@@ -61,7 +84,7 @@ SCENARIO("Subtraction Automaton is constructed") {
       *mu3 << 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0;
       std::vector<MatDenDPtr> mu = {mu1, mu2};
       wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
-                                                         alpha, mu, eta, 1);
+                                                         alpha, mu, eta);
       auto subtractionAutomaton =
           WeightedAutomaton<MatDenD>::create_subtraction_automaton(*wa1, *wa2);
       std::vector<uint> word = {0, 2, 2, 2};
@@ -80,7 +103,7 @@ SCENARIO("Subtraction Automaton is constructed") {
       auto mu3 = std::make_shared<MatDenD>(states, states);
       std::vector<MatDenDPtr> mu = {mu1, mu2};
       wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
-                                                         alpha, mu, eta, 1);
+                                                         alpha, mu, eta);
       auto subtractionAutomaton =
           WeightedAutomaton<MatDenD>::create_subtraction_automaton(*wa1, *wa2);
       std::vector<std::vector<uint>> words = {{0, 1}, {0, 0}};
@@ -103,7 +126,9 @@ SCENARIO("The equivalence of automata is tested") {
     std::shared_ptr<WeightedAutomaton<MatDenD>> wa2;
     WHEN("A and B are the exact same automata") {
       wa2 = gen_wa_dense();
-      THEN("They are equal") { REQUIRE(wa1->equivalent(wa2)); }
+      THEN("They are equal") {
+        REQUIRE(wa1->equivalent(wa2));
+         }
     }
     WHEN("The automata have differing numbers of input characters") {
       int states = 4;
@@ -120,9 +145,11 @@ SCENARIO("The equivalence of automata is tested") {
       *mu3 << 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0;
       std::vector<MatDenDPtr> mu = {mu1, mu2};
       wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
-                                                         alpha, mu, eta, 1);
+                                                         alpha, mu, eta);
 
-      THEN("They are not equal") { REQUIRE(!wa1->equivalent(wa2)); }
+      THEN("They are not equal") {
+        REQUIRE(!wa1->equivalent(wa2));
+      }
     }
     WHEN(
         "The automata are different in structure but equivalent in semantics") {
@@ -138,28 +165,34 @@ SCENARIO("The equivalence of automata is tested") {
       *mu2 << 0, 0, 0, 0, 0, 1, 0, 0, 0;
       std::vector<MatDenDPtr> mu = {mu1, mu2};
       wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
-                                                         alpha, mu, eta, 1);
-      THEN("They are equivalent") { REQUIRE(wa1->equivalent(wa2)); }
+                                                         alpha, mu, eta);
+      THEN("They are equivalent") {
+        REQUIRE(wa1->equivalent(wa2));
+     }
     }
     WHEN("The Automata differ in semantics") {
       int states = 3;
       int characters = 2;
-      auto alpha = std::make_shared<Eigen::MatrixXd>(1, states);
+      auto alpha = std::make_shared<MatDenD>(1, states);
       *alpha << 2, 0, 0;
-      auto eta = std::make_shared<Eigen::MatrixXd>(states, 1);
+      auto eta = std::make_shared<MatDenD>(states, 1);
       *eta << 0, 0, 1;
-      auto mu1 = std::make_shared<Eigen::MatrixXd>(states, states);
+      auto mu1 = std::make_shared<MatDenD>(states, states);
       *mu1 << 0, 1, 1, 1, 1, 1, 1, 1, 0;
-      auto mu2 = std::make_shared<Eigen::MatrixXd>(states, states);
+      auto mu2 = std::make_shared<MatDenD>(states, states);
       *mu2 << 0, 0, 0, 0, 0, 1, 0, 0, 0;
       std::vector<MatDenDPtr> mu = {mu1, mu2};
-      wa2 = std::make_shared<WeightedAutomaton<Eigen::MatrixXd>>(
-          states, characters, alpha, mu, eta, 1);
-      THEN("They are not equivalent") { REQUIRE(!wa1->equivalent(wa2)); }
+      wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
+                                                         alpha, mu, eta);
+      THEN("They are not equivalent") {
+        REQUIRE(!wa1->equivalent(wa2));
+      }
     }
     WHEN("A minimized automaton is compared with the base case") {
       wa2 = gen_wa_min_dense();
-      THEN("They're equivalent") { REQUIRE(wa1->equivalent(wa2)); }
+      THEN("They're equivalent") {
+        REQUIRE(wa1->equivalent(wa2));
+        }
     }
   }
 }

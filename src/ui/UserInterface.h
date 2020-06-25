@@ -23,52 +23,59 @@ public:
 
   virtual ~UserInterface();
 
-  [[nodiscard]] virtual Task select_task() const = 0;
+  [[nodiscard]] virtual auto select_task() const -> Task = 0;
 
-  [[nodiscard]] virtual std::shared_ptr<ModelInterface>
-  select_model(const std::vector<std::shared_ptr<ModelInterface>> &) const = 0;
+  [[nodiscard]] virtual auto
+  select_model(const std::vector<std::shared_ptr<ModelInterface>> &) const
+      -> std::shared_ptr<ModelInterface> = 0;
 
-  [[nodiscard]] virtual uint select_reduction_method(
-      std::shared_ptr<ModelInterface> &selectedModel) const = 0;
+  [[nodiscard]] virtual auto
+  select_reduction_method(std::shared_ptr<ModelInterface> &selectedModel) const
+      -> uint = 0;
 
-  [[nodiscard]] virtual std::shared_ptr<ConversionMethodInterface>
-  select_conversion_method(std::shared_ptr<ModelInterface> &) const = 0;
+  [[nodiscard]] virtual auto
+  select_conversion_method(std::shared_ptr<ModelInterface> &) const
+      -> std::shared_ptr<ConversionMethodInterface> = 0;
 
-  [[nodiscard]] virtual IOMethod select_io_method(bool) const = 0;
+  [[nodiscard]] virtual auto select_io_method(bool) const -> IOMethod = 0;
 
-  [[nodiscard]] virtual std::string file_input() const = 0;
+  [[nodiscard]] virtual auto file_input() const -> std::string = 0;
 
-  [[nodiscard]] virtual std::string
-  stdin_input(std::shared_ptr<ModelInterface> &) const = 0;
+  [[nodiscard]] virtual auto
+  stdin_input(std::shared_ptr<ModelInterface> &) const -> std::string = 0;
 
-  [[nodiscard]] virtual std::string set_output_destination() const = 0;
+  [[nodiscard]] virtual auto set_output_destination() const -> std::string = 0;
 
   static void display_file(const std::string &output, const std::string &file) {
     std::ofstream outfile(file);
-    outfile << output;
-    std::cout << "Output was written to " << file << std::endl;
+    if (outfile.is_open()) {
+      outfile << output;
+      outfile.close();
+      std::cout << "Output was written to " << file << std::endl;
+    } else {
+      throw std::bad_exception();
+    }
   }
 
-  virtual void display(const std::string &) const {
+  virtual void display(const std::string & /*unused*/) const {
     throw std::logic_error(
         "Please use a concrete implementation of this interface!");
   }
 
-  static std::string read_file(const std::string &path) {
+  static auto read_file(const std::string &path) -> std::string {
     std::filesystem::path inputPath(path);
     inputPath = std::filesystem::canonical(inputPath);
     if (!inputPath.has_filename() || !std::filesystem::exists(inputPath)) {
       throw std::invalid_argument("Passed invalid input path " +
                                   inputPath.string());
-    } else {
-      std::cout << "Loading input from " << inputPath << std::endl;
     }
+    std::cout << "Loading input from " << inputPath << std::endl;
 
     std::ifstream in(inputPath);
     if (in.fail()) {
       throw std::invalid_argument("Failed to open input stream");
     }
-    std::string contents("");
+    std::string contents;
     in.seekg(0, std::ios::end);
     contents.resize(static_cast<unsigned long>(in.tellg()));
     in.seekg(0, std::ios::beg);

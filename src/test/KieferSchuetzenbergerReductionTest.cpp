@@ -53,7 +53,7 @@ SCENARIO("The random vectors have the correct shape") {
     auto mu = {std::make_shared<MatDenD>(10, 10)};
     auto automaton = std::make_shared<WeightedAutomaton<MatDenD>>(
         10, 4, std::make_shared<MatDenD>(1, 10), mu,
-        std::make_shared<MatDenD>(10, 1), 1);
+        std::make_shared<MatDenD>(10, 1));
     uint K = 100;
     WHEN("generating random vectors") {
       auto vectors =

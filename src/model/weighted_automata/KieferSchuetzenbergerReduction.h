@@ -88,7 +88,7 @@ public:
     }
     return std::make_shared<WeightedAutomaton<M>>(
         static_cast<uint>(rank), WA->get_number_input_characters(), alphaArrow,
-        muArrow, etaArrow, WA->is_dense());
+        muArrow, etaArrow);
   }
 
   static auto forward_reduction(const std::shared_ptr<WeightedAutomaton<M>> &WA,
@@ -139,30 +139,47 @@ public:
     }
     return std::make_shared<WeightedAutomaton<M>>(
         static_cast<uint>(rank), WA->get_number_input_characters(), alphaArrow,
-        muArrow, etaArrow, WA->is_dense());
+        muArrow, etaArrow);
   }
 
   static auto calculate_rho_backward_vectors(
       const std::shared_ptr<WeightedAutomaton<M>> &WA,
-      const std::vector<MatSpDPtr>
-          &randomVectors) -> std::vector<MatSpDPtr> {
+      const std::vector<MatSpDPtr> &randomVectors) -> std::vector<MatSpDPtr> {
     std::vector<std::tuple<MatSpDPtr, std::vector<uint>>> sigmaK =
         generate_words_backwards(WA, WA->get_states());
     std::vector<MatSpDPtr> result = {};
     std::mutex resultMutex = std::mutex();
     MatSpD vI;
+    MatSpD temp;
 
 #pragma omp parallel for default(none)                                         \
-    num_threads(THREADS) if (!TEST) private(vI)                                \
+    num_threads(THREADS) if (!TEST) private(vI, temp)                          \
         shared(result, sigmaK, randomVectors, resultMutex, WA)
     for (size_t j = 0; j < randomVectors.size(); j++) {
       vI = MatSpD(WA->get_states(), 1);
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
-    shared(result, vI, sigmaK, randomVectors, resultMutex, j)
-      for (size_t i = 0; i < sigmaK.size(); i++) {
-        vI += (*std::get<0>(sigmaK[i]) *
-               get_word_factor(std::get<1>(sigmaK[i]), randomVectors[j]))
-                  .eval();
+
+      std::vector<double> sums;
+      std::vector<double> balancers;
+      std::vector<double> ys;
+      std::vector<double> ts;
+
+      for (int l = 0; l < vI.rows(); l++) {
+        sums.push_back(0.0);
+        balancers.push_back(0.0);
+        ys.push_back(0.0);
+        ts.push_back(0.0);
+      }
+      for (auto &i : sigmaK) {
+        temp = (*std::get<0>(i) *
+                get_word_factor(std::get<1>(i), randomVectors[j]))
+                   .eval();
+        for (size_t k = 0; k < sums.size(); k++) {
+          ys[k] = temp.coeffRef(static_cast<long>(k), 0) - balancers[k];
+          ts[k] = sums[k] + ys[k];
+          balancers[k] = (ts[k] - sums[k]) - ys[k];
+          sums[k] = ts[k];
+          vI.coeffRef(static_cast<long>(k), 0) = sums[k];
+        }
       }
       std::lock_guard<std::mutex> guard(resultMutex);
       result.push_back(std::make_shared<MatSpD>(vI));
@@ -170,28 +187,49 @@ public:
     return result;
   }
 
-  static auto calculate_rho_forward_vectors(
-      const std::shared_ptr<WeightedAutomaton<M>> &WA,
-      const std::vector<MatSpDPtr>
-          &randomVectors)
-      -> std::vector<std::shared_ptr<Eigen::SparseMatrix<double, 0, long>>> {
+  static auto
+  calculate_rho_forward_vectors(const std::shared_ptr<WeightedAutomaton<M>> &WA,
+                                const std::vector<MatSpDPtr> &randomVectors)
+      -> std::vector<MatSpDPtr> {
     std::vector<std::tuple<MatSpDPtr, std::vector<uint>>> sigmaK =
         generate_words_forwards(WA, WA->get_states());
     std::vector<MatSpDPtr> result = {};
     std::mutex resultMutex = std::mutex();
     MatSpD vI;
+    MatSpD temp;
 
 #pragma omp parallel for default(none)                                         \
-    num_threads(THREADS) if (!TEST) private(vI)                                \
-        shared(result, sigmaK, randomVectors, WA, resultMutex)
+    num_threads(THREADS) if (!TEST) private(vI, temp)                          \
+        shared(result, sigmaK, randomVectors, WA, resultMutex, std::cout)
     for (size_t j = 0; j < randomVectors.size(); j++) {
       vI = MatSpD(1, WA->get_states());
-#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
-    shared(result, vI, sigmaK, randomVectors, j, WA, resultMutex)
-      for (size_t i = 0; i < sigmaK.size(); i++) {
-        vI += (*std::get<0>(sigmaK[i]) *
-               get_word_factor(std::get<1>(sigmaK[i]), randomVectors[j]))
-                  .eval();
+
+      std::vector<double> sums;
+      std::vector<double> balancers;
+      std::vector<double> ys;
+      std::vector<double> ts;
+
+      for (int l = 0; l < vI.cols(); l++) {
+        sums.push_back(0.0);
+        balancers.push_back(0.0);
+        ys.push_back(0.0);
+        ts.push_back(0.0);
+      }
+
+      for (auto &i : sigmaK) {
+        // vI += (*std::get<0>(sigmaK[i]) *
+        //       get_word_factor(std::get<1>(sigmaK[i]), randomVectors[j]))
+        //          .eval();
+        temp = (*std::get<0>(i) *
+                get_word_factor(std::get<1>(i), randomVectors[j]))
+                   .eval();
+        for (size_t k = 0; k < sums.size(); k++) {
+          ys[k] = temp.coeffRef(0, static_cast<long>(k)) - balancers[k];
+          ts[k] = sums[k] + ys[k];
+          balancers[k] = (ts[k] - sums[k]) - ys[k];
+          sums[k] = ts[k];
+          vI.coeffRef(0, static_cast<long>(k)) = sums[k];
+        }
       }
       std::lock_guard<std::mutex> guard(resultMutex);
       result.push_back(std::make_shared<MatSpD>(vI));
@@ -315,10 +353,8 @@ public:
     return result;
   }
 
-  static inline auto get_word_factor(
-      const std::vector<uint> &word,
-      const MatSpDPtr &randVector)
-      -> double {
+  static inline auto get_word_factor(const std::vector<uint> &word,
+                                     const MatSpDPtr &randVector) -> double {
     double result = 1.0;
     for (uint i = 0; i < word.size(); i++) {
       result = result * randVector->coeffRef(word[i], i);
@@ -344,7 +380,8 @@ public:
 #pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
     shared(WA, uniform, randV, rng, randVMutex, max) private(vect)
     for (uint i = 0; i < WA->get_states(); i++) {
-      vect = std::make_shared<MatSpD>(WA->get_number_input_characters(), WA->get_states());
+      vect = std::make_shared<MatSpD>(WA->get_number_input_characters(),
+                                      WA->get_states());
       for (uint j = 0; j < WA->get_number_input_characters(); j++) {
         for (uint k = 0; k < WA->get_states(); k++) {
           vect->coeffRef(j, k) =

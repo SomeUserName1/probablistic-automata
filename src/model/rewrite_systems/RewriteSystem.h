@@ -1,8 +1,8 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_REWRITESYSTEM_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_REWRITESYSTEM_H
 
+#include "../../util/DefsConstants.h"
 #include "../../util/FloatingPointCompare.h"
-#include "../../util/TypeDefs.h"
 #include "../RepresentationInterface.h"
 #include <memory>
 #include <utility>

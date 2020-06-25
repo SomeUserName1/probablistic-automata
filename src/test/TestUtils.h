@@ -28,7 +28,7 @@ static inline auto gen_wa_min_dense()
     *mu2 << 1.63434e-17,  1.94083e-16,  2.59748e-16, 0.0249307, -3.27224e-16, -8.22317e-17, -0.00554017,  7.27164e-17,  1.82737e-17;
     std::vector<MatDenDPtr> mu = {mu1, mu2};
     return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters, alpha,
-                                                        mu, eta, 1);
+                                                        mu, eta);
 }
 
 static inline auto gen_wa_dense()
@@ -45,7 +45,24 @@ static inline auto gen_wa_dense()
   *mu2 << 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0;
   std::vector<MatDenDPtr> mu = {mu1, mu2};
   return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters, alpha,
-                                                      mu, eta, 1);
+                                                      mu, eta);
+}
+
+static inline auto gen_wa_hand_min_dense()
+-> std::shared_ptr<WeightedAutomaton<MatDenD>> {
+  uint states = 3;
+  uint characters = 2;
+  MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
+  *alpha << 1, 0, 0;
+  MatDenDPtr eta = std::make_shared<MatDenD>(states, 1);
+  *eta << 0, 0, 1;
+  MatDenDPtr mu1 = std::make_shared<MatDenD>(states, states);
+  *mu1 << 0, 2, 0, 0, 0, 0, 0, 0, 0;
+  MatDenDPtr mu2 = std::make_shared<MatDenD>(states, states);
+  *mu2 << 0, 0, 0, 0, 0, 1, 0, 0, 0;
+  std::vector<MatDenDPtr> mu = {mu1, mu2};
+  return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters, alpha,
+                                                      mu, eta);
 }
 
 static inline auto gen_wa_sparse()
@@ -64,7 +81,7 @@ static inline auto gen_wa_sparse()
   mu1->coeffRef(2, 3) = 1;
   std::vector<MatSpDPtr> mu = {mu1, mu2};
   return std::make_shared<WeightedAutomaton<MatSpD>>(states, characters, alpha,
-                                                     mu, eta, 0);
+                                                     mu, eta);
 }
 
 static inline auto gen_fixed_rand_v() -> std::vector<MatSpDPtr> {

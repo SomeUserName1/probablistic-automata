@@ -5,6 +5,7 @@
 
 #include "../../util/ParseUtils.h"
 #include "../ModelInterface.h"
+#include "WeightedAutomatonBenchmarks.h"
 #include "KieferSchuetzenbergerReduction.h"
 #include "WeightedAutomaton.h"
 
@@ -12,7 +13,6 @@ class WeightedAutomatonModel : public ModelInterface {
 private:
   std::vector<std::shared_ptr<ReductionMethodInterface>> reductionMethods;
   std::vector<std::shared_ptr<ConversionMethodInterface>> conversionMethods;
-  size_t dense = 1;
 
 public:
   WeightedAutomatonModel()
@@ -28,13 +28,12 @@ public:
 
   auto parse(std::string &str)
       -> std::shared_ptr<RepresentationInterface> override {
-    auto line = get_next_line(str, ';', TrimWhiteSpace);;
+    auto line = get_next_line(str, ";", TrimWhiteSpace);
     if (!line.starts_with("input=dense")) {
       if (line.starts_with("input=sparse")) {
-        this->dense = 0;
         this->reductionMethods = {
             std::make_shared<KieferSchuetzenbergerReduction<
-                Eigen::SparseMatrix<double, 0, long>>>()};
+                MatSpD>>()};
         return validate_model_instance_sparse(str);
       }
       throw std::invalid_argument(
@@ -48,7 +47,7 @@ public:
 
   static auto validate_model_instance_dense(std::string &str)
       -> std::shared_ptr<RepresentationInterface> {
-    auto line = get_next_line(str, ';', TrimWhiteSpace);;
+    auto line = get_next_line(str, ";", TrimWhiteSpace);
 
     // states
     if (!line.starts_with("states")) {
@@ -61,7 +60,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, ';', TrimWhiteSpace);;
+    line = get_next_line(str, ";", TrimWhiteSpace);
 
     // characters
     if (!line.starts_with("characters")) {
@@ -75,7 +74,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, ';', TrimWhiteSpace);;
+    line = get_next_line(str, ";", TrimWhiteSpace);
 
     // alpha
     if (!line.starts_with("alpha")) {
@@ -89,7 +88,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, ';', TrimWhiteSpace);;
+    line = get_next_line(str, ";", TrimWhiteSpace);
 
     // mu
     std::vector<MatDenDPtr> mu = {};
@@ -117,7 +116,7 @@ public:
     } while (!line.starts_with(")));") && !line.empty());
 
     // fetch next line
-    line = get_next_line(str, ';', TrimWhiteSpace);;
+    line = get_next_line(str, ";", TrimWhiteSpace);
 
     if (!line.starts_with("eta")) {
       throw std::invalid_argument("Please specify the final state vector last");
@@ -129,7 +128,7 @@ public:
     }
     std::cout << "Parsed Automaton successfully" << std::endl;
     return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
-                                                        alpha, mu, eta, 1);
+                                                        alpha, mu, eta);
   }
 
   static auto validate_model_instance_sparse(std::string &str)
@@ -138,7 +137,7 @@ public:
     long b = 0;
     long c = 0;
     double d = 0.0;
-    auto line = get_next_line(str, ';', TrimNewLines);;
+    auto line = get_next_line(str, ";", TrimNewLines);
 
     // states
     if (!line.starts_with("states")) {
@@ -151,7 +150,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, ';', TrimNewLines);;
+    line = get_next_line(str, ";", TrimNewLines);
 
     // characters
     if (!line.starts_with("characters")) {
@@ -165,7 +164,7 @@ public:
     }
 
     // fetch next line
-    line = get_next_line(str, ';', TrimNewLines);
+    line = get_next_line(str, ";", TrimNewLines);
 
     // alpha
     if (!line.starts_with("alpha")) {
@@ -173,24 +172,24 @@ public:
           "The initial vector needs to be specified as 3rd!");
     }
     auto alpha =
-        std::make_shared<Eigen::SparseMatrix<double, 0, long>>(1, states);
+        std::make_shared<MatSpD>(1, states);
     line = line.substr(line.find(':') + 1, line.size());
     b = extract_one_digit<uint>(line);
     d = extract_one_digit<double>(line);
     alpha->coeffRef(0, b) = d;
 
     // fetch next line
-    line = get_next_line(str, ';', TrimNewLines);;
+    line = get_next_line(str, ";", TrimNewLines);
 
     // mu
-    std::vector<std::shared_ptr<Eigen::SparseMatrix<double, 0, long>>> mu = {};
+    std::vector<std::shared_ptr<MatSpD>> mu = {};
     if (!line.starts_with("mu")) {
       throw std::invalid_argument(
           "Specify the transition matrices 4th, one for each character!");
     }
     line = line.substr(line.find(':') + 1, line.size());
     for (int i = 0; i < characters; i++) {
-      mu.emplace_back(std::make_shared<Eigen::SparseMatrix<double, 0, long>>(
+      mu.emplace_back(std::make_shared<MatSpD>(
           states, states));
     }
 
@@ -202,14 +201,14 @@ public:
       mu[a]->coeffRef(b, c) = d;
 
       // fetch next line
-      line = get_next_line(str, ';', TrimNewLines);;
+      line = get_next_line(str, ";", TrimNewLines);
     } while (!line.starts_with("eta") && !line.empty());
 
     if (!line.starts_with("eta")) {
       throw std::logic_error("Unreachable;");
     }
     auto eta =
-        std::make_shared<Eigen::SparseMatrix<double, 0, long>>(states, 1);
+        std::make_shared<MatSpD>(states, 1);
     line = line.substr(line.find(':') + 1, line.size());
     b = extract_one_digit<uint>(line);
     d = extract_one_digit<double>(line);
@@ -217,8 +216,8 @@ public:
     std::cout << "Parsed Automaton successfully" << std::endl;
 
     return std::make_shared<
-        WeightedAutomaton<Eigen::SparseMatrix<double, 0, long>>>(
-        states, characters, alpha, mu, eta, 0);
+        WeightedAutomaton<MatSpD>>(
+        states, characters, alpha, mu, eta);
   }
 
   [[nodiscard]] auto get_reduction_methods() const
@@ -261,28 +260,6 @@ public:
            "1 1 3 1;\n"
            "1 2 3 1;\n"
            "eta: 3 1;\n";
-  }
-
-// FIXME move to parse utils
-  template <Arithmetic T>
-  static inline auto extract_one_digit(std::string &vector) -> T {
-    bool prevDigit = false;
-    size_t firstDigit = 0;
-    for (size_t i = 0; i < vector.size(); i++) {
-      if ((std::isdigit(vector[i]) || vector[i] == 'e' || vector[i] == '-' ||
-           vector[i] == '+' || vector[i] == '.') &&
-          !prevDigit) {
-        prevDigit = true;
-        firstDigit = i;
-      } else if (!(std::isdigit(vector[i]) || vector[i] == 'e' ||
-                   vector[i] == '-' || vector[i] == '+' || vector[i] == '.') &&
-                 prevDigit) {
-        T result = static_cast<T>(std::stod(vector.substr(firstDigit, i)));
-        vector.erase(0, i);
-        return result;
-      }
-    }
-    throw std::invalid_argument("No numbers found in the input!");
   }
 };
 

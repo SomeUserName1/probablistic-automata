@@ -8,9 +8,9 @@ SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 SET(CMAKE_CXX_STANDARD 20)
 #SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include -Xclang -disable-O0-optnone -Xclang -load \
 # -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so")
-SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include \
+SET(CMAKE_CXX_FLAGS "-fprofile-instr-generate -fcoverage-mapping -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include \
     -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall \
-    -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat")
+    -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
@@ -46,17 +46,34 @@ ProcessorCount(N)
 # N/2 processors to account for hyper-threading
 add_compile_definitions(THREADS=${N}/2)
 
+
+
+SET(interfaces      src/model/ModelInterface.cpp
+                    src/model/ConversionMethodInterface.cpp
+                    src/model/ReductionMethodInterface.cpp
+                    src/model/RepresentationInterface.cpp)
+
+SET(models          src/model/weighted_automata/WeightedAutomatonModel.cpp
+                    src/model/differential_equations/DifferentialEquationModel.cpp
+                    src/model/rewrite_systems/RewriteSystemModel.cpp
+                    src/model/conversions/DifferentialEquationRuleNetworkConversion.cpp
+                    src/model/conversions/WeightedAutomatonRuleNetworkConversion.cpp)
+
+SET(ui              src/ui/TextUserInterface.cpp
+                    src/ui/UserInterface.cpp)
+
+SET(utils           src/util/NotImplementedException.cpp
+                    src/util/FloatingPointCompare.h
+                    src/util/DefsConstants.h
+                    src/util/ParseUtils.h)
+
+
 ADD_EXECUTABLE(ssm src/main.cpp
-                   src/ui/TextUserInterface.cpp
-                   src/model/weighted_automata/WeightedAutomatonModel.cpp
-                   src/model/differential_equations/DifferentialEquationModel.cpp
-        src/util/NotImplementedException.cpp
-                   src/model/ModelInterface.cpp
-                   src/model/ConversionMethodInterface.cpp
-                   src/model/ReductionMethodInterface.cpp
-                   src/model/RepresentationInterface.cpp
-                   src/ui/UserInterface.cpp
-        src/model/weighted_automata/WeightedAutomatonBenchmarks.h src/util/FloatingPointCompare.h src/util/TypeDefs.h src/model/conversions/DifferentialEquationRuleNetworkConversion.cpp src/model/conversions/DifferentialEquationRuleNetworkConversion.h src/model/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/model/conversions/WeightedAutomatonRuleNetworkConversion.h src/model/rewrite_systems/RewriteSystem.cpp src/model/rewrite_systems/RewriteSystemModel.cpp src/model/rewrite_systems/RewriteSystemModel.h src/model/differential_equations/DifferentialEquation.cpp src/util/ParseUtils.h)
+                    ${interfaces}
+                    ${models}
+                    ${ui}
+                    ${utils})
+
 target_compile_definitions(ssm PUBLIC TEST=0)
 target_link_libraries(ssm  -lm -ldl -lspqr -lcholmod)
 # -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
@@ -64,19 +81,17 @@ target_link_libraries(ssm  -lm -ldl -lspqr -lcholmod)
 
 
 enable_testing()
-add_executable(tests src/test/TestsMain.cpp
-        src/test/CLITest.cpp
-        src/test/WATest.cpp
-        src/test/KieferSchuetzenbergerReductionTest.cpp
-        src/ui/TextUserInterface.cpp
-        src/model/weighted_automata/WeightedAutomatonModel.cpp
-        src/util/NotImplementedException.cpp
-        src/model/ModelInterface.cpp
-        src/model/ConversionMethodInterface.cpp
-        src/model/ReductionMethodInterface.cpp
-        src/model/RepresentationInterface.cpp
-        src/ui/UserInterface.cpp
-        src/test/TestUtils.h src/util/TypeDefs.h)
+
+SET(test_cases       src/test/CLITest.cpp
+                src/test/WATest.cpp
+                src/test/KieferSchuetzenbergerReductionTest.cpp)
+
+add_executable(tests    src/test/TestsMain.cpp
+                        ${test_cases}
+                        ${interfaces}
+                        ${models}
+                        ${ui}
+                        ${utils})
 target_link_libraries(tests Catch2::Catch2  -lspqr -lcholmod)
 # -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a
 #        ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl

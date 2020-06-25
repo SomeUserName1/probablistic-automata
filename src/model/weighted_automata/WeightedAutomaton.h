@@ -16,8 +16,8 @@
 #include <eigen3/Eigen/SPQRSupport>
 
 #include "../../ui/UserInterface.h"
+#include "../../util/DefsConstants.h"
 #include "../../util/FloatingPointCompare.h"
-#include "../../util/TypeDefs.h"
 #include "../RepresentationInterface.h"
 
 template <Matrix M> class WeightedAutomaton : public RepresentationInterface {
@@ -27,7 +27,6 @@ private:
   std::shared_ptr<M> alpha;
   std::vector<std::shared_ptr<M>> mu{};
   std::shared_ptr<M> eta;
-  size_t dense;
 
 public:
   WeightedAutomaton();
@@ -35,10 +34,9 @@ public:
   ~WeightedAutomaton() override;
   WeightedAutomaton(uint mStates, uint characters, std::shared_ptr<M> mAlpha,
                     std::vector<std::shared_ptr<M>> mMu,
-                    std::shared_ptr<M> mEta, size_t mDense)
+                    std::shared_ptr<M> mEta)
       : states(mStates), noInputCharacters(characters),
-        alpha(std::move(mAlpha)), mu(std::move(mMu)), eta(std::move(mEta)),
-        dense(mDense) {}
+        alpha(std::move(mAlpha)), mu(std::move(mMu)), eta(std::move(mEta)) {}
 
   [[nodiscard]] inline auto process_word(const std::vector<uint> &word) const
       -> double {
@@ -71,8 +69,6 @@ public:
   [[nodiscard]] inline auto get_eta() const -> const std::shared_ptr<M> & {
     return this->eta;
   }
-
-  [[nodiscard]] inline auto is_dense() const -> bool { return this->dense; }
 
   static auto create_subtraction_automaton(const WeightedAutomaton<M> &lhs,
                                            const WeightedAutomaton<M> &rhs)
@@ -128,7 +124,7 @@ public:
       subMu.push_back(muX);
     }
     return std::make_shared<WeightedAutomaton<M>>(
-        subStates, subCharacters, subAlpha, subMu, subEta, lhs.is_dense());
+        subStates, subCharacters, subAlpha, subMu, subEta);
   }
 
   static inline void set_block(long startX, long startY, uint length,
@@ -216,6 +212,7 @@ public:
                                      .eval())
                                     .sum(),
                                 0.0)) {
+      UserInterface::display_file("empty string", "off_by.txt");
       return false;
     }
 
@@ -254,6 +251,7 @@ public:
       }
       result = ((*sAlpha * v).eval()).sum();
       if (!floating_point_compare(result, 0.0)) {
+        UserInterface::display_file(std::to_string(result), "off_by.txt");
         return false;
       }
     }
@@ -261,8 +259,8 @@ public:
   }
 };
 
-template <Matrix M> WeightedAutomaton<M>::WeightedAutomaton() {}
+template <Matrix M> WeightedAutomaton<M>::WeightedAutomaton() = default;
 
-template <Matrix M> WeightedAutomaton<M>::~WeightedAutomaton() {}
+template <Matrix M> WeightedAutomaton<M>::~WeightedAutomaton() = default;
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_WEIGHTEDAUTOMATON_H

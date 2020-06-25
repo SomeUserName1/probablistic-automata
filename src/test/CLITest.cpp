@@ -67,7 +67,8 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
       THEN("The program executes without error, loading the input, processing "
            "and writing the output to file") {
         std::string line;
-        std::size_t pos = 0, prev = 0;
+        std::size_t pos = 0;
+        std::size_t prev = 0;
         pos = output.find('\n', 0);
         line = output.substr(prev, pos - prev);
         prev = pos + 1;
@@ -150,6 +151,8 @@ SCENARIO("The program can be called from the command line", "[CLI]") {
 
 SCENARIO("Equivalence") {
   GIVEN("The running example and a program reduced version") {
+    std::filesystem::remove_all("equi_test");
+    std::filesystem::create_directory("equi_test");
     std::vector<std::string> args = {"./ssm",
                                      "-t",
                                      "Reduction",
@@ -160,13 +163,13 @@ SCENARIO("Equivalence") {
                                      "-i",
                                      "../src/test/test_input_dense.txt",
                                      "-o",
-                                     "out_eq_test.txt"};
+                                     "equi_test/out_eq_test.txt"};
     execute("./ssm", args, "");
     WHEN("Using the output of the program ") {
-      std::string progOutput = UserInterface::read_file("out_eq_test.txt");
+      std::string progOutput = UserInterface::read_file("equi_test/out_eq_test.txt");
       std::string minimized = progOutput.substr(
           progOutput.find("After Reduction\n") + 16, progOutput.size());
-      UserInterface::display_file(minimized, "result.txt");
+      UserInterface::display_file(minimized, "equi_test/result.txt");
       THEN("It's equivalent to the original automaton") {
         args = {"./ssm",
                 "-t",
@@ -176,13 +179,14 @@ SCENARIO("Equivalence") {
                 "-i",
                 "../src/test/test_input_dense.txt",
                 "-c",
-                "result.txt",
+                "equi_test/result.txt",
                 "-o",
-                "out_result.txt"};
+                "equi_test/out_result.txt"};
         minimized = execute("./ssm", args, "");
-        progOutput = UserInterface::read_file("out_result.txt");
+        progOutput = UserInterface::read_file("equi_test/out_result.txt");
         std::string check("equivalent");
         std::cout << minimized << std::endl;
+        std::cout << progOutput << std::endl;
         REQUIRE(std::equal(progOutput.begin(), progOutput.end(), check.begin(),
                            [](auto a, auto b) { return a == b; }));
       }
