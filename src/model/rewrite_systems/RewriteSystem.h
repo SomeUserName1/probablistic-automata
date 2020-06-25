@@ -5,6 +5,7 @@
 #include "../../util/FloatingPointCompare.h"
 #include "../RepresentationInterface.h"
 #include <memory>
+#include <set>
 #include <utility>
 #include <vector>
 
@@ -14,19 +15,19 @@ public:
   class Rule;
 
 private:
-  unsigned int noCharacters;
+  std::vector<std::string> mapping;
   std::vector<std::shared_ptr<Rule>> rules;
 
 public:
   RewriteSystem() = default;
-  RewriteSystem(unsigned int mNoChars,
+  RewriteSystem(std::vector<std::string> mMapping,
                 std::vector<std::shared_ptr<Rule>> mRules)
-      : noCharacters(mNoChars), rules(std::move(mRules)) {}
+      : mapping(mMapping), rules(std::move(mRules)) {}
 
   ~RewriteSystem() override;
 
-  [[nodiscard]] auto get_no_characters() const noexcept -> unsigned int {
-    return this->noCharacters;
+  [[nodiscard]] auto get_mapping() const noexcept -> std::vector<std::string> {
+    return this->mapping;
   }
 
   [[nodiscard]] auto get_rules() const noexcept
@@ -36,10 +37,9 @@ public:
 
   [[nodiscard]] auto pretty_print() const -> std::string override {
     std::stringstream stringstream;
-    stringstream << "Alphabet:\n"
-                 << "\t (x0)";
-    for (uint i = 1; i < this->noCharacters; i++) {
-      stringstream << ", (x" << i << ")";
+    stringstream << "Alphabet:\n";
+    for (const auto &elem : mapping) {
+      stringstream << "\t " << elem << std::endl;
     }
     stringstream << "\n Rules:\n";
     for (const auto &rule : this->rules) {
@@ -54,7 +54,7 @@ public:
   equivalent(const std::shared_ptr<RepresentationInterface> &other) const
       -> bool override {
     auto oRewriteSystem = static_pointer_cast<RewriteSystem>(other);
-    if (this->noCharacters != oRewriteSystem->get_no_characters() ||
+    if (this->mapping.size() != oRewriteSystem->get_mapping().size() ||
         this->rules.size() != oRewriteSystem->get_rules().size()) {
       return false;
     }
@@ -75,25 +75,30 @@ public:
 
   class Term : public RepresentationInterface {
   private:
+    RewriteSystem &parent;
     unsigned int factor;
     std::vector<uint> word;
 
   public:
-    Term(uint mFactor, std::vector<uint> mWord)
-        : factor(mFactor), word(std::move(mWord)) {}
+    Term(RewriteSystem &mParent, uint mFactor, std::vector<uint> mWord)
+        : parent(mParent), factor(mFactor), word(std::move(mWord)) {}
     ~Term() override;
 
-    [[nodiscard]] auto get_factor() const -> int { return this->factor; }
+    [[nodiscard]] auto get_factor() const -> unsigned int {
+      return this->factor;
+    }
 
-    [[nodiscard]] get_word() const->std::vector<uint> { return this->word; }
+    [[nodiscard]] auto get_word() const -> std::vector<uint> {
+      return this->word;
+    }
 
     [[nodiscard]] auto pretty_print() const -> std::string override {
       std::stringstream stringstream;
       stringstream.precision(PRINT_PRECISION);
-      stringstream << fixed << this->factor << " ";
+      stringstream << std::fixed << this->factor << " ";
       for (size_t i = 0; i < word.size(); i++) {
         if (word[i] > 0) {
-          stringstream << "(x" << i << ")_" + word[i] + " ";
+          stringstream << parent.mapping[i] << "_" << word[i] << " ";
         }
       }
       return stringstream.str();
@@ -103,11 +108,11 @@ public:
     equivalent(const std::shared_ptr<RepresentationInterface> &other) const
         -> bool override {
       auto oTerm = static_pointer_cast<Term>(other);
-      if (!floating_point_compare(this->factor - oTerm->get_factor(), 0.0) ||
-          this->word.size() != oTerm->get_word.size()) {
+      if (this->factor != oTerm->get_factor() ||
+          this->word.size() != oTerm->get_word().size()) {
         return false;
       }
-      for (int i = 0; i < word.size(); i++) {
+      for (size_t i = 0; i < word.size(); i++) {
         if (word[i] != oTerm->get_word()[i]) {
           return false;
         }
@@ -118,32 +123,33 @@ public:
 
   class Rule : public RepresentationInterface {
   private:
+    RewriteSystem &parent;
     double rate;
-    double mcoeff;
+    unsigned long long int mcoeff;
     std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
     std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
 
   public:
-    Rule(double mRate, std::vector<std::shared_ptr<RewriteSystem::Term>> mLhs,
+    Rule(RewriteSystem &mParent, double mRate,
+         std::vector<std::shared_ptr<RewriteSystem::Term>> mLhs,
          std::vector<std::shared_ptr<RewriteSystem::Term>> mRhs)
-        : rate(mRate), mcoeff(std::nan), lhs(std::move(mLhs)),
-          rhs(std::move(mRhs)) {
-    }
+        : parent(mParent), rate(mRate), mcoeff(0), lhs(std::move(mLhs)),
+          rhs(std::move(mRhs)) {}
     ~Rule() override;
 
     [[nodiscard]] auto get_rate() const -> double { return this->rate; }
 
-    [[nodiscard]] auto get_mcoeff() const->double {
-      if (this->mcoeff == std::nan) {
-        throw std::logic_error("Initialize the mcoef first!");
+    [[nodiscard]] auto get_mcoeff() -> unsigned long long int {
+      if (this->mcoeff == 0) {
+        this->set_mcoeff();
       }
       return this->mcoeff;
     }
 
-    [[nodiscard]] void set_mcoeff(double multCoeff) {
+    void set_mcoeff() {
       unsigned int upper = 0;
       unsigned long long int lower = 1;
-      for (const auto& term : this->lhs) {
+      for (const auto &term : this->lhs) {
         upper += term->get_factor();
         lower *= FACTORIALS[term->get_factor()];
       }
@@ -164,18 +170,18 @@ public:
       std::stringstream stringstream;
       stringstream.precision(PRINT_PRECISION);
 
-      stringstream << *(lhs[0]);
+      stringstream << lhs[0]->pretty_print();
       for (size_t i = 1; i < lhs.size(); i++) {
-        stringstream << " + " << *(lhs[i]);
+        stringstream << " + " << lhs[i]->pretty_print();
       }
 
-      stringstream << "-- " << fixed << rate << " -->";
+      stringstream << "->";
 
-      stringstream << *(rhs[0]);
+      stringstream << rhs[0]->pretty_print();
       for (size_t i = 1; i < rhs.size(); i++) {
-        stringstream << " + " << *(rhs[i]);
+        stringstream << " + " << rhs[i]->pretty_print();
       }
-      stringstream << std::endl;
+      stringstream << "\t, " << std::fixed << rate << std::endl;
       return stringstream.str();
     }
 
@@ -188,15 +194,15 @@ public:
       if (oRule == nullptr) {
         return false;
       }
-      if (!floating_point_compare(this->rate - other->get_rate(), 0.0) ||
-          this->lhs.size() != other->get_lhs().size() ||
-          this->rhs.size() != other->get_rhs().size()) {
+      if (!floating_point_compare(this->rate - oRule->get_rate(), 0.0) ||
+          this->lhs.size() != oRule->get_lhs().size() ||
+          this->rhs.size() != oRule->get_rhs().size()) {
         return false;
       }
       bool found = false;
       for (const auto &term : this->lhs) {
         found = false;
-        for (const auto &oTerm : other->get_lhs()) {
+        for (const auto &oTerm : oRule->get_lhs()) {
           if ((*term).equivalent(oTerm)) {
             found = true;
           }
@@ -207,7 +213,7 @@ public:
       }
       for (const auto &term : this->rhs) {
         found = false;
-        for (const auto &oTerm : other->get_rhs()) {
+        for (const auto &oTerm : oRule->get_rhs()) {
           if ((*term).equivalent(oTerm)) {
             found = true;
           }

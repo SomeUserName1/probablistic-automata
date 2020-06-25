@@ -84,7 +84,7 @@ enable_testing()
 
 SET(test_cases       src/test/CLITest.cpp
                 src/test/WATest.cpp
-                src/test/KieferSchuetzenbergerReductionTest.cpp)
+                src/test/KieferSchuetzenbergerReductionTest.cpp src/test/RSTest.cpp)
 
 add_executable(tests    src/test/TestsMain.cpp
                         ${test_cases}

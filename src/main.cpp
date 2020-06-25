@@ -6,6 +6,7 @@
 
 #include "model/differential_equations/DifferentialEquationModel.h"
 #include "model/weighted_automata/WeightedAutomatonModel.h"
+#include "model/rewrite_systems/RewriteSystemModel.h"
 #include "ui/TextUserInterface.h"
 
 #ifndef THREADS
@@ -98,13 +99,19 @@ auto main(int argc, char *argv[]) -> int {
         model = std::make_shared<WeightedAutomatonModel>();
       } else if (iequals(modelStr, "DE") ||
                  iequals(modelStr, "DifferentialEquationModel") ||
-                 iequals(modelStr, "Differential Equation")) {
+                 iequals(modelStr, "DifferentialEquation")) {
+        model = std::make_shared<DifferentialEquationModel>();
+      } else if (iequals(modelStr, "RS") ||
+                 iequals(modelStr, "RewritingSystemModel") ||
+                 iequals(modelStr, "RewritingSystem")) {
         model = std::make_shared<DifferentialEquationModel>();
       } else {
-        std::cerr << "Specify either 'WA', 'DE', 'WeightedAutomatonModel', "
-                  << "'DifferentialEquationModel', 'WeightedAutomaton' or "
-                  << "'DifferentialEquation'"
-                  << " as model, you specified " + modelStr << std::endl;
+        std::cerr
+            << "Specify either 'WA', 'DE', 'RS', 'WeightedAutomatonModel', "
+            << "'DifferentialEquationModel', 'RewritingSystemMode', "
+            << "'WeightedAutomaton', "
+            << "'DifferentialEquation' or 'RewritingSystem'"
+            << " as model, you specified " + modelStr << std::endl;
         exit(-1);
       }
 
@@ -145,7 +152,8 @@ auto main(int argc, char *argv[]) -> int {
       case UserInterface::Reduction: {
         std::vector<std::shared_ptr<ModelInterface>> models = {
             std::make_shared<WeightedAutomatonModel>(),
-            std::make_shared<DifferentialEquationModel>()};
+            std::make_shared<DifferentialEquationModel>(),
+            std::make_shared<RewriteSystemModel>()};
         model = ui->select_model(models);
         reductionMethod = ui->select_reduction_method(model);
         inputMethod = ui->select_io_method(true);
