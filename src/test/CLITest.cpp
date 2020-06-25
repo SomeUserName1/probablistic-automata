@@ -245,6 +245,9 @@ static auto execute(const std::string &cmd, std::vector<std::string> args,
 
     close(stdinPipe[PIPE_WRITE]);
     close(stdoutPipe[PIPE_READ]);
+
+    int returnStatus = -1;
+    waitpid(pid, &returnStatus, 0);
   } else {
     close(stdinPipe[PIPE_READ]);
     close(stdinPipe[PIPE_WRITE]);

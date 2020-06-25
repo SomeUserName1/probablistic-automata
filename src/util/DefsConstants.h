@@ -5,7 +5,7 @@
 #include <iostream>
 #include <memory>
 const uint DEFAULT_RANDOM_RANGE_FACTOR = 10;
-const uint PRINT_PRECISION = 4;
+const uint PRINT_PRECISION = 8;
 const std::array<unsigned long long int, 21> FACTORIALS = {
     1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362800, 3628800,
     39916800, 479001600,  6227020800, 87178291200, 1307674368000,

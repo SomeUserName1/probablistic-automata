@@ -247,7 +247,6 @@ SCENARIO("The forward and backward reductions are calculated correctly as "
   }
 }
 
-
 SCENARIO("When executing the full reduction") {
   GIVEN("an initial automaton and the random vectors") {
     auto A = gen_wa_dense();
@@ -285,6 +284,25 @@ SCENARIO("When executing the full reduction") {
         auto trueEta = Eigen::MatrixXd(3, 1);
         trueEta << 1, 0, 0;
         REQUIRE((minWA->get_eta())->isApprox(trueEta));
+      }
+    }
+  }
+}
+
+SCENARIO("The reduced automaton accepts the same words with the same weights") {
+  GIVEN("The running example") {
+    auto wa = gen_wa_sparse();
+    WHEN("Reducing it using KieferSchuetzenberger") {
+      auto reducedRI = KieferSchuetzenbergerReduction<MatSpD>::reduce(wa, 100, false);
+      auto reducedWA = static_pointer_cast<WeightedAutomaton<MatSpD>>(reducedRI);
+      std::vector<std::vector<unsigned int>> words;
+      generate_words(wa->get_states(), wa->get_number_input_characters(),
+                     words);
+      THEN("Evaluating different words yields the same result") {
+        for (const auto &word : words) {
+          REQUIRE(floating_point_compare(
+              wa->process_word(word) - reducedWA->process_word(word), 0.0));
+        }
       }
     }
   }

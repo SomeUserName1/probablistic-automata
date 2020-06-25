@@ -212,23 +212,21 @@ auto main(int argc, char *argv[]) -> int {
       } else if (outputMethod == UserInterface::IOMethod::Display) {
         ui->display(summary);
       }
-      const auto *const result = reduced_representation->equivalent(representation)
-                           ? "equivalent"
-                           : "not equivalent";
-      std::cout << "Finished Equivalence check: " << result << std::endl;
+      const bool result = representation->equivalent(reduced_representation);
+      const std::string resStr = result ? "equivalent" : "not equivalent";
+      std::cout << "Finished Equivalence check: " << resStr << std::endl;
       break;
     }
     case UserInterface::Equivalence: {
       auto representation0 = model->parse(input);
       auto representation1 = model->parse(input1);
-      const auto *result = representation0->equivalent(representation1)
-                               ? "equivalent"
-                               : "not equivalent";
-      std::cout << "Finished Equivalence check: " << result << std::endl;
+      const bool result = representation0->equivalent(representation1);
+      const std::string resStr = result ? "equivalent" : "not equivalent";
+      std::cout << "Finished Equivalence check: " << resStr << std::endl;
       if (outputMethod == UserInterface::IOMethod::File) {
-        ui->display_file(result, outputDestination);
+        ui->display_file(resStr, outputDestination);
       } else if (outputMethod == UserInterface::IOMethod::Display) {
-        ui->display(result);
+        ui->display(resStr);
       }
       break;
     }

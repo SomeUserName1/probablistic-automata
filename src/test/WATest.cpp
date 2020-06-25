@@ -57,11 +57,11 @@ SCENARIO("Subtraction Automaton is constructed") {
       wa2 = gen_wa_dense();
       auto subtractionAutomaton =
           WeightedAutomaton<MatDenD>::create_subtraction_automaton(*wa1, *wa2);
-      // TODO powerset of words up to k as function
-      std::vector<std::vector<uint>> words = {
-          {0},       {1},       {0, 0},    {0, 1},    {1, 0},
-          {1, 1},    {0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1},
-          {1, 0, 0}, {1, 0, 1}, {1, 1, 0}, {1, 1, 1}};
+
+      std::vector<std::vector<uint>> words = {};
+      generate_words(subtractionAutomaton->get_states(),
+                     subtractionAutomaton->get_number_input_characters(),
+                     words);
       THEN("The weight of example words is 0 in the subtraction automaton") {
         for (const auto &word : words) {
           REQUIRE(floating_point_compare(
@@ -126,9 +126,7 @@ SCENARIO("The equivalence of automata is tested") {
     std::shared_ptr<WeightedAutomaton<MatDenD>> wa2;
     WHEN("A and B are the exact same automata") {
       wa2 = gen_wa_dense();
-      THEN("They are equal") {
-        REQUIRE(wa1->equivalent(wa2));
-         }
+      THEN("They are equal") { REQUIRE(wa1->equivalent(wa2)); }
     }
     WHEN("The automata have differing numbers of input characters") {
       int states = 4;
@@ -166,9 +164,7 @@ SCENARIO("The equivalence of automata is tested") {
       std::vector<MatDenDPtr> mu = {mu1, mu2};
       wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
                                                          alpha, mu, eta);
-      THEN("They are equivalent") {
-        REQUIRE(wa1->equivalent(wa2));
-     }
+      THEN("They are equivalent") { REQUIRE(wa1->equivalent(wa2)); }
     }
     WHEN("The Automata differ in semantics") {
       int states = 3;
@@ -187,12 +183,6 @@ SCENARIO("The equivalence of automata is tested") {
       THEN("They are not equivalent") {
         REQUIRE(!wa1->equivalent(wa2));
       }
-    }
-    WHEN("A minimized automaton is compared with the base case") {
-      wa2 = gen_wa_min_dense();
-      THEN("They're equivalent") {
-        REQUIRE(wa1->equivalent(wa2));
-        }
     }
   }
 }

@@ -14,23 +14,6 @@ static inline auto convert_N_M(const N &mat) -> std::shared_ptr<M> {
   return result;
 }
 
-static inline auto gen_wa_min_dense()
--> std::shared_ptr<WeightedAutomaton<MatDenD>> {
-    uint states = 3;
-    uint characters = 2;
-    MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
-    *alpha << 0,  800, 3600;
-    MatDenDPtr eta = std::make_shared<MatDenD>(states, 1);
-    *eta << 1, 0, 0;
-    MatDenDPtr mu1 = std::make_shared<MatDenD>(states, states);
-    *mu1 << -1.54231e-31,  -6.2105e-16, -8.33515e-16, -1.49588e-17, -0.06, -0.08, 1.12191e-17, 0.045, 0.06;
-    MatDenDPtr mu2 = std::make_shared<MatDenD>(states, states);
-    *mu2 << 1.63434e-17,  1.94083e-16,  2.59748e-16, 0.0249307, -3.27224e-16, -8.22317e-17, -0.00554017,  7.27164e-17,  1.82737e-17;
-    std::vector<MatDenDPtr> mu = {mu1, mu2};
-    return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters, alpha,
-                                                        mu, eta);
-}
-
 static inline auto gen_wa_dense()
     -> std::shared_ptr<WeightedAutomaton<MatDenD>> {
   uint states = 4;
@@ -49,7 +32,7 @@ static inline auto gen_wa_dense()
 }
 
 static inline auto gen_wa_hand_min_dense()
--> std::shared_ptr<WeightedAutomaton<MatDenD>> {
+    -> std::shared_ptr<WeightedAutomaton<MatDenD>> {
   uint states = 3;
   uint characters = 2;
   MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
@@ -110,5 +93,28 @@ static inline auto gen_fixed_rand_v3() -> std::vector<MatSpDPtr> {
   return {convert_N_M<MatSpD, MatDenD>(mat1),
           convert_N_M<MatSpD, MatDenD>(mat2),
           convert_N_M<MatSpD, MatDenD>(mat3)};
+}
+
+static inline auto
+generate_words(unsigned int n, unsigned int chars,
+               std::vector<std::vector<unsigned int>> &result) -> void {
+  if (n == 1) {
+    for (unsigned int j = 0; j < chars; j++) {
+      result.push_back({j});
+    }
+  } else {
+    generate_words(n - 1, chars, result);
+    std::vector<std::vector<unsigned int>> iteratorCopy(result);
+
+    for (const auto &word : iteratorCopy) {
+      if (word.size() == n - 1) {
+        for (unsigned int j = 0; j < chars; j++) {
+          std::vector<unsigned int> temp(word);
+          temp.push_back(j);
+          result.push_back(temp);
+        }
+      }
+    }
+  }
 }
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_TESTUTILS_H

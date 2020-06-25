@@ -157,29 +157,18 @@ public:
         shared(result, sigmaK, randomVectors, resultMutex, WA)
     for (size_t j = 0; j < randomVectors.size(); j++) {
       vI = MatSpD(WA->get_states(), 1);
+      MatSpD balancer = MatSpD(WA->get_states(), 1);
+      MatSpD y = MatSpD(WA->get_states(), 1);
+      MatSpD t = MatSpD(WA->get_states(), 1);
 
-      std::vector<double> sums;
-      std::vector<double> balancers;
-      std::vector<double> ys;
-      std::vector<double> ts;
-
-      for (int l = 0; l < vI.rows(); l++) {
-        sums.push_back(0.0);
-        balancers.push_back(0.0);
-        ys.push_back(0.0);
-        ts.push_back(0.0);
-      }
       for (auto &i : sigmaK) {
         temp = (*std::get<0>(i) *
                 get_word_factor(std::get<1>(i), randomVectors[j]))
                    .eval();
-        for (size_t k = 0; k < sums.size(); k++) {
-          ys[k] = temp.coeffRef(static_cast<long>(k), 0) - balancers[k];
-          ts[k] = sums[k] + ys[k];
-          balancers[k] = (ts[k] - sums[k]) - ys[k];
-          sums[k] = ts[k];
-          vI.coeffRef(static_cast<long>(k), 0) = sums[k];
-        }
+        y = temp - balancer;
+        t = vI + y;
+        balancer = (t - vI) - y;
+        vI = t;
       }
       std::lock_guard<std::mutex> guard(resultMutex);
       result.push_back(std::make_shared<MatSpD>(vI));
@@ -203,33 +192,18 @@ public:
         shared(result, sigmaK, randomVectors, WA, resultMutex, std::cout)
     for (size_t j = 0; j < randomVectors.size(); j++) {
       vI = MatSpD(1, WA->get_states());
-
-      std::vector<double> sums;
-      std::vector<double> balancers;
-      std::vector<double> ys;
-      std::vector<double> ts;
-
-      for (int l = 0; l < vI.cols(); l++) {
-        sums.push_back(0.0);
-        balancers.push_back(0.0);
-        ys.push_back(0.0);
-        ts.push_back(0.0);
-      }
+      MatSpD balancer = MatSpD(1, WA->get_states());
+      MatSpD y = MatSpD(1, WA->get_states());
+      MatSpD t = MatSpD(1, WA->get_states());
 
       for (auto &i : sigmaK) {
-        // vI += (*std::get<0>(sigmaK[i]) *
-        //       get_word_factor(std::get<1>(sigmaK[i]), randomVectors[j]))
-        //          .eval();
         temp = (*std::get<0>(i) *
                 get_word_factor(std::get<1>(i), randomVectors[j]))
                    .eval();
-        for (size_t k = 0; k < sums.size(); k++) {
-          ys[k] = temp.coeffRef(0, static_cast<long>(k)) - balancers[k];
-          ts[k] = sums[k] + ys[k];
-          balancers[k] = (ts[k] - sums[k]) - ys[k];
-          sums[k] = ts[k];
-          vI.coeffRef(0, static_cast<long>(k)) = sums[k];
-        }
+        y = temp - balancer;
+        t = vI + y;
+        balancer = (t - vI) - y;
+        vI = t;
       }
       std::lock_guard<std::mutex> guard(resultMutex);
       result.push_back(std::make_shared<MatSpD>(vI));

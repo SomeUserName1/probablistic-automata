@@ -123,8 +123,8 @@ public:
       std::lock_guard<std::mutex> guard(subMuMutex);
       subMu.push_back(muX);
     }
-    return std::make_shared<WeightedAutomaton<M>>(
-        subStates, subCharacters, subAlpha, subMu, subEta);
+    return std::make_shared<WeightedAutomaton<M>>(subStates, subCharacters,
+                                                  subAlpha, subMu, subEta);
   }
 
   static inline void set_block(long startX, long startY, uint length,
@@ -141,7 +141,7 @@ public:
   [[nodiscard]] inline auto pretty_print() const -> std::string override {
     std::stringstream result;
     size_t i = 0;
-    Eigen::IOFormat fmt(Eigen::StreamPrecision, 0, ", ", ",\n\t", "(", ")", "(",
+    Eigen::IOFormat fmt(16, 0, ", ", ",\n\t", "(", ")", "(",
                         ")");
     result << "input=dense;\n"
            << "states=" << this->states
@@ -218,40 +218,41 @@ public:
 
     std::vector<MatSpDPtr> randomVectors =
         generate_random_vectors(subtractionAutomaton, K);
-    M v = *(subtractionAutomaton->get_eta());
-    std::vector<double> sums;
-    std::vector<double> balancers;
-    std::vector<double> ys;
-    std::vector<double> ts;
 
-    for (int l = 0; l < v.rows(); l++) {
-      sums.push_back(0.0);
-      balancers.push_back(0.0);
-      ys.push_back(0.0);
-      ts.push_back(0.0);
-    }
+    M v = *(subtractionAutomaton->get_eta());
 
     std::vector<std::shared_ptr<M>> sMu = subtractionAutomaton->get_mu();
     std::shared_ptr<M> sAlpha = subtractionAutomaton->get_alpha();
     M temp;
     double result = 0.0;
 
+    MatSpD sum = MatSpD(v.rows(), 1);
+    MatSpD balancer = MatSpD(v.rows(), 1);
+    MatSpD y = MatSpD(v.rows(), 1);
+    MatSpD t = MatSpD(v.rows(), 1);
+
     for (size_t i = 0; i < subtractionAutomaton->get_states(); i++) {
       for (uint j = 0; j < sMu.size(); j++) {
-        temp =
-            ((randomVectors[i])->coeff(0, j) * (*(sMu[j]) * v).eval()).eval();
-
-        for (size_t k = 0; k < sums.size(); k++) {
-          ys[k] = temp.coeffRef(static_cast<long>(k), 0) - balancers[k];
-          ts[k] = sums[k] + ys[k];
-          balancers[k] = (ts[k] - sums[k]) - ys[k];
-          sums[k] = ts[k];
-          v.coeffRef(static_cast<long>(k), 0) = sums[k];
-        }
+        temp = (*(sMu[j]) * v).eval();
+        y = temp - balancer;
+        t = sum + y;
+        balancer = (t - sum) - y;
+        sum = t;
       }
+      v = sum;
+      balancer.setZero();
+      sum.setZero();
+      y.setZero();
+      t.setZero();
+
       result = ((*sAlpha * v).eval()).sum();
       if (!floating_point_compare(result, 0.0)) {
-        UserInterface::display_file(std::to_string(result), "off_by.txt");
+        std::stringstream debugInfo;
+        debugInfo << result << "\n ############# \n"
+                  << MatDenD(*(sAlpha)) << "\n ###### \n"
+                  << MatDenD(v) << "\n ### \n"
+                  << MatDenD((*sAlpha * v).eval());
+        UserInterface::display_file(debugInfo.str(), "off_by.txt");
         return false;
       }
     }
