@@ -133,3 +133,7 @@ cmake-build-debug
 *.prj
 
 include/
+.clangd/
+.idea/
+statistics*
+compile_commands.json

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/include/LLOV" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/include/SuiteSparse" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/include/eigen" vcs="Git" />
-  </component>
-</project>
