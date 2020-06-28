@@ -48,16 +48,17 @@ add_compile_definitions(THREADS=${N}/2)
 
 
 
-SET(interfaces      src/model/ModelInterface.cpp
-                    src/model/ConversionMethodInterface.cpp
-                    src/model/ReductionMethodInterface.cpp
-                    src/model/RepresentationInterface.cpp)
+SET(interfaces src/models/ModelInterface.cpp
+        src/models/ConversionMethodInterface.cpp
+        src/models/ReductionMethodInterface.cpp
+        src/models/RepresentationInterface.cpp)
 
-SET(models          src/model/weighted_automata/WeightedAutomatonModel.cpp
-                    src/model/differential_equations/DifferentialEquationModel.cpp
-                    src/model/rewrite_systems/RewriteSystemModel.cpp
-                    src/model/conversions/DifferentialEquationRuleNetworkConversion.cpp
-                    src/model/conversions/WeightedAutomatonRuleNetworkConversion.cpp)
+SET(models src/models/weighted_automata/WeightedAutomatonModel.cpp
+        src/models/differential_equations/DifferentialEquationModel.cpp
+        src/models/rewrite_systems/RewriteSystemModel.cpp
+        src/models/rewrite_systems/RewriteSystem.cpp
+        src/models/conversions/DifferentialEquationRuleNetworkConversion.cpp
+        src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp)
 
 SET(ui              src/ui/TextUserInterface.cpp
                     src/ui/UserInterface.cpp)

@@ -1,7 +1,7 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_TESTUTILS_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_TESTUTILS_H
 
-#include "../model/weighted_automata/WeightedAutomatonModel.h"
+#include "../models/weighted_automata/WeightedAutomatonModel.h"
 
 template <typename M, typename N>
 static inline auto convert_N_M(const N &mat) -> std::shared_ptr<M> {

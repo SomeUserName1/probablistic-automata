@@ -4,16 +4,16 @@
 #include <omp.h>
 #include <tclap/CmdLine.h>
 
-#include "model/differential_equations/DifferentialEquationModel.h"
-#include "model/weighted_automata/WeightedAutomatonModel.h"
-#include "model/rewrite_systems/RewriteSystemModel.h"
+#include "models/differential_equations/DifferentialEquationModel.h"
+#include "models/weighted_automata/WeightedAutomatonModel.h"
+#include "models/rewrite_systems/RewriteSystemModel.h"
 #include "ui/TextUserInterface.h"
 
 #ifndef THREADS
 #define THREADS 1
 #endif
 
-static auto iequals(const std::string &str1, const std::string &str2) -> bool;
+//static auto iequals(const std::string &str1, const std::string &str2) -> bool;
 
 static auto iequals(const std::string &str1, const std::string &str2) -> bool {
   return str1.size() == str2.size() &&
@@ -48,7 +48,7 @@ auto main(int argc, char *argv[]) -> int {
 
     TCLAP::ValueArg<std::string> taskArg("t", "task", "Task to execute", false,
                                          "", "string");
-    TCLAP::ValueArg<std::string> modelArg("m", "model", "model to use", false,
+    TCLAP::ValueArg<std::string> modelArg("m", "models", "models to use", false,
                                           "", "string");
     TCLAP::ValueArg<std::string> methodArg(
         "r", "reduction", "reduction method to apply", false, "", "string");
@@ -111,7 +111,7 @@ auto main(int argc, char *argv[]) -> int {
             << "'DifferentialEquationModel', 'RewritingSystemMode', "
             << "'WeightedAutomaton', "
             << "'DifferentialEquation' or 'RewritingSystem'"
-            << " as model, you specified " + modelStr << std::endl;
+            << " as models, you specified " + modelStr << std::endl;
         exit(-1);
       }
 
@@ -129,7 +129,7 @@ auto main(int argc, char *argv[]) -> int {
       outputMethod = UserInterface::IOMethod::File;
 
       if (task == UserInterface::Reduction && !methodStr.empty()) {
-        // currently only two methods are supported, one per model so ignore
+        // currently only two methods are supported, one per models so ignore
         // what the user says and just use it Intentionally bad design,
         // sufficient for now
         reductionMethod = 0;

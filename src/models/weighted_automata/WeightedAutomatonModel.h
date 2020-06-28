@@ -84,7 +84,7 @@ public:
     MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
     line = line.substr(line.find('=') + 1, line.size());
     for (int i = 0; i < states; i++) {
-      alpha->coeffRef(0, i) = extract_one_digit<double>(line);
+      alpha->coeffRef(0, i) = extract_number<double>(line);
     }
 
     // fetch next line
@@ -103,7 +103,7 @@ public:
       muX = std::make_shared<MatDenD>(states, states);
       for (int i = 0; i < states; i++) {
         for (int j = 0; j < states; j++) {
-          muX->coeffRef(i, j) = extract_one_digit<double>(line);
+          muX->coeffRef(i, j) = extract_number<double>(line);
         }
       }
       mu.push_back(muX);
@@ -124,7 +124,7 @@ public:
     MatDenDPtr eta = std::make_shared<MatDenD>(states, 1);
     line = line.substr(line.find('=') + 1, line.size());
     for (int i = 0; i < states; i++) {
-      eta->coeffRef(i, 0) = extract_one_digit<double>(line);
+      eta->coeffRef(i, 0) = extract_number<double>(line);
     }
     std::cout << "Parsed Automaton successfully" << std::endl;
     return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
@@ -174,8 +174,8 @@ public:
     auto alpha =
         std::make_shared<MatSpD>(1, states);
     line = line.substr(line.find(':') + 1, line.size());
-    b = extract_one_digit<uint>(line);
-    d = extract_one_digit<double>(line);
+    b = extract_number<uint>(line);
+    d = extract_number<double>(line);
     alpha->coeffRef(0, b) = d;
 
     // fetch next line
@@ -194,10 +194,10 @@ public:
     }
 
     do {
-      a = extract_one_digit<size_t>(line);
-      b = extract_one_digit<long>(line);
-      c = extract_one_digit<long>(line);
-      d = extract_one_digit<double>(line);
+      a = extract_number<size_t>(line);
+      b = extract_number<long>(line);
+      c = extract_number<long>(line);
+      d = extract_number<double>(line);
       mu[a]->coeffRef(b, c) = d;
 
       // fetch next line
@@ -210,8 +210,8 @@ public:
     auto eta =
         std::make_shared<MatSpD>(states, 1);
     line = line.substr(line.find(':') + 1, line.size());
-    b = extract_one_digit<uint>(line);
-    d = extract_one_digit<double>(line);
+    b = extract_number<uint>(line);
+    d = extract_number<double>(line);
     eta->coeffRef(b, 0) = d;
     std::cout << "Parsed Automaton successfully" << std::endl;
 

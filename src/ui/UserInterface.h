@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "../model/ModelInterface.h"
+#include "../models/ModelInterface.h"
 
 class UserInterface {
 public:

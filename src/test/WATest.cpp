@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "../model/weighted_automata/WeightedAutomaton.h"
+#include "../models/weighted_automata/WeightedAutomaton.h"
 #include "../util/FloatingPointCompare.h"
 #include "TestUtils.h"
 

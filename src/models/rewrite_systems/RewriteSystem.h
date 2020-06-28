@@ -76,12 +76,13 @@ public:
   class Term : public RepresentationInterface {
   private:
     RewriteSystem &parent;
-    unsigned int factor;
     std::vector<uint> word;
+    unsigned long int factor;
 
   public:
-    Term(RewriteSystem &mParent, uint mFactor, std::vector<uint> mWord)
-        : parent(mParent), factor(mFactor), word(std::move(mWord)) {}
+    Term(RewriteSystem &mParent, std::vector<uint> mWord,
+         unsigned long int mFactor)
+        : parent(mParent), word(std::move(mWord)), factor(mFactor) {}
     ~Term() override;
 
     [[nodiscard]] auto get_factor() const -> unsigned int {

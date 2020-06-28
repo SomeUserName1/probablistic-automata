@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include "../ui/UserInterface.h"
-#include "../model/rewrite_systems/RewriteSystemModel.h"
+#include "../models/rewrite_systems/RewriteSystemModel.h"
 #include "../util/ParseUtils.h"
 
 SCENARIO("Test Parsing") {

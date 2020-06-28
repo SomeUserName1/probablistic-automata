@@ -8,10 +8,10 @@ UserInterface::Task TextUserInterface::select_task() const {
             << " or differential equations." << std::endl
             << "What do you want to do?" << std::endl
             << "\t\t 1. Reduce an example" << std::endl
-            << "\t\t 2. Check if two instances of the same model are equivalent"
+            << "\t\t 2. Check if two instances of the same models are equivalent"
             << std::endl
             << "\t\t 3. Perform a benchmark" << std::endl
-            << "\t\t 4. Convert an example from one model to another"
+            << "\t\t 4. Convert an example from one models to another"
             << std::endl
             << "\t\t 5. to exit" << std::endl;
 
@@ -33,7 +33,7 @@ UserInterface::Task TextUserInterface::select_task() const {
 
 std::shared_ptr<ModelInterface> TextUserInterface::select_model(
     const std::vector<std::shared_ptr<ModelInterface>> &availableModels) const {
-  std::cout << "Choose a model" << std::endl;
+  std::cout << "Choose a models" << std::endl;
   uint i = 0;
   for (const auto &mModel : availableModels) {
     std::cout << "\t\t" << i << ". " << mModel->get_name() << std::endl;

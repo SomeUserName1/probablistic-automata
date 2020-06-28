@@ -3,7 +3,7 @@
 #include <sstream>
 #include <vector>
 
-#include "../model/weighted_automata/WeightedAutomatonModel.h"
+#include "../models/weighted_automata/WeightedAutomatonModel.h"
 #include "../util/FloatingPointCompare.h"
 #include "TestUtils.h"
 
