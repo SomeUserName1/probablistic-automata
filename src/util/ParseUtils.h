@@ -29,20 +29,27 @@ inline static auto get_next_line(std::string &str, const char *delim,
 }
 
 template <Arithmetic T>
-static inline auto extract_one_digit(std::string &vector) -> T {
+static inline auto extract_number(std::string &vector) -> T {
   bool prevDigit = false;
   size_t firstDigit = 0;
   for (size_t i = 0; i < vector.size(); i++) {
-    if ((std::isdigit(static_cast<unsigned char>(vector[i])) || vector[i] == '-' || vector[i] == '+' ||
-         vector[i] == '.') &&
+    if ((std::isdigit(static_cast<unsigned char>(vector[i])) ||
+         vector[i] == '-' || vector[i] == '+' || vector[i] == '.') &&
         !prevDigit) {
       prevDigit = true;
       firstDigit = i;
-    } else if (!(std::isdigit(static_cast<unsigned char>(vector[i])) || vector[i] == 'e' ||
-                 vector[i] == '-' || vector[i] == '+' || vector[i] == '.') &&
+    } else if (!(std::isdigit(static_cast<unsigned char>(vector[i])) ||
+                 vector[i] == 'e' || vector[i] == '-' || vector[i] == '+' ||
+                 vector[i] == '.') &&
                prevDigit) {
-      T result = static_cast<T>(std::stod(vector.substr(firstDigit, i - firstDigit)));
+      T result =
+          static_cast<T>(std::stod(vector.substr(firstDigit, i - firstDigit)));
       vector.erase(0, i);
+      return result;
+    } else if (vector.size() - 1 == i && prevDigit) {
+      T result = static_cast<T>(
+          std::stod(vector.substr(firstDigit, i - firstDigit + 1)));
+      vector.erase(0, i + 1);
       return result;
     }
   }
@@ -52,23 +59,25 @@ static inline auto extract_one_digit(std::string &vector) -> T {
 static inline auto extract_entity_name(std::string &line) -> std::string {
   bool prevCapital = false;
   size_t capital = 0;
-  for (size_t i = 0; i < line.size(); i++) {
 
-    if ((std::isupper(static_cast<unsigned char>(line[i])) != 0) && !prevCapital) {
+  for (size_t i = 0; i < line.size(); i++) {
+    if ((std::isupper(static_cast<unsigned char>(line[i])) != 0) &&
+        !prevCapital) {
       prevCapital = true;
       capital = i;
-    } else if ((std::islower(static_cast<unsigned char>(line[i])) == 0) && prevCapital) {
+    } else if (((std::islower(static_cast<unsigned char>(line[i])) == 0)) &&
+               prevCapital) {
       std::string result = line.substr(capital, i - capital);
-      std::cout << "before " << line << std::endl;
       line.erase(0, i);
-      std::cout << "after " << line << std::endl;
+      return result;
+    } else if (line.size() - 1 == i && prevCapital) {
+      std::string result = line.substr(capital, i - capital + 1);
+      line.erase(0, i + 1);
       return result;
     }
   }
 
-  std::cout << "mad before " << line << std::endl;
   line.erase(0, line.size());
-  std::cout << "mad after " << line << std::endl;
   return "";
 }
 
