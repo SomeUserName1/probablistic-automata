@@ -7,9 +7,9 @@ SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 # SET(CMAKE_CXX_COMPILER "../include/LLOV/bin/clang++")
 SET(CMAKE_CXX_STANDARD 20)
 #SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include -Xclang -disable-O0-optnone -Xclang -load \
-# -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so")
+# -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so") -fsanitize=undefined,address
 SET(CMAKE_CXX_FLAGS "-fprofile-instr-generate -fcoverage-mapping -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include \
-    -march=native -fsanitize=undefined,address -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall \
+    -march=native  -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall \
     -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS 1)
@@ -58,7 +58,7 @@ SET(models src/models/weighted_automata/WeightedAutomatonModel.cpp
         src/models/rewrite_systems/RewriteSystemModel.cpp
         src/models/rewrite_systems/RewriteSystem.cpp
         src/models/conversions/DifferentialEquationRuleNetworkConversion.cpp
-        src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp)
+        src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/models/Term.cpp src/models/Term.h)
 
 SET(ui              src/ui/TextUserInterface.cpp
                     src/ui/UserInterface.cpp)

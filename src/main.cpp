@@ -111,7 +111,7 @@ auto main(int argc, char *argv[]) -> int {
             << "'DifferentialEquationModel', 'RewritingSystemMode', "
             << "'WeightedAutomaton', "
             << "'DifferentialEquation' or 'RewritingSystem'"
-            << " as models, you specified " + modelStr << std::endl;
+            << " as model, you specified " + modelStr << std::endl;
         exit(-1);
       }
 

@@ -1,13 +1,6 @@
-begin reactions
-  Au     -> Ap	 	, 1.0
-  Ap     -> Au	 	, 2.0
-  Au + B -> AuB	 	, 3.0
-  AuB    -> Au + B	, 4.0
-  Ap + B -> ApB	 	, 3.0
-  ApB    -> Ap + B 	, 4.0
-end reactions
-
-
-
-
-
+Au     -> Ap	 	, 1.0
+2Ap     -> 2Au	 	, 2.0
+2 Au + 2B -> Au2B2 	, 3.0
+AuB    -> Au + B	, 4.0
+Ap + B -> ApB	 	, 3.0
+ApB    -> Ap + B 	, 4.0
