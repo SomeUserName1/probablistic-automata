@@ -7,10 +7,30 @@
 SCENARIO("Lifting an automaton") {
   GIVEN("Our running example in minimized version") {
     auto wa = gen_wa_hand_min_dense();
-    WHEN("Lifting it as done before") {
+    WHEN("Lifting it as done before using dense input") {
       auto liftedWA = lift_wa<MatDenD>(wa, {1}, {1});
       THEN("We get the same as done by hand") {
         auto waEx = gen_wa_dense();
+        REQUIRE(waEx->get_states() == liftedWA->get_states());
+        REQUIRE(waEx->get_number_input_characters() ==
+                liftedWA->get_number_input_characters());
+        REQUIRE(floating_point_compare(
+            (*(waEx->get_alpha()) - *(liftedWA->get_alpha())).sum(), 0.0));
+        REQUIRE(floating_point_compare(
+            (*(waEx->get_eta()) - *(liftedWA->get_eta())).sum(), 0.0));
+        for (size_t i = 0; i < waEx->get_mu().size(); i++) {
+          REQUIRE(floating_point_compare(
+              (*(waEx->get_mu()[i]) - *(liftedWA->get_mu()[i])).sum(), 0.0));
+        }
+      }
+    }
+  }
+  GIVEN("Our running example in minimized version") {
+    auto wa = gen_wa_hand_min_sparse();
+    WHEN("Lifting it as done before using sparse input") {
+      auto liftedWA = lift_wa<MatSpD>(wa, {1}, {1});
+      THEN("We get the same as done by hand") {
+        auto waEx = gen_wa_sparse();
         REQUIRE(waEx->get_states() == liftedWA->get_states());
         REQUIRE(waEx->get_number_input_characters() ==
                 liftedWA->get_number_input_characters());
@@ -145,9 +165,7 @@ SCENARIO("The equivalence of automata is tested") {
       wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
                                                          alpha, mu, eta);
 
-      THEN("They are not equal") {
-        REQUIRE(!wa1->equivalent(wa2));
-      }
+      THEN("They are not equal") { REQUIRE(!wa1->equivalent(wa2)); }
     }
     WHEN(
         "The automata are different in structure but equivalent in semantics") {
@@ -180,9 +198,7 @@ SCENARIO("The equivalence of automata is tested") {
       std::vector<MatDenDPtr> mu = {mu1, mu2};
       wa2 = std::make_shared<WeightedAutomaton<MatDenD>>(states, characters,
                                                          alpha, mu, eta);
-      THEN("They are not equivalent") {
-        REQUIRE(!wa1->equivalent(wa2));
-      }
+      THEN("They are not equivalent") { REQUIRE(!wa1->equivalent(wa2)); }
     }
   }
 }

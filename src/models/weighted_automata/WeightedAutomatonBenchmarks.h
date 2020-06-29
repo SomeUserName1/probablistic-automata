@@ -4,7 +4,7 @@
 #include "WeightedAutomaton.h"
 
 template <Matrix M>
-static auto lift_wa(std::shared_ptr<WeightedAutomaton<M>> wa,
+static inline auto lift_wa(std::shared_ptr<WeightedAutomaton<M>> wa,
                     const std::vector<long> &states,
                     const std::vector<uint> &duplications)
     -> std::shared_ptr<WeightedAutomaton<M>> {
@@ -126,4 +126,76 @@ static auto lift_wa(std::shared_ptr<WeightedAutomaton<M>> wa,
       matSize, wa->get_number_input_characters(), liftedAlpha, liftedMus,
       liftedEta);
 }
+
+static inline auto gen_wa_dense()
+-> std::shared_ptr<WeightedAutomaton<MatDenD>> {
+  uint states = 4;
+  uint characters = 2;
+  MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
+  *alpha << 1, 0, 0, 0;
+  MatDenDPtr eta = std::make_shared<MatDenD>(states, 1);
+  *eta << 0, 0, 0, 1;
+  MatDenDPtr mu1 = std::make_shared<MatDenD>(states, states);
+  *mu1 << 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0;
+  MatDenDPtr mu2 = std::make_shared<MatDenD>(states, states);
+  *mu2 << 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0;
+  std::vector<MatDenDPtr> mu = {mu1, mu2};
+  return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters, alpha,
+                                                      mu, eta);
+}
+
+static inline auto gen_wa_hand_min_dense()
+-> std::shared_ptr<WeightedAutomaton<MatDenD>> {
+  uint states = 3;
+  uint characters = 2;
+  MatDenDPtr alpha = std::make_shared<MatDenD>(1, states);
+  *alpha << 1, 0, 0;
+  MatDenDPtr eta = std::make_shared<MatDenD>(states, 1);
+  *eta << 0, 0, 1;
+  MatDenDPtr mu1 = std::make_shared<MatDenD>(states, states);
+  *mu1 << 0, 2, 0, 0, 0, 0, 0, 0, 0;
+  MatDenDPtr mu2 = std::make_shared<MatDenD>(states, states);
+  *mu2 << 0, 0, 0, 0, 0, 1, 0, 0, 0;
+  std::vector<MatDenDPtr> mu = {mu1, mu2};
+  return std::make_shared<WeightedAutomaton<MatDenD>>(states, characters, alpha,
+                                                      mu, eta);
+}
+
+static inline auto gen_wa_sparse()
+-> std::shared_ptr<WeightedAutomaton<MatSpD>> {
+  uint states = 4;
+  uint characters = 2;
+  MatSpDPtr alpha = std::make_shared<MatSpD>(1, states);
+  alpha->coeffRef(0, 0) = 1.0;
+  MatSpDPtr eta = std::make_shared<MatSpD>(states, 1);
+  eta->coeffRef(3, 0) = 1.0;
+  MatSpDPtr mu1 = std::make_shared<MatSpD>(states, states);
+  mu1->coeffRef(0, 1) = 1;
+  mu1->coeffRef(0, 2) = 1;
+  MatSpDPtr mu2 = std::make_shared<MatSpD>(states, states);
+  mu2->coeffRef(1, 3) = 1;
+  mu2->coeffRef(2, 3) = 1;
+  std::vector<MatSpDPtr> mu = {mu1, mu2};
+  return std::make_shared<WeightedAutomaton<MatSpD>>(states, characters, alpha,
+                                                     mu, eta);
+}
+
+static inline auto gen_wa_hand_min_sparse()
+-> std::shared_ptr<WeightedAutomaton<MatSpD>> {
+  uint states = 3;
+  uint characters = 2;
+  MatSpDPtr alpha = std::make_shared<MatSpD>(1, states);
+  alpha->coeffRef(0,0) = 1;
+  MatSpDPtr eta = std::make_shared<MatSpD>(states, 1);
+  eta->coeffRef(states - 1, 0) = 1;
+  MatSpDPtr mu1 = std::make_shared<MatSpD>(states, states);
+  mu1->coeffRef(0, 1) = 2;
+  MatSpDPtr mu2 = std::make_shared<MatSpD>(states, states);
+  mu2->coeffRef(1, 2) = 1;
+  std::vector<MatSpDPtr > mu = {mu1, mu2};
+  return std::make_shared<WeightedAutomaton<MatSpD>>(states, characters, alpha,
+                                                     mu, eta);
+}
+
+
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_WEIGHTEDAUTOMATONBENCHMARKS_H
