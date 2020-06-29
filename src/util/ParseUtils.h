@@ -2,6 +2,7 @@
 #define STOCHASTIC_SYSTEM_MINIMIZATION_PARSEUTILS_H
 
 #include "DefsConstants.h"
+#include <cstring>
 #include <string>
 
 enum TrimType { TrimWhiteSpace = 0, TrimNewLines = 1, DontTrim = 2 };
@@ -10,8 +11,13 @@ inline static auto get_next_line(std::string &str, const char *delim,
                                  TrimType trimType) noexcept -> std::string {
   std::string line;
   std::size_t pos = str.find(delim);
-  line = str.substr(0, pos + sizeof(delim));
-  str.erase(0, pos + 1);
+  if (pos != std::string::npos) {
+    pos = pos + strlen(delim);
+  } else {
+    pos = line.size() - 1;
+  }
+  line = str.substr(0, pos);
+  str.erase(0, pos);
   switch (trimType) {
   case (TrimType::TrimWhiteSpace): {
     line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
@@ -32,21 +38,29 @@ template <Arithmetic T>
 static inline auto extract_number(std::string &vector) -> T {
   bool prevDigit = false;
   size_t firstDigit = 0;
+  unsigned char current = 0;
+
   for (size_t i = 0; i < vector.size(); i++) {
-    if ((std::isdigit(static_cast<unsigned char>(vector[i])) ||
-         vector[i] == '-' || vector[i] == '+' || vector[i] == '.') &&
+    current = static_cast<unsigned char>(vector[i]);
+    if (((std::isdigit(current) != 0) || vector[i] == '-' || vector[i] == '+' ||
+         vector[i] == '.') &&
         !prevDigit) {
       prevDigit = true;
       firstDigit = i;
-    } else if (!(std::isdigit(static_cast<unsigned char>(vector[i])) ||
-                 vector[i] == 'e' || vector[i] == '-' || vector[i] == '+' ||
-                 vector[i] == '.') &&
+      if (i == vector.size() - 1) {
+        T result = static_cast<T>(
+            std::stod(vector.substr(i, 1)));
+        vector.erase(0, i + 1);
+        return result;
+      }
+    } else if (!((std::isdigit(current) != 0) || vector[i] == 'e' ||
+                 vector[i] == '-' || vector[i] == '+' || vector[i] == '.') &&
                prevDigit) {
       T result =
           static_cast<T>(std::stod(vector.substr(firstDigit, i - firstDigit)));
       vector.erase(0, i);
       return result;
-    } else if (vector.size() - 1 == i && prevDigit) {
+    } else if (vector.size() - 1 == i && prevDigit ) {
       T result = static_cast<T>(
           std::stod(vector.substr(firstDigit, i - firstDigit + 1)));
       vector.erase(0, i + 1);
@@ -59,14 +73,19 @@ static inline auto extract_number(std::string &vector) -> T {
 static inline auto extract_entity_name(std::string &line) -> std::string {
   bool prevCapital = false;
   size_t capital = 0;
+  unsigned char current = 0;
 
   for (size_t i = 0; i < line.size(); i++) {
-    if ((std::isupper(static_cast<unsigned char>(line[i])) != 0) &&
-        !prevCapital) {
+    current = static_cast<unsigned char>(line[i]);
+    if ((std::isupper(current) != 0) && !prevCapital) {
       prevCapital = true;
       capital = i;
-    } else if (((std::islower(static_cast<unsigned char>(line[i])) == 0)) &&
-               prevCapital) {
+      if (i == line.size() - 1) {
+        std::string result = line.substr(i, 1);
+        line.erase(0, i + 1);
+        return result;
+      }
+    } else if (((std::islower(current) == 0)) && prevCapital) {
       std::string result = line.substr(capital, i - capital);
       line.erase(0, i);
       return result;
@@ -76,7 +95,6 @@ static inline auto extract_entity_name(std::string &line) -> std::string {
       return result;
     }
   }
-
   line.erase(0, line.size());
   return "";
 }

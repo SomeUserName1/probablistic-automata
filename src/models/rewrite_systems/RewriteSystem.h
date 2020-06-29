@@ -1,17 +1,18 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_REWRITESYSTEM_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_REWRITESYSTEM_H
 
-#include "../../util/DefsConstants.h"
-#include "../../util/FloatingPointCompare.h"
-#include "../RepresentationInterface.h"
 #include <memory>
 #include <set>
 #include <utility>
 #include <vector>
 
+#include "../../util/DefsConstants.h"
+#include "../../util/FloatingPointCompare.h"
+#include "../RepresentationInterface.h"
+#include "../Term.h"
+
 class RewriteSystem : public RepresentationInterface {
 public:
-  class Term;
   class Rule;
 
 private:
@@ -22,7 +23,7 @@ public:
   RewriteSystem() = default;
   RewriteSystem(std::vector<std::string> mMapping,
                 std::vector<std::shared_ptr<Rule>> mRules)
-      : mapping(mMapping), rules(std::move(mRules)) {}
+      : mapping(std::move(mMapping)), rules(std::move(mRules)) {}
 
   ~RewriteSystem() override;
 
@@ -73,68 +74,19 @@ public:
     return true;
   }
 
-  class Term : public RepresentationInterface {
-  private:
-    RewriteSystem &parent;
-    std::vector<uint> word;
-    unsigned long int factor;
-
-  public:
-    Term(RewriteSystem &mParent, std::vector<uint> mWord,
-         unsigned long int mFactor)
-        : parent(mParent), word(std::move(mWord)), factor(mFactor) {}
-    ~Term() override;
-
-    [[nodiscard]] auto get_factor() const -> unsigned int {
-      return this->factor;
-    }
-
-    [[nodiscard]] auto get_word() const -> std::vector<uint> {
-      return this->word;
-    }
-
-    [[nodiscard]] auto pretty_print() const -> std::string override {
-      std::stringstream stringstream;
-      stringstream.precision(PRINT_PRECISION);
-      stringstream << std::fixed << this->factor << " ";
-      for (size_t i = 0; i < word.size(); i++) {
-        if (word[i] > 0) {
-          stringstream << parent.mapping[i] << "_" << word[i] << " ";
-        }
-      }
-      return stringstream.str();
-    }
-
-    [[nodiscard]] auto
-    equivalent(const std::shared_ptr<RepresentationInterface> &other) const
-        -> bool override {
-      auto oTerm = static_pointer_cast<Term>(other);
-      if (this->factor != oTerm->get_factor() ||
-          this->word.size() != oTerm->get_word().size()) {
-        return false;
-      }
-      for (size_t i = 0; i < word.size(); i++) {
-        if (word[i] != oTerm->get_word()[i]) {
-          return false;
-        }
-      }
-      return true;
-    }
-  };
 
   class Rule : public RepresentationInterface {
   private:
-    RewriteSystem &parent;
     double rate;
     unsigned long long int mcoeff;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
+    std::vector<std::shared_ptr<Term>> lhs;
+    std::vector<std::shared_ptr<Term>> rhs;
 
   public:
-    Rule(RewriteSystem &mParent, double mRate,
-         std::vector<std::shared_ptr<RewriteSystem::Term>> mLhs,
-         std::vector<std::shared_ptr<RewriteSystem::Term>> mRhs)
-        : parent(mParent), rate(mRate), mcoeff(0), lhs(std::move(mLhs)),
+    Rule(double mRate,
+         std::vector<std::shared_ptr<Term>> mLhs,
+         std::vector<std::shared_ptr<Term>> mRhs)
+        : rate(mRate), mcoeff(0), lhs(std::move(mLhs)),
           rhs(std::move(mRhs)) {}
     ~Rule() override;
 
@@ -158,12 +110,12 @@ public:
     }
 
     [[nodiscard]] auto get_lhs() const
-        -> std::vector<std::shared_ptr<RewriteSystem::Term>> {
+        -> std::vector<std::shared_ptr<Term>> {
       return this->lhs;
     }
 
     [[nodiscard]] auto get_rhs() const
-        -> std::vector<std::shared_ptr<RewriteSystem::Term>> {
+        -> std::vector<std::shared_ptr<Term>> {
       return this->rhs;
     }
 

@@ -3,6 +3,7 @@
 
 #include "../../util/ParseUtils.h"
 #include "../ModelInterface.h"
+#include "../Term.h"
 #include "RewriteSystem.h"
 
 class RewriteSystemModel : public ModelInterface {
@@ -21,7 +22,7 @@ public:
   auto parse(std::string &string)
       -> std::shared_ptr<RepresentationInterface> override {
     // Step 1: Enumerate all distinct "Elements"
-    std::vector<std::string> mapping = {};
+    std::vector<std::string> pMapping = {};
     std::istringstream f(string);
     std::string line;
     std::string name;
@@ -30,9 +31,9 @@ public:
       if (line.find("->") != std::string::npos) {
         name = extract_entity_name(line);
         while (!name.empty()) {
-          if (std::find(mapping.begin(), mapping.end(), name) ==
-              mapping.end()) {
-            mapping.emplace_back(name);
+          if (std::find(pMapping.begin(), pMapping.end(), name) ==
+              pMapping.end()) {
+            pMapping.emplace_back(name);
           }
           name = extract_entity_name(line);
         }
@@ -40,55 +41,38 @@ public:
     }
 
     // Step 2: extract rules
-    std::vector<std::shared_ptr<RewriteSystem::Rule>> rules = {};
-    auto rs = std::make_shared<RewriteSystem>(mapping, rules);
-
-    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
+    std::vector<std::shared_ptr<RewriteSystem::Rule>> pRules = {};
+    std::vector<std::shared_ptr<Term>> lhs;
+    std::vector<std::shared_ptr<Term>> rhs;
     std::string lhsInput;
     std::string rhsInput;
     std::string rateInput;
-    size_t middle;
-    size_t end;
-    double rate;
+    size_t middle = 0;
+    size_t end = 0;
+    double rate = 0;
     line = get_next_line(string, "\n", TrimType::TrimWhiteSpace);
     while (!line.empty()) {
+      if (line.starts_with("begin") || line.starts_with("end")) {
+        line = get_next_line(string, "\n", TrimType::TrimWhiteSpace);
+        continue;
+      }
       middle = line.find("->");
-      end = line.find(",");
+      end = line.find(',');
 
       lhsInput = line.substr(0, middle - 0);
       rhsInput =
-          line.substr(middle + sizeof("->"), end - (middle + sizeof("->")));
+          line.substr(middle + strlen("->"), end - (middle + strlen("->")));
       rateInput =
-          line.substr(end + sizeof(","), line.size() - (end + sizeof(",")));
+          line.substr(end + strlen(","), line.size());
+      // - (end + strlen(","))
 
-      lhs = extract_terms(*rs, lhsInput);
-      rhs = extract_terms(*rs, rhsInput);
+      lhs = Term::extract_terms(pMapping, lhsInput);
+      rhs = Term::extract_terms(pMapping, rhsInput);
       rate = extract_number<double>(rateInput);
-      rules.push_back(std::make_shared<RewriteSystem::Rule>(*rs, rate, lhs, rhs));
+      pRules.push_back(std::make_shared<RewriteSystem::Rule>(rate, lhs, rhs));
+      line = get_next_line(string, "\n", TrimType::TrimWhiteSpace);
     }
-    return std::move(rs);
-  }
-
-  static inline auto extract_term(RewriteSystem &parent, std::string &input)
-      -> std::shared_ptr<RewriteSystem::Term> {
-    // TODO continue here
-    // peek next symbol & use extrat number + extract entity name
-  }
-
-  static inline auto extract_terms(RewriteSystem &parent, std::string &input)
-      -> std::vector<std::shared_ptr<RewriteSystem::Term>> {
-    std::vector<std::shared_ptr<RewriteSystem::Term>> result = {};
-    std::string term;
-    size_t pos = input.find("+");
-    size_t prev = 0;
-    while (pos != std::string::npos) {
-      term = input.substr(prev, pos - prev);
-      result.emplace_back(extract_term(parent, term));
-      prev = pos + sizeof("+");
-      pos = input.find("+");
-    }
-    return result;
+    return std::make_shared<RewriteSystem>(pMapping, pRules);
   }
 
   [[nodiscard]] auto get_reduction_methods() const
