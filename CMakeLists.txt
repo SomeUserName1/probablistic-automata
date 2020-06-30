@@ -54,11 +54,11 @@ SET(interfaces src/models/ModelInterface.cpp
         src/models/RepresentationInterface.cpp)
 
 SET(models src/models/weighted_automata/WeightedAutomatonModel.cpp
-        src/models/differential_equations/DifferentialEquationModel.cpp
+        src/models/system_of_equations/SystemOfEquationsModel.cpp
         src/models/rewrite_systems/RewriteSystemModel.cpp
         src/models/rewrite_systems/RewriteSystem.cpp
         src/models/conversions/DifferentialEquationRuleNetworkConversion.cpp
-        src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/models/Term.cpp src/models/Term.h)
+        src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/models/Term.cpp src/models/Term.h src/models/system_of_equations/SystemOfEquations.cpp src/models/system_of_equations/SystemOfEquations.h src/models/system_of_equations/Equation.h)
 
 SET(ui              src/ui/TextUserInterface.cpp
                     src/ui/UserInterface.cpp)

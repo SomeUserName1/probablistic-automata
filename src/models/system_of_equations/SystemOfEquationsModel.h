@@ -1,17 +1,17 @@
-#ifndef STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
-#define STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
+#ifndef STOCHASTIC_SYSTEM_MINIMIZATION_SYSTEMOFEQUATIONSMODEL_H
+#define STOCHASTIC_SYSTEM_MINIMIZATION_SYSTEMOFEQUATIONSMODEL_H
 
 #include "../ModelInterface.h"
 #include "../RepresentationInterface.h"
 
-class DifferentialEquationModel : public ModelInterface {
+class SystemOfEquationsModel : public ModelInterface {
 private:
   std::vector<std::shared_ptr<ReductionMethodInterface>> reductionMethods = {};
   std::vector<std::shared_ptr<ConversionMethodInterface>> conversionMethods;
 
 public:
-  DifferentialEquationModel() = default;
-  ~DifferentialEquationModel() override;
+  SystemOfEquationsModel() = default;
+  ~SystemOfEquationsModel() override;
 
   [[nodiscard]] auto get_name() const -> std::string override {
     return "Differential Equation Model";
@@ -38,4 +38,4 @@ public:
   }
 };
 
-#endif // STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATIONMODEL_H
+#endif // STOCHASTIC_SYSTEM_MINIMIZATION_SYSTEMOFEQUATIONSMODEL_H

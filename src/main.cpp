@@ -98,7 +98,7 @@ auto main(int argc, char *argv[]) -> int {
           iequals(modelStr, "WeightedAutomaton")) {
         model = std::make_shared<WeightedAutomatonModel>();
       } else if (iequals(modelStr, "DE") ||
-                 iequals(modelStr, "DifferentialEquationModel") ||
+                 iequals(modelStr, "SystemOfEquationsModel") ||
                  iequals(modelStr, "DifferentialEquation")) {
         model = std::make_shared<DifferentialEquationModel>();
       } else if (iequals(modelStr, "RS") ||
@@ -108,7 +108,7 @@ auto main(int argc, char *argv[]) -> int {
       } else {
         std::cerr
             << "Specify either 'WA', 'DE', 'RS', 'WeightedAutomatonModel', "
-            << "'DifferentialEquationModel', 'RewritingSystemMode', "
+            << "'SystemOfEquationsModel', 'RewritingSystemMode', "
             << "'WeightedAutomaton', "
             << "'DifferentialEquation' or 'RewritingSystem'"
             << " as model, you specified " + modelStr << std::endl;

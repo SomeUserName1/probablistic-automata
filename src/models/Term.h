@@ -9,6 +9,11 @@
 #include "../util/DefsConstants.h"
 #include "../util/ParseUtils.h"
 
+// TODO How to store non-linearities/functions as factors
+// TODO how to store derivatives, powers, ... as "words"
+// TODO currently only 1 * x1_2 x2 x3_3 are repr'able;
+// TODO: Fancy: impl. Function, Constant, Deriv, pow and expr Term as
+
 class Term : public RepresentationInterface {
 private:
   unsigned long int factor;
