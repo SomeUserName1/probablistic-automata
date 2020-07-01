@@ -2,7 +2,7 @@
 #define STOCHASTIC_SYSTEM_MINIMIZATION_DIFFERENTIALEQUATION_H
 
 #include "../RepresentationInterface.h"
-#include "../Term.h"
+#include "Term.h"
 
 class DifferentialEquation : public Equation {
 private:

@@ -18,12 +18,12 @@ SCENARIO("Parsing rules with many multiplicities works") {
         std::vector<uint> t2 = {0, 1};
         std::vector<uint> t3 = {2, 2};
 
-        auto lhs1 = std::make_shared<Term>(2, t1);
-        auto lhs2 = std::make_shared<Term>(2, t2);
-        auto rhs1 = std::make_shared<Term>(1, t3);
+        auto lhs1 = std::make_shared<RewriteSystem::Term>(2, t1);
+        auto lhs2 = std::make_shared<RewriteSystem::Term>(2, t2);
+        auto rhs1 = std::make_shared<RewriteSystem::Term>(1, t3);
 
-        std::vector<std::shared_ptr<Term>> lhs = {lhs1, lhs2};
-        std::vector<std::shared_ptr<Term>> rhs = {rhs1};
+        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs = {lhs1, lhs2};
+        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs = {rhs1};
         std::vector<std::shared_ptr<RewriteSystem::Rule>> trueRule = {
             std::make_shared<RewriteSystem::Rule>(3.0, lhs, rhs)};
 

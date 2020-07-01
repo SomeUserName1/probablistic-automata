@@ -3,7 +3,6 @@
 
 #include "../../util/ParseUtils.h"
 #include "../ModelInterface.h"
-#include "../Term.h"
 #include "RewriteSystem.h"
 
 class RewriteSystemModel : public ModelInterface {
@@ -42,8 +41,8 @@ public:
 
     // Step 2: extract rules
     std::vector<std::shared_ptr<RewriteSystem::Rule>> pRules = {};
-    std::vector<std::shared_ptr<Term>> lhs;
-    std::vector<std::shared_ptr<Term>> rhs;
+    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
+    std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
     std::string lhsInput;
     std::string rhsInput;
     std::string rateInput;
@@ -66,8 +65,8 @@ public:
           line.substr(end + strlen(","), line.size());
       // - (end + strlen(","))
 
-      lhs = Term::extract_terms(pMapping, lhsInput);
-      rhs = Term::extract_terms(pMapping, rhsInput);
+      lhs = RewriteSystem::Term::extract_terms(pMapping, lhsInput);
+      rhs = RewriteSystem::Term::extract_terms(pMapping, rhsInput);
       rate = extract_number<double>(rateInput);
       pRules.push_back(std::make_shared<RewriteSystem::Rule>(rate, lhs, rhs));
       line = get_next_line(string, "\n", TrimType::TrimWhiteSpace);

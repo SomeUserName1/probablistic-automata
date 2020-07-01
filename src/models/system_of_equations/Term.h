@@ -5,9 +5,9 @@
 #include <sstream>
 #include <cstring>
 
-#include "RepresentationInterface.h"
-#include "../util/DefsConstants.h"
-#include "../util/ParseUtils.h"
+#include "../../util/DefsConstants.h"
+#include "../../util/ParseUtils.h"
+#include "../RepresentationInterface.h"
 
 // TODO How to store non-linearities/functions as factors
 // TODO how to store derivatives, powers, ... as "words"
@@ -16,8 +16,8 @@
 
 class Term : public RepresentationInterface {
 private:
-  unsigned long int factor;
-  std::vector<uint> word;
+  unsigned long int factor; // FIXME Here functions & constants are possible
+  std::vector<uint> word; // FIXME Powers, Derivatives, sin, cos, tan, e
 
 public:
   Term(unsigned long int mFactor, std::vector<uint> mWord)
@@ -46,7 +46,7 @@ public:
 
   [[nodiscard]] auto
   equivalent(const std::shared_ptr<RepresentationInterface> &other) const
-      -> bool override {
+  -> bool override {
     auto oTerm = static_pointer_cast<Term>(other);
     if (this->factor != oTerm->get_factor() ||
         this->word.size() != oTerm->get_word().size()) {

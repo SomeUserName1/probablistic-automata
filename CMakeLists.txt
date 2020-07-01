@@ -58,7 +58,9 @@ SET(models src/models/weighted_automata/WeightedAutomatonModel.cpp
         src/models/rewrite_systems/RewriteSystemModel.cpp
         src/models/rewrite_systems/RewriteSystem.cpp
         src/models/conversions/DifferentialEquationRuleNetworkConversion.cpp
-        src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp src/models/Term.cpp src/models/Term.h src/models/system_of_equations/SystemOfEquations.cpp src/models/system_of_equations/SystemOfEquations.h src/models/system_of_equations/Equation.h)
+        src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp
+        src/models/system_of_equations/Term.cpp
+        src/models/system_of_equations/SystemOfEquations.cpp)
 
 SET(ui              src/ui/TextUserInterface.cpp
                     src/ui/UserInterface.cpp)
@@ -85,7 +87,7 @@ enable_testing()
 
 SET(test_cases       src/test/CLITest.cpp
                 src/test/WATest.cpp
-                src/test/KieferSchuetzenbergerReductionTest.cpp src/test/RSTest.cpp)
+                src/test/KieferSchuetzenbergerReductionTest.cpp src/test/RSTest.cpp src/models/system_of_equations/Term.cpp)
 
 add_executable(tests    src/test/TestsMain.cpp
                         ${test_cases}
