@@ -4,3 +4,4 @@ Au     -> Ap	 	, 1.0
 AuB    -> Au + B	, 4.0
 Ap + B -> ApB	 	, 3.0
 ApB    -> Ap + B 	, 4.0
+        -> Ap       , 1.0

@@ -57,6 +57,7 @@ SET(models src/models/weighted_automata/WeightedAutomatonModel.cpp
         src/models/system_of_equations/SystemOfEquationsModel.cpp
         src/models/rewrite_systems/RewriteSystemModel.cpp
         src/models/rewrite_systems/RewriteSystem.cpp
+        src/models/rewrite_systems/MaximalAggregation.cpp
         src/models/conversions/DifferentialEquationRuleNetworkConversion.cpp
         src/models/conversions/WeightedAutomatonRuleNetworkConversion.cpp
         src/models/system_of_equations/Term.cpp

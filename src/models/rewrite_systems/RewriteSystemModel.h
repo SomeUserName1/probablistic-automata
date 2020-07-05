@@ -3,6 +3,7 @@
 
 #include "../../util/ParseUtils.h"
 #include "../ModelInterface.h"
+#include "MaximalAggregation.h"
 #include "RewriteSystem.h"
 
 class RewriteSystemModel : public ModelInterface {
@@ -11,7 +12,9 @@ private:
   std::vector<std::shared_ptr<ConversionMethodInterface>> conversionMethods;
 
 public:
-  RewriteSystemModel() = default;
+  RewriteSystemModel()
+      : reductionMethods({std::make_shared<MaximalAggregation>()}),
+        conversionMethods({}){};
   ~RewriteSystemModel() override;
 
   [[nodiscard]] auto get_name() const -> std::string override {
@@ -28,20 +31,35 @@ public:
 
     while (std::getline(f, line)) {
       if (line.find("->") != std::string::npos) {
-        name = extract_entity_name(line);
+        name = extract_atomic_name(line);
         while (!name.empty()) {
           if (std::find(pMapping.begin(), pMapping.end(), name) ==
               pMapping.end()) {
             pMapping.emplace_back(name);
           }
-          name = extract_entity_name(line);
+          name = extract_atomic_name(line);
         }
       }
     }
 
-    // Step 2: extract rules
+    // Step 2: extract Species
+    std::vector<std::vector<unsigned int>> pSpecies = {};
+    while (std::getline(f, line)) {
+      if (line.find("->") != std::string::npos) {
+        name = extract_species_name(line);
+        while (!name.empty()) {
+          if (std::find(pSpecies.begin(), pSpecies.end(), name) ==
+              pSpecies.end()) {
+            pSpecies.emplace_back(name);
+          }
+          name = extract_species_name(line);
+        }
+      }
+    }
+
+    // Step 3: extract rules
     std::vector<std::shared_ptr<RewriteSystem::Rule>> pRules = {};
-    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
+    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs = {};
     std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
     std::string lhsInput;
     std::string rhsInput;
@@ -61,14 +79,23 @@ public:
       lhsInput = line.substr(0, middle - 0);
       rhsInput =
           line.substr(middle + strlen("->"), end - (middle + strlen("->")));
-      rateInput =
-          line.substr(end + strlen(","), line.size());
+      rateInput = line.substr(end + strlen(","), line.size());
       // - (end + strlen(","))
 
-      lhs = RewriteSystem::Term::extract_terms(pMapping, lhsInput);
-      rhs = RewriteSystem::Term::extract_terms(pMapping, rhsInput);
-      rate = extract_number<double>(rateInput);
-      pRules.push_back(std::make_shared<RewriteSystem::Rule>(rate, lhs, rhs));
+      if (!lhsInput.empty()) {
+        lhs = RewriteSystem::extract_terms(pMapping, lhsInput);
+      }
+      if (!rhsInput.empty()) {
+        rhs = RewriteSystem::extract_terms(pMapping, rhsInput);
+      } else {
+        throw std::invalid_argument("Rhs of a rule may not be empty!");
+      }
+      if (!rateInput.empty()) {
+        rate = extract_number<double>(rateInput);
+      } else {
+        throw std::invalid_argument("rate of a rule may not be empty!");
+      }
+      pRules.emplace_back(RewriteSystem::Rule(rate, lhs, rhs));
       line = get_next_line(string, "\n", TrimType::TrimWhiteSpace);
     }
     return std::make_shared<RewriteSystem>(pMapping, pRules);

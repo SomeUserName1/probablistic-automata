@@ -4,14 +4,13 @@ see ![Proposal](doc/proposal/proposal.pdf) and  ![Presentation](doc/proposal/pre
 For requirements and software design see the appendix of the ![report draft](doc/project_report/0-main.pdf)  
 
 ## TODOs  
-- [x] Implement sparse matrix internals of the algorithm in addition to dense matrices  
-- [x] Presentation on WA paper & implementation  
-- [x] Implement Lifting for WAs/Benchmarks  
+
 - [x] parser for rewriting systems
+- [ ] Implementation of rewriting system algorithm (WIP)  
 - [ ] Parser for ODE
 - [ ] higher order ODE to system of first order ODEs  
 - [ ] ODE to rewriting system conversion
-- [ ] Implementation of rewriting system algorithm   
+   
 - [ ] Presentation on PNAS paper & implementation  
 - [ ] Compare minimizations, in terms of speed, memory & coherrence   
 
@@ -22,5 +21,7 @@ Optional:
 - [ ] Check if Q matrix (i.e. product of householder reflectors) helps with basis   
     (with F forward basis: QF = F' such that F' triangular, thus F'mu more sparse) 
 
-- ERODE:
-- [ ] When really fast: impl. DE with z3    
+- DE/RS:
+- [ ] impl support non-polynomial functions using power & taylor series expansion, symmetries/periodicity, laurent polynomials, ...  
+(possible extension for thesis in terms of *exact* transformation to RS)
+- [ ] When really fast: impl. DE version with z3    

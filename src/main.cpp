@@ -5,17 +5,27 @@
 #include <tclap/CmdLine.h>
 
 #include "models/differential_equations/DifferentialEquationModel.h"
-#include "models/weighted_automata/WeightedAutomatonModel.h"
 #include "models/rewrite_systems/RewriteSystemModel.h"
+#include "models/weighted_automata/WeightedAutomatonModel.h"
 #include "ui/TextUserInterface.h"
 
 #ifndef THREADS
 #define THREADS 1
 #endif
 
-//static auto iequals(const std::string &str1, const std::string &str2) -> bool;
+// FIXME check pointers: unique vs shared, plain vectors vs vec<ptr<>>
+// 1. reduce all possible to unique
+// 2. use unique pointers for all non-primitive types in vectors, consider
+// removing rest
+// FIXME use emplace back instead of push back
+// FIXME reserve vectors that are grown, init with constructor rather than loop
+// FIXME use eigen matrixes/vectors instead of std vectors when type is
+// primitive numeric
+// FIXME add const where possible
+// FIXME OpenMP rest
 
-static auto iequals(const std::string &str1, const std::string &str2) -> bool {
+static inline auto iequals(const std::string &str1, const std::string &str2)
+    -> bool {
   return str1.size() == str2.size() &&
          std::equal(str1.begin(), str1.end(), str2.begin(), [](auto a, auto b) {
            return std::tolower(a) == std::tolower(b);
