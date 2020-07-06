@@ -12,15 +12,11 @@ SCENARIO("Parsing rules with many multiplicities works") {
       auto ri = model->parse(input);
       auto rs = std::static_pointer_cast<RewriteSystem>(ri);
       THEN("it's parsed correctly") {
-        std::vector<std::string> trueMap = {"Au", "B"};
+        std::vector<std::string> trueMap = {"Au", "B", "Au2B2"};
 
-        std::vector<uint> t1 = {1, 0};
-        std::vector<uint> t2 = {0, 1};
-        std::vector<uint> t3 = {2, 2};
-
-        auto lhs1 = std::make_shared<RewriteSystem::Term>(2, t1);
-        auto lhs2 = std::make_shared<RewriteSystem::Term>(2, t2);
-        auto rhs1 = std::make_shared<RewriteSystem::Term>(1, t3);
+        auto lhs1 = std::make_shared<RewriteSystem::Term>(2, 0);
+        auto lhs2 = std::make_shared<RewriteSystem::Term>(2, 1);
+        auto rhs1 = std::make_shared<RewriteSystem::Term>(1, 2);
 
         std::vector<std::shared_ptr<RewriteSystem::Term>> lhs = {lhs1, lhs2};
         std::vector<std::shared_ptr<RewriteSystem::Term>> rhs = {rhs1};
@@ -62,7 +58,7 @@ SCENARIO("Test Parsing") {
       THEN("it parses") {
         std::string name;
         for (size_t i = 0; i < result.size(); i++) {
-          name = extract_entity_name(input);
+          name = extract_atomic_name(input);
           REQUIRE(result[i] == name);
         }
       }

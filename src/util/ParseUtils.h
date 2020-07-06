@@ -48,8 +48,7 @@ static inline auto extract_number(std::string &vector) -> T {
       prevDigit = true;
       firstDigit = i;
       if (i == vector.size() - 1) {
-        T result = static_cast<T>(
-            std::stod(vector.substr(i, 1)));
+        T result = static_cast<T>(std::stod(vector.substr(i, 1)));
         vector.erase(0, i + 1);
         return result;
       }
@@ -60,7 +59,7 @@ static inline auto extract_number(std::string &vector) -> T {
           static_cast<T>(std::stod(vector.substr(firstDigit, i - firstDigit)));
       vector.erase(0, i);
       return result;
-    } else if (vector.size() - 1 == i && prevDigit ) {
+    } else if (vector.size() - 1 == i && prevDigit) {
       T result = static_cast<T>(
           std::stod(vector.substr(firstDigit, i - firstDigit + 1)));
       vector.erase(0, i + 1);
@@ -97,37 +96,37 @@ static inline auto extract_atomic_name(std::string &line) -> std::string {
   }
   line.erase(0, line.size());
   return "";
+}
 
+static inline auto extract_species_name(std::string &line) -> std::string {
+  bool firstCap = false;
+  size_t capital = 0;
+  unsigned char current = 0;
 
-  static inline auto extract_species_name(std::string &line) -> std::string {
-    bool firstCap = false;
-    size_t capital = 0;
-    unsigned char current = 0;
+  line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
 
-    line.erase(std::remove_if(line.begin(), line.end(), ::isspace), line.end());
-
-    for (size_t i = 0; i < line.size(); i++) {
-      current = static_cast<unsigned char>(line[i]);
-      if (std::isupper(current) != 0 && !firstCap) {
-        firstCap = true;
-        capital = i;
-        if (i == line.size() - 1) {
-          std::string result = line.substr(i, 1);
-          line.erase(0, i + 1);
-          return result;
-        }
-      } else if (std::isalnum(current) == 0  && firstCap) {
-        std::string result = line.substr(capital, i - capital);
-        line.erase(0, i);
-        return result;
-      } else if (line.size() - 1 == i && firstCap) {
-        std::string result = line.substr(capital, i - capital + 1);
+  for (size_t i = 0; i < line.size(); i++) {
+    current = static_cast<unsigned char>(line[i]);
+    if (std::isupper(current) != 0 && !firstCap) {
+      firstCap = true;
+      capital = i;
+      if (i == line.size() - 1) {
+        std::string result = line.substr(i, 1);
         line.erase(0, i + 1);
         return result;
       }
+    } else if (std::isalnum(current) == 0 && firstCap) {
+      std::string result = line.substr(capital, i - capital);
+      line.erase(0, i);
+      return result;
+    } else if (line.size() - 1 == i && firstCap) {
+      std::string result = line.substr(capital, i - capital + 1);
+      line.erase(0, i + 1);
+      return result;
     }
-    line.erase(0, line.size());
-    return "";
   }
+  line.erase(0, line.size());
+  return "";
+}
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_PARSEUTILS_H
