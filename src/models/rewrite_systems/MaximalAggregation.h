@@ -20,16 +20,16 @@ private:
   std::set<std::tuple<unsigned int, std::vector<RewriteSystem::Term>>>
       reactantLabels;
   // gives the position of the labels to be considered per species
-  std::vector<std::vector<size_t>> labelPos;
+  std::vector<std::shared_ptr<std::vector<size_t>>> labelPos;
   // holds all rules with non-zero net flux per species
   std::vector<
-      std::vector<std::tuple<std::shared_ptr<RewriteSystem::Rule>, double>>>
+      std::vector<std::tuple<std::shared_ptr<RewriteSystem::Rule>, double, unsigned int, std::vector<size_t>>>>
       nonZeroFluxRulesPerSpecies;
   // holds all rules having a certain species in their lhs
   std::vector<std::vector<std::shared_ptr<RewriteSystem::Rule>>>
       lhsContainsSpec;
   // Used for caching the forward/backward rate values
-  std::shared_ptr<MatDenD> M;
+  MatDenDPtr M;
 
 public:
   MaximalAggregation() = default;
@@ -97,7 +97,7 @@ public:
     //}
 
 
-    std::vector<size_t> pos;
+    std::shared_ptr<std::vector<size_t>> pos;
     std::tuple<std::set<std::tuple<unsigned int, std::vector<Term>>>::iterator,
                bool>
         insertTuple;
@@ -109,7 +109,7 @@ public:
 //    shared(rules, speciesList, labelPosMutex,                                      \
 //           reactantLabelsMutex) private(pos, diff, candidate)
     for (size_t i = 0; i < rules.size(); i++) {
-      pos = std::vector(speciesList.size());
+      pos = std::make_shared<std::vector>(speciesList.size());
       reagents = rules[i]->get_lhs();
       for (size_t k = 0; k < reagents.size(); k++) {
         for (size_t j = 0; j < speciesList.size(); j++) {
@@ -124,7 +124,7 @@ public:
             std::lock_guard<std::mutex> guard(reactantLabelsMutex);
             insertTuple =
                 this->reactantLabels.emplace({speciesList[j], alteredReagents});
-            pos[j] = static_cast<size_t>(std::distance(
+            (*pos)[j] = static_cast<size_t>(std::distance(
                 reactantLabels.begin(), std::get<0>(insertTuple)));
             this->lhsContainsSpec[j].emplace_back(rules[i]);
           }
@@ -145,7 +145,7 @@ public:
              get_factor_for_species(speciesList[i], rules[i]->get_lhs());
         if (ns > 0.0) {
           std::lock_guard<std::mutex> guard(nonZeroFluxMutex);
-          this->nonZeroFluxRulesPerSpecies[i].emplace_back(rule[i], ns);
+          this->nonZeroFluxRulesPerSpecies[i].emplace_back(rule[i], ns * rules[i]->get_rate(), this->mcoeffs[i], this->labelPos[i]);
         }
       }
     }
@@ -154,6 +154,7 @@ public:
     //}
     this->M = std::make_shared<MatDenD>(this->system->get_species_list().size(),
                                         reactantLabels.size());
+    this->M->fill(0.0);
   }
 
   void backward_prepartitioning() {
@@ -192,12 +193,43 @@ public:
   void split(bool forward, std::vector<unsigned int> &currentBlock,
              const std::vector<std::vector<unsigned int>> &split) {
     // of species with non-zero
-    std::set<unsigned int>
+    std::set<unsigned int> nonZeroRateSpecies;
+    std::set<std::vector<unsigned int>> partitionsContainingNZRS;
+
+    for (const auto& sj : currentBlock) {
+      if (forward) {
+        compute_forward_rate(sj, nonZeroRateSpecies);
+      } else {
+        compute_backward_rate(sj, currentBlock, nonZeroRateSpecies);
+      }
+    }
+
+    for ()
   }
 
-  void compute_forward_reduction() {}
-  void compute_backward_reduction() {}
+  void compute_forward_rate(unsigned int species, std::set<unsigned int> &nonZeroRateSpecies) {
+    std::shared_ptr<RewriteSystem::Rule> rule;
+    double rate;
+    double mcoeff;
+    std::shared_ptr<std::vector<size_t>> pos;
+    for (size_t i = 0; i < this->nonZeroFluxRulesPerSpecies[species].size(); i++) {
+      rule = std::get<0>(elem);
+      rate = std::get<1>(elem);
+      mcoeff = std::get<2>(elem);
+      pos = std::get<3>(elem);
+      for (const auto &term : rule->get_lhs()) {
+        update_m(term->get_species(), pos[term->get_species()], rate/mcoeff);
+      }
+    }
+  }
+  void compute_backward_rate(unsigned int species, std::vector<unsigned int> currentBlock, std::set<unsigned int> &nonZeroRateSpecies) {}
+
   std::shared_ptr<RewriteSystem> apply_reduction() {}
+
+  void update_m(unsigned int species, size_t col, double val, std::set<unsigned int> &nonZeroRateSpecies) {
+    nonZeroRateSpecies.insert(species);
+    this->M->coeffRef(species, col) = this->M->coeff(species, col) + val;
+  }
 
   void set_mcoeffs() {
     unsigned int upper = 0;
