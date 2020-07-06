@@ -18,15 +18,15 @@ public:
 
 private:
   std::vector<std::string> mapping;
-  std::vector<std::vector<unsigned int>> species;
+  std::vector<std::vector<unsigned int>> speciesList;
   std::vector<std::shared_ptr<Rule>> rules;
 
 public:
   RewriteSystem() = default;
   RewriteSystem(std::vector<std::string> mMapping,
-                std::vector<std::vector<unsigned int>> mSpecies,
+                std::vector<std::vector<unsigned int>> mSpeciesList,
                 std::vector<std::shared_ptr<Rule>> mRules)
-      : mapping(std::move(mMapping)), species(std::move(mSpecies)),
+      : mapping(std::move(mMapping)), speciesList(std::move(mSpeciesList)),
         rules(std::move(mRules)) {}
 
   ~RewriteSystem() override;
@@ -35,9 +35,9 @@ public:
     return this->mapping;
   }
 
-  [[nodiscard]] auto get_species() const noexcept
+  [[nodiscard]] auto get_species_list() const noexcept
       -> std::vector<std::vector<unsigned int>> {
-    return this->species;
+    return this->speciesList;
   }
 
   [[nodiscard]] auto get_rules() const noexcept
@@ -83,83 +83,30 @@ public:
     return true;
   }
 
-  inline auto extract_term(const std::vector<std::string> &pMapping,
-                           std::string &input) -> std::shared_ptr<Term> {
-
-    bool seenPrevEntity = false;
-    std::string prevEntityStr;
-    unsigned int prevEntityInt = 0;
-    unsigned char next = 0;
-    unsigned long int factor = 0;
-    std::vector<unsigned int> word = std::vector(pMapping.size(), 0);
-
-    while (!input.empty()) {
-      next = static_cast<unsigned char>(input[0]);
-      if ((std::isdigit(next) != 0) && !seenPrevEntity) {
-        factor = extract_number<unsigned long int>(input);
-      } else if ((std::isupper(next) != 0)) {
-        if (seenPrevEntity) {
-          word[prevEntityInt] = 1;
-        }
-        seenPrevEntity = true;
-        prevEntityStr = extract_atomic_name(input);
-        prevEntityInt = static_cast<unsigned int>(std::distance(
-            pMapping.begin(),
-            std::find(pMapping.begin(), pMapping.end(), prevEntityStr)));
-      } else if ((std::isdigit(next) != 0) && seenPrevEntity) {
-        seenPrevEntity = false;
-        word[prevEntityInt] = extract_number<unsigned int>(input);
-      }
-      if (seenPrevEntity && input.empty()) {
-        seenPrevEntity = false;
-        word[prevEntityInt] = 1;
-      }
-    }
-    unsigned int theSpecies = 0;
-    theSpecies = static_cast<unsigned int>(
-        std::distance(species.begin(),
-                      std::find(std::begin(species), std::end(species), word)));
-    return std::make_shared<Term>(factor, theSpecies);
-  }
-
-  static inline auto extract_terms(const std::vector<std::string> &pMapping,
-                                   std::string &input)
-      -> std::vector<std::shared_ptr<Term>> {
-    std::vector<std::shared_ptr<Term>> result = {};
-    std::string term;
-    size_t pos = 0;
-    size_t prev = 0;
-    while (pos != std::string::npos) {
-      pos = input.find('+', prev);
-      term = input.substr(prev, pos - prev);
-      result.emplace_back(extract_term(pMapping, term));
-      prev = pos + strlen("+");
-    }
-    return result;
-  }
-
   class Term : public RepresentationInterface {
   private:
-    unsigned long int factor;
-    unsigned int spec;
+    unsigned int factor;
+    unsigned int species;
 
   public:
-    Term(unsigned long int mFactor, unsigned int mSpecies)
-        : factor(mFactor), spec(mSpecies) {}
+    Term(unsigned int mFactor, unsigned int mSpecies)
+        : factor(mFactor), species(mSpecies) {}
     ~Term() override;
 
-    [[nodiscard]] auto get_factor() const -> unsigned long int {
+    [[nodiscard]] auto get_factor() const -> unsigned int {
       return this->factor;
     }
 
+    [[nodiscard]] auto decrement_factor() -> void { this->factor--; }
+
     [[nodiscard]] auto get_species() const -> unsigned int {
-      return this->spec;
+      return this->species;
     }
 
     [[nodiscard]] auto pretty_print() const -> std::string override {
       std::stringstream stringstream;
       stringstream.precision(PRINT_PRECISION);
-      stringstream << std::fixed << this->factor << "(x" << this->spec << ")"
+      stringstream << std::fixed << this->factor << "(x" << this->species << ")"
                    << " ";
       return stringstream.str();
     }
@@ -169,14 +116,13 @@ public:
         -> bool override {
       auto oTerm = static_pointer_cast<Term>(other);
       return !(this->factor != oTerm->get_factor() ||
-               this->spec != oTerm->get_species());
+               this->species != oTerm->get_species());
     }
   };
 
   class Rule : public RepresentationInterface {
   private:
     double rate;
-    unsigned long long int mcoeff;
     std::vector<std::shared_ptr<Term>> lhs;
     std::vector<std::shared_ptr<Term>> rhs;
 

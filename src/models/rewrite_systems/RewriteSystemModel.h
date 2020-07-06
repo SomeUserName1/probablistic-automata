@@ -14,11 +14,81 @@ private:
 public:
   RewriteSystemModel()
       : reductionMethods({std::make_shared<MaximalAggregation>()}),
-        conversionMethods({}){};
+        conversionMethods({}) {}
   ~RewriteSystemModel() override;
 
   [[nodiscard]] auto get_name() const -> std::string override {
     return "RewriteSystemModel";
+  }
+
+  static inline auto
+  convert_species_string_vector(const std::vector<std::string> &pMapping,
+                                std::string &input) {
+    bool seenPrevEntity = false;
+    std::string prevEntityStr;
+    unsigned int prevEntityInt = 0;
+    unsigned char next = 0;
+    std::vector<unsigned int> word = std::vector(pMapping.size(), 0u);
+
+    while (!input.empty()) {
+      next = static_cast<unsigned char>(input[0]);
+      if ((std::isupper(next) != 0)) {
+        if (seenPrevEntity) {
+          word[prevEntityInt] = 1;
+        }
+        seenPrevEntity = true;
+        prevEntityStr = extract_atomic_name(input);
+        prevEntityInt = static_cast<unsigned int>(std::distance(
+            pMapping.begin(),
+            std::find(pMapping.begin(), pMapping.end(), prevEntityStr)));
+      } else if ((std::isdigit(next) != 0) && seenPrevEntity) {
+        seenPrevEntity = false;
+        word[prevEntityInt] = extract_number<unsigned int>(input);
+      }
+      if (seenPrevEntity && input.empty()) {
+        seenPrevEntity = false;
+        word[prevEntityInt] = 1;
+      }
+    }
+    return word;
+  }
+
+  static inline auto
+  extract_term(const std::vector<std::string> &pMapping,
+               const std::vector<std::vector<unsigned int>> &pSpeciesList,
+               std::string &input) -> std::shared_ptr<RewriteSystem::Term> {
+
+    unsigned int factor = 0;
+    std::vector<unsigned int> word = std::vector(pMapping.size(), 0u);
+    unsigned char next = static_cast<unsigned char>(input[0]);
+    if ((std::isdigit(next) != 0)) {
+      factor = extract_number<unsigned int>(input);
+    } else if ((std::isupper(next) != 0)) {
+      word = convert_species_string_vector(pMapping, input);
+    }
+    unsigned int theSpecies = 0;
+    theSpecies = static_cast<unsigned int>(std::distance(
+        std::begin(pSpeciesList),
+        std::find(std::begin(pSpeciesList), std::end(pSpeciesList), word)));
+    return std::make_shared<RewriteSystem::Term>(factor, theSpecies);
+  }
+
+  static inline auto
+  extract_terms(const std::vector<std::string> &pMapping,
+                const std::vector<std::vector<unsigned int>> &pSpeciesList,
+                std::string &input)
+      -> std::vector<std::shared_ptr<RewriteSystem::Term>> {
+    std::vector<std::shared_ptr<RewriteSystem::Term>> result = {};
+    std::string term;
+    size_t pos = 0;
+    size_t prev = 0;
+    while (pos != std::string::npos) {
+      pos = input.find('+', prev);
+      term = input.substr(prev, pos - prev);
+      result.emplace_back(extract_term(pMapping, pSpeciesList, term));
+      prev = pos + strlen("+");
+    }
+    return result;
   }
 
   auto parse(std::string &string)
@@ -43,16 +113,19 @@ public:
     }
 
     // Step 2: extract Species
-    std::vector<std::vector<unsigned int>> pSpecies = {};
+    std::vector<std::vector<unsigned int>> pSpeciesList = {};
+    std::vector<unsigned int> pSpecies;
     while (std::getline(f, line)) {
       if (line.find("->") != std::string::npos) {
         name = extract_species_name(line);
-        while (!name.empty()) {
-          if (std::find(pSpecies.begin(), pSpecies.end(), name) ==
-              pSpecies.end()) {
-            pSpecies.emplace_back(name);
+        pSpecies = convert_species_string_vector(pMapping, name);
+        while (!pSpecies.empty()) {
+          if (std::find(pSpeciesList.begin(), pSpeciesList.end(), pSpecies) ==
+              pSpeciesList.end()) {
+            pSpeciesList.emplace_back(pSpecies);
           }
           name = extract_species_name(line);
+          pSpecies = convert_species_string_vector(pMapping, name);
         }
       }
     }
@@ -83,10 +156,10 @@ public:
       // - (end + strlen(","))
 
       if (!lhsInput.empty()) {
-        lhs = RewriteSystem::extract_terms(pMapping, lhsInput);
+        lhs = extract_terms(pMapping, pSpeciesList, lhsInput);
       }
       if (!rhsInput.empty()) {
-        rhs = RewriteSystem::extract_terms(pMapping, rhsInput);
+        rhs = extract_terms(pMapping, pSpeciesList, rhsInput);
       } else {
         throw std::invalid_argument("Rhs of a rule may not be empty!");
       }
@@ -95,10 +168,10 @@ public:
       } else {
         throw std::invalid_argument("rate of a rule may not be empty!");
       }
-      pRules.emplace_back(RewriteSystem::Rule(rate, lhs, rhs));
+      pRules.emplace_back(std::make_shared<RewriteSystem::Rule>(rate, lhs, rhs));
       line = get_next_line(string, "\n", TrimType::TrimWhiteSpace);
     }
-    return std::make_shared<RewriteSystem>(pMapping, pRules);
+    return std::make_shared<RewriteSystem>(pMapping, pSpeciesList, pRules);
   }
 
   [[nodiscard]] auto get_reduction_methods() const

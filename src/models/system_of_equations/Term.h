@@ -83,7 +83,7 @@ public:
           word[prevEntityInt] = 1;
         }
         seenPrevEntity = true;
-        prevEntityStr = extract_entity_name(input);
+        prevEntityStr = extract_atomic_name(input);
         prevEntityInt = static_cast<unsigned int>(std::distance(
             pMapping.begin(),
             std::find(pMapping.begin(), pMapping.end(), prevEntityStr)));
