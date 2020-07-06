@@ -11,7 +11,8 @@ public:
   [[nodiscard]] virtual inline auto get_name() const -> std::string = 0;
 
   [[nodiscard]] virtual inline auto
-  reduce(const std::shared_ptr<RepresentationInterface> &) const -> std::shared_ptr<RepresentationInterface> = 0;
+  reduce(const std::shared_ptr<RepresentationInterface> &)
+      -> std::shared_ptr<RepresentationInterface> = 0;
 };
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_REDUCTIONMETHODINTERFACE_H

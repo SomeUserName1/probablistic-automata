@@ -25,7 +25,7 @@ public:
   }
 
   [[nodiscard]] inline auto
-  reduce(const std::shared_ptr<RepresentationInterface> &waInstance) const
+  reduce(const std::shared_ptr<RepresentationInterface> &waInstance)
       -> std::shared_ptr<RepresentationInterface> override {
     return reduce(waInstance, DEFAULT_RANDOM_RANGE_FACTOR, false);
   }
