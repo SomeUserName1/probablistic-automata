@@ -166,7 +166,8 @@ SCENARIO("Equivalence") {
                                      "equi_test/out_eq_test.txt"};
     execute("./ssm", args, "");
     WHEN("Using the output of the program ") {
-      std::string progOutput = UserInterface::read_file("equi_test/out_eq_test.txt");
+      std::string progOutput =
+          UserInterface::read_file("equi_test/out_eq_test.txt");
       std::string minimized = progOutput.substr(
           progOutput.find("After Reduction\n") + 16, progOutput.size());
       UserInterface::display_file(minimized, "equi_test/result.txt");

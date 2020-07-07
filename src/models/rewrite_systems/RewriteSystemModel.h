@@ -168,7 +168,8 @@ public:
       } else {
         throw std::invalid_argument("rate of a rule may not be empty!");
       }
-      pRules.emplace_back(std::make_shared<RewriteSystem::Rule>(rate, lhs, rhs));
+      pRules.emplace_back(
+          std::make_shared<RewriteSystem::Rule>(rate, lhs, rhs));
       line = get_next_line(string, "\n", TrimType::TrimWhiteSpace);
     }
     return std::make_shared<RewriteSystem>(pMapping, pSpeciesList, pRules);

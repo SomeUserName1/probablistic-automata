@@ -141,8 +141,7 @@ public:
   [[nodiscard]] inline auto pretty_print() const -> std::string override {
     std::stringstream result;
     size_t i = 0;
-    Eigen::IOFormat fmt(16, 0, ", ", ",\n\t", "(", ")", "(",
-                        ")");
+    Eigen::IOFormat fmt(16, 0, ", ", ",\n\t", "(", ")", "(", ")");
     result << "input=dense;\n"
            << "states=" << this->states
            << ";\ncharacters=" << this->noInputCharacters << ";\n"

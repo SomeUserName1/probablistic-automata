@@ -17,23 +17,24 @@ public:
     return "Differential Equation Model";
   }
 
-  auto
-  parse(std::string &string) -> std::shared_ptr<RepresentationInterface> override {
+  auto parse(std::string &string)
+      -> std::shared_ptr<RepresentationInterface> override {
     // TODO continue here
     throw NotImplementedException();
   }
 
-  [[nodiscard]] auto
-  get_reduction_methods() const -> std::vector<std::shared_ptr<ReductionMethodInterface>> override {
+  [[nodiscard]] auto get_reduction_methods() const
+      -> std::vector<std::shared_ptr<ReductionMethodInterface>> override {
     throw NotImplementedException();
   }
 
-  [[nodiscard]] auto
-  get_conversion_methods() const -> std::vector<std::shared_ptr<ConversionMethodInterface>> override {
+  [[nodiscard]] auto get_conversion_methods() const
+      -> std::vector<std::shared_ptr<ConversionMethodInterface>> override {
     throw NotImplementedException();
   }
 
-  [[nodiscard]] auto get_representation_description() const noexcept -> std::string override {
+  [[nodiscard]] auto get_representation_description() const noexcept
+      -> std::string override {
     return "TODO";
   }
 };

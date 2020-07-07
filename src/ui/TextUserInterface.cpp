@@ -2,18 +2,18 @@
 
 UserInterface::Task TextUserInterface::select_task() const {
   Task task = Unselected;
-  std::cout << "Hello," << std::endl
-            << "this is a program to automatically minimize models of "
-               "stochastic dynamical systems like automata"
-            << " or differential equations." << std::endl
-            << "What do you want to do?" << std::endl
-            << "\t\t 1. Reduce an example" << std::endl
-            << "\t\t 2. Check if two instances of the same models are equivalent"
-            << std::endl
-            << "\t\t 3. Perform a benchmark" << std::endl
-            << "\t\t 4. Convert an example from one models to another"
-            << std::endl
-            << "\t\t 5. to exit" << std::endl;
+  std::cout
+      << "Hello," << std::endl
+      << "this is a program to automatically minimize models of "
+         "stochastic dynamical systems like automata"
+      << " or differential equations." << std::endl
+      << "What do you want to do?" << std::endl
+      << "\t\t 1. Reduce an example" << std::endl
+      << "\t\t 2. Check if two instances of the same models are equivalent"
+      << std::endl
+      << "\t\t 3. Perform a benchmark" << std::endl
+      << "\t\t 4. Convert an example from one models to another" << std::endl
+      << "\t\t 5. to exit" << std::endl;
 
   do {
     std::string input("");

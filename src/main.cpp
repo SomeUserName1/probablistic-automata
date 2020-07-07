@@ -4,9 +4,11 @@
 #include <omp.h>
 #include <tclap/CmdLine.h>
 
-#include "models/differential_equations/DifferentialEquationModel.h"
+
+#include "models/differential_equations/SystemOfEquationsModel.h"
 #include "models/rewrite_systems/RewriteSystemModel.h"
 #include "models/weighted_automata/WeightedAutomatonModel.h"
+#include "models/benchmarks.h"
 #include "ui/TextUserInterface.h"
 
 #ifndef THREADS

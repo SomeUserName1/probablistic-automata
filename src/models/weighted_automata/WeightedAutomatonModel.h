@@ -5,9 +5,9 @@
 
 #include "../../util/ParseUtils.h"
 #include "../ModelInterface.h"
-#include "WeightedAutomatonBenchmarks.h"
 #include "KieferSchuetzenbergerReduction.h"
 #include "WeightedAutomaton.h"
+#include "WeightedAutomatonBenchmarks.h"
 
 class WeightedAutomatonModel : public ModelInterface {
 private:
@@ -32,15 +32,13 @@ public:
     if (!line.starts_with("input=dense")) {
       if (line.starts_with("input=sparse")) {
         this->reductionMethods = {
-            std::make_shared<KieferSchuetzenbergerReduction<
-                MatSpD>>()};
+            std::make_shared<KieferSchuetzenbergerReduction<MatSpD>>()};
         return validate_model_instance_sparse(str);
       }
       throw std::invalid_argument(
           "The input specification must be either using sparse or dense "
           "format and declare "
           "this in the first line as 'sparse' or 'dense'!");
-
     }
     return validate_model_instance_dense(str);
   }
@@ -171,8 +169,7 @@ public:
       throw std::invalid_argument(
           "The initial vector needs to be specified as 3rd!");
     }
-    auto alpha =
-        std::make_shared<MatSpD>(1, states);
+    auto alpha = std::make_shared<MatSpD>(1, states);
     line = line.substr(line.find(':') + 1, line.size());
     b = extract_number<uint>(line);
     d = extract_number<double>(line);
@@ -189,8 +186,7 @@ public:
     }
     line = line.substr(line.find(':') + 1, line.size());
     for (int i = 0; i < characters; i++) {
-      mu.emplace_back(std::make_shared<MatSpD>(
-          states, states));
+      mu.emplace_back(std::make_shared<MatSpD>(states, states));
     }
 
     do {
@@ -207,17 +203,15 @@ public:
     if (!line.starts_with("eta")) {
       throw std::logic_error("Unreachable;");
     }
-    auto eta =
-        std::make_shared<MatSpD>(states, 1);
+    auto eta = std::make_shared<MatSpD>(states, 1);
     line = line.substr(line.find(':') + 1, line.size());
     b = extract_number<uint>(line);
     d = extract_number<double>(line);
     eta->coeffRef(b, 0) = d;
     std::cout << "Parsed Automaton successfully" << std::endl;
 
-    return std::make_shared<
-        WeightedAutomaton<MatSpD>>(
-        states, characters, alpha, mu, eta);
+    return std::make_shared<WeightedAutomaton<MatSpD>>(states, characters,
+                                                       alpha, mu, eta);
   }
 
   [[nodiscard]] auto get_reduction_methods() const

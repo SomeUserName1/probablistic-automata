@@ -293,8 +293,10 @@ SCENARIO("The reduced automaton accepts the same words with the same weights") {
   GIVEN("The running example") {
     auto wa = gen_wa_sparse();
     WHEN("Reducing it using KieferSchuetzenberger") {
-      auto reducedRI = KieferSchuetzenbergerReduction<MatSpD>::reduce(wa, 100, false);
-      auto reducedWA = static_pointer_cast<WeightedAutomaton<MatSpD>>(reducedRI);
+      auto reducedRI =
+          KieferSchuetzenbergerReduction<MatSpD>::reduce(wa, 100, false);
+      auto reducedWA =
+          static_pointer_cast<WeightedAutomaton<MatSpD>>(reducedRI);
       std::vector<std::vector<unsigned int>> words;
       generate_words(wa->get_states(), wa->get_number_input_characters(),
                      words);

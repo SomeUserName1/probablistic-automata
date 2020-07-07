@@ -12,7 +12,9 @@ public:
 
   [[nodiscard]] virtual auto pretty_print() const -> std::string = 0;
 
-  [[nodiscard]] virtual auto equivalent(const std::shared_ptr<RepresentationInterface> &other) const -> bool = 0;
+  [[nodiscard]] virtual auto
+  equivalent(const std::shared_ptr<RepresentationInterface> &other) const
+      -> bool = 0;
 };
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_MODELREPRESENTATIONINTERFACE_H

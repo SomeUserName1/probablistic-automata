@@ -1,9 +1,9 @@
 #ifndef STOCHASTIC_SYSTEM_MINIMIZATION_TERM_H
 #define STOCHASTIC_SYSTEM_MINIMIZATION_TERM_H
 
-#include <vector>
-#include <sstream>
 #include <cstring>
+#include <sstream>
+#include <vector>
 
 #include "../../util/DefsConstants.h"
 #include "../../util/ParseUtils.h"
@@ -17,7 +17,7 @@
 class Term : public RepresentationInterface {
 private:
   unsigned long int factor; // FIXME Here functions & constants are possible
-  std::vector<uint> word; // FIXME Powers, Derivatives, sin, cos, tan, e
+  std::vector<uint> word;   // FIXME Powers, Derivatives, sin, cos, tan, e
 
 public:
   Term(unsigned long int mFactor, std::vector<uint> mWord)
@@ -46,7 +46,7 @@ public:
 
   [[nodiscard]] auto
   equivalent(const std::shared_ptr<RepresentationInterface> &other) const
-  -> bool override {
+      -> bool override {
     auto oTerm = static_pointer_cast<Term>(other);
     if (this->factor != oTerm->get_factor() ||
         this->word.size() != oTerm->get_word().size()) {
@@ -60,8 +60,8 @@ public:
     return true;
   }
 
-  static inline auto extract_term(const std::vector<std::string> &pMapping, std::string &input)
-  -> std::shared_ptr<Term> {
+  static inline auto extract_term(const std::vector<std::string> &pMapping,
+                                  std::string &input) -> std::shared_ptr<Term> {
 
     bool seenPrevEntity = false;
     std::string prevEntityStr;
@@ -99,8 +99,9 @@ public:
     return std::make_shared<Term>(factor, word);
   }
 
-  static inline auto extract_terms(const std::vector<std::string> &pMapping, std::string &input)
-  -> std::vector<std::shared_ptr<Term>> {
+  static inline auto extract_terms(const std::vector<std::string> &pMapping,
+                                   std::string &input)
+      -> std::vector<std::shared_ptr<Term>> {
     std::vector<std::shared_ptr<Term>> result = {};
     std::string term;
     size_t pos = 0;

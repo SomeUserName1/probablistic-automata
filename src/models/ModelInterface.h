@@ -21,8 +21,8 @@ public:
       -> std::shared_ptr<RepresentationInterface> = 0;
 
   [[nodiscard]] auto
-  summarize_reduction(std::shared_ptr<RepresentationInterface> & model,
-                      std::shared_ptr<RepresentationInterface> & minModel) const
+  summarize_reduction(std::shared_ptr<RepresentationInterface> &model,
+                      std::shared_ptr<RepresentationInterface> &minModel) const
       -> std::string {
     std::stringstream result;
     result << "Before Reduction" << std::endl

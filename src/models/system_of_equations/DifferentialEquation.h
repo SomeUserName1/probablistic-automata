@@ -6,17 +6,18 @@
 
 class DifferentialEquation : public Equation {
 private:
-  std::vector<Term> rhs
-  std::vector<Term> lhs
+  std::vector<Term> rhs std::vector<Term> lhs
 
-public:
-  DifferentialEquation() = default;
+      public : DifferentialEquation() = default;
   ~DifferentialEquation() override;
 
-  [[nodiscard]] auto pretty_print() const -> std::string override { return nullptr; }
+  [[nodiscard]] auto pretty_print() const -> std::string override {
+    return nullptr;
+  }
 
-  [[nodiscard]] auto equivalent(
-      const std::shared_ptr<RepresentationInterface> &other) const -> bool override {
+  [[nodiscard]] auto
+  equivalent(const std::shared_ptr<RepresentationInterface> &other) const
+      -> bool override {
     return false;
   }
 };

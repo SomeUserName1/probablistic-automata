@@ -103,9 +103,7 @@ public:
       return this->species;
     }
 
-    void add_factor(unsigned int addition) {
-      this-> factor += addition;
-    }
+    void add_factor(unsigned int addition) { this->factor += addition; }
 
     [[nodiscard]] auto pretty_print() const -> std::string override {
       std::stringstream stringstream;
@@ -119,7 +117,8 @@ public:
     equivalent(const std::shared_ptr<RepresentationInterface> &other) const
         -> bool override {
       auto oTerm = static_pointer_cast<Term>(other);
-      return (this->factor == oTerm->get_factor() && this->species == oTerm->get_species());
+      return (this->factor == oTerm->get_factor() &&
+              this->species == oTerm->get_species());
     }
   };
 
