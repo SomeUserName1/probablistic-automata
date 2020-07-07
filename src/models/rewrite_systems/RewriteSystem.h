@@ -97,10 +97,14 @@ public:
       return this->factor;
     }
 
-    [[nodiscard]] auto decrement_factor() -> void { this->factor--; }
+    auto decrement_factor() -> void { this->factor--; }
 
     [[nodiscard]] auto get_species() const -> unsigned int {
       return this->species;
+    }
+
+    void add_factor(unsigned int addition) {
+      this-> factor += addition;
     }
 
     [[nodiscard]] auto pretty_print() const -> std::string override {
@@ -115,8 +119,7 @@ public:
     equivalent(const std::shared_ptr<RepresentationInterface> &other) const
         -> bool override {
       auto oTerm = static_pointer_cast<Term>(other);
-      return !(this->factor != oTerm->get_factor() ||
-               this->species != oTerm->get_species());
+      return (this->factor == oTerm->get_factor() && this->species == oTerm->get_species());
     }
   };
 
@@ -129,7 +132,7 @@ public:
   public:
     Rule(double mRate, std::vector<std::shared_ptr<Term>> mLhs,
          std::vector<std::shared_ptr<Term>> mRhs)
-        : rate(mRate), mcoeff(0), lhs(std::move(mLhs)), rhs(std::move(mRhs)) {}
+        : rate(mRate), lhs(std::move(mLhs)), rhs(std::move(mRhs)) {}
     ~Rule() override;
 
     [[nodiscard]] auto get_rate() const -> double { return this->rate; }
