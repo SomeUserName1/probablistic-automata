@@ -16,7 +16,7 @@ private:
   // current partition: vector holding vectors of indices of the species
   std::vector<std::vector<unsigned int>> part;
   // holds labels of the partitions
-  std::vector<unsigned int> partLabels;
+  std::vector<long> partLabels;
   // holds multinomial coefficients for each reaction
   std::vector<unsigned long long int> mcoeffs;
   // holds all reactants to be considered when computing fr/br; species, reagent
@@ -100,6 +100,7 @@ public:
 
     //#pragma omp task default(none) shared(rules)
     //{
+    this->partLabels = std::vector<long>(this->part.size(), -1L);
     this->M = std::make_shared<MatDenD>(this->system->get_species_list().size(),
                                         reactantLabels.size());
     this->M->fill(0.0);
@@ -156,19 +157,6 @@ public:
         }
       }
     }
-
-    // std::mutex nonZeroFluxMutex = std::mutex();
-    //#pragma omp taskloop default(none) num_threads(THREADS) if (!TEST) \
-//    shared(rules, speciesList, nonZeroFluxMutex, \
-//           ) private(ns)
-    std::vector<std::shared_ptr<RewriteSystem::Term>> initLabel = {};
-    this->partLabels =
-        std::vector<std::vector<std::shared_ptr<RewriteSystem::Term>>>(
-            this->part.size(), initLabel);
-    /*    for (const auto &block : this->part) {
-          partLabels.push_back({});
-        }*/
-
     //}
     //}
   }
@@ -288,17 +276,17 @@ public:
             currentSpecies != species) {
           ct++;
         }
-        if (this->partLabels[partNo].empty()) {
+        if (this->partLabels[partNo] == -1L) {
           this->partLabels[partNo] = currentSpecies;
         }
         // Error prone?
 
-        for (size_t k = 0; k < rhoMDash; k++) {
-          if (rhoMDash[k]->get_species() == this->partLabels[partNo])) {
-            found = true;
-            rhoMDash[k]->add_factor(alteredReagents[j]->get_factor());
-            break;
-          }
+        for (size_t k = 0; k < rhoMDash.size(); k++) {
+          if (rhoMDash[k]->get_species() == this->partLabels[partNo]) {
+              found = true;
+              rhoMDash[k]->add_factor(alteredReagents[j]->get_factor());
+              break;
+            }
         }
         if (!found) {
           rhoMDash.push_back(std::make_shared<RewriteSystem::Term>(
@@ -306,11 +294,13 @@ public:
         }
       }
       // Optimize me
-      for (for size_t j = 0; j < this->reactantLabels; j++) {
-        if (equal_reagents(this->reactantLabels[j], rhoMDash)) {
-          col = j;
+      long k = 0;
+      for (const auto& label : this->reactantLabels) {
+        if (equal_reagents(std::get<1>(label), rhoMDash)) {
+          col = k;
           break;
         }
+        k++;
       }
       if (col == -1) {
         std::cout << "rhoMDash in compute br was not found in the labels"
@@ -320,11 +310,13 @@ public:
       alpha = rule->get_rate();
       for (size_t j = 0; j < alteredReagents.size(); j++) {
         update_m(alteredReagents[j]->get_species(), col,
-                 -alpha * alteredReagents[j]->get_factor() / ct, nonZeroRateSpecies);
+                 -alpha * alteredReagents[j]->get_factor() / ct,
+                 nonZeroRateSpecies);
       }
       rhs = rule->get_rhs();
       for (size_t j = 0; j < rhs.size(); j++) {
-        update_m(rhs[j]->get_species(), col, alpha * rhs[j]->get_factor() / ct, nonZeroRateSpecies);
+        update_m(rhs[j]->get_species(), col, alpha * rhs[j]->get_factor() / ct,
+                 nonZeroRateSpecies);
       }
     }
   }
@@ -417,8 +409,8 @@ public:
       return false;
     }
     bool found = false;
-    for (const auto term0 : reagents0) {
-      for (const auto term1 : reagents1) {
+    for (const auto &term0 : reagents0) {
+      for (const auto &term1 : reagents1) {
         if (term0->get_factor() == term1->get_factor() &&
             term0->get_species() == term1->get_species()) {
           found = true;
