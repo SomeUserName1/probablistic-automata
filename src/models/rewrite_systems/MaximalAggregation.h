@@ -198,7 +198,7 @@ public:
              const std::vector<std::vector<unsigned int>> &split) {
     // of species with non-zero
     std::set<unsigned int> nonZeroRateSpecies;
-    std::set<std::vector<unsigned int>> partitionsContainingNZRS;
+    std::vector<unsigned int> partitionsContainingNZRS;
 
     for (const auto &sj : currentSplitter) {
       if (forward) {
@@ -207,8 +207,44 @@ public:
         compute_backward_rate(sj, currentSplitter, nonZeroRateSpecies);
       }
     }
+    std::vector<unsigned int> marked = {};
+    unsigned int blockNo;
+    for (const auto &element : nonZeroRateSpecies) {
+      blockNo = get_block_number(element);
+      this->partLabels[blockNo] = -1;
+      if (!floating_point_compare(this->M->row(element).sum(), 0.0)) {
+        if (!contains_marked(marked, blockNo)) {
+          partitionsContainingNZRS.emplace(blockNo);
+        }
+      }
+      marked.push_back(element);
+    }
 
-    // FIXME cont. here
+    std::vector<unsigned int> currentPartition;
+    std::vecotr<unsigned int> newPartition = {};
+    while(!partitionsContainingNZRS.empty()) {
+      blockNo = partitionsContainingNZRS.back();
+      partitionsContainingNZRS.pop_back();
+      currentPartition = this->part[blockNo];
+      for (size_t i = 0; i < currentPartition.size(); i++) {
+        for (size_t j = 0; j < marked.size(); j++) {
+          if (currentPartition[i] == marked[j]) {
+            newPartition.push_back(currentPartition[i]);
+            currentPartition.erase(currentPartition.begin() + i);
+          }
+        }
+      }
+      if (currentPartition.empty()) {
+        this->part[blockNo] = newPartition;
+      } else {
+        this->part.push_back(newPartition);
+      }
+      splitIntoSubParts(newPartition);
+
+    }
+    while (!nonZeroRateSpecies.empty()) {
+      git
+    }
   }
 
   void compute_forward_rate(unsigned int species,
@@ -423,6 +459,17 @@ public:
       }
     }
     return true;
+  }
+
+  inline auto contains_marked(std::vector<unsigned int>& markedSpec, size_t partNo) -> bool {
+    for (const auto &elem : this->part[partNo]) {
+      for (const auto &species : markedSpec) {
+        if (elem == species) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 };
 
