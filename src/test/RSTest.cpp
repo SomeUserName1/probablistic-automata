@@ -23,7 +23,9 @@ SCENARIO("Parsing rules with many multiplicities works") {
         std::vector<std::shared_ptr<RewriteSystem::Rule>> trueRule = {
             std::make_shared<RewriteSystem::Rule>(3.0, lhs, rhs)};
 
+        std::cout << rs->pretty_print() << std::endl;
         for (size_t i = 0; i < trueMap.size(); i++) {
+
           REQUIRE(rs->get_mapping()[i] == trueMap[i]);
         }
         REQUIRE(rs->get_rules()[0]->equivalent((trueRule[0])));

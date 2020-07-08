@@ -5,7 +5,7 @@
 #include <tclap/CmdLine.h>
 
 
-#include "models/differential_equations/SystemOfEquationsModel.h"
+#include "models/system_of_equations/SystemOfEquationsModel.h"
 #include "models/rewrite_systems/RewriteSystemModel.h"
 #include "models/weighted_automata/WeightedAutomatonModel.h"
 #include "models/benchmarks.h"
@@ -112,11 +112,11 @@ auto main(int argc, char *argv[]) -> int {
       } else if (iequals(modelStr, "DE") ||
                  iequals(modelStr, "SystemOfEquationsModel") ||
                  iequals(modelStr, "DifferentialEquation")) {
-        model = std::make_shared<DifferentialEquationModel>();
+        model = std::make_shared<SystemOfEquationsModel>();
       } else if (iequals(modelStr, "RS") ||
                  iequals(modelStr, "RewritingSystemModel") ||
                  iequals(modelStr, "RewritingSystem")) {
-        model = std::make_shared<DifferentialEquationModel>();
+        model = std::make_shared<RewriteSystemModel>();
       } else {
         std::cerr
             << "Specify either 'WA', 'DE', 'RS', 'WeightedAutomatonModel', "
@@ -164,7 +164,7 @@ auto main(int argc, char *argv[]) -> int {
       case UserInterface::Reduction: {
         std::vector<std::shared_ptr<ModelInterface>> models = {
             std::make_shared<WeightedAutomatonModel>(),
-            std::make_shared<DifferentialEquationModel>(),
+            std::make_shared<SystemOfEquationsModel>(),
             std::make_shared<RewriteSystemModel>()};
         model = ui->select_model(models);
         reductionMethod = ui->select_reduction_method(model);
@@ -184,7 +184,7 @@ auto main(int argc, char *argv[]) -> int {
       case UserInterface::Equivalence: {
         std::vector<std::shared_ptr<ModelInterface>> models = {
             std::make_shared<WeightedAutomatonModel>(),
-            std::make_shared<DifferentialEquationModel>()};
+            std::make_shared<SystemOfEquationsModel>()};
         model = ui->select_model(models);
         inputMethod = ui->select_io_method(true);
         outputMethod = ui->select_io_method(false);
