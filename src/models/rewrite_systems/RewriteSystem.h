@@ -51,6 +51,21 @@ public:
     for (const auto &elem : mapping) {
       stringstream << "\t " << elem << std::endl;
     }
+    size_t i = 0;
+    stringstream << "\n Species:\n";
+    for (const auto &elem : this->speciesList) {
+      for (const auto& digit : elem) {
+        if (digit > 0) {
+          stringstream << mapping[i];
+          if (digit > 1) {
+            stringstream << digit;
+          }
+        }
+        i++;
+      }
+      i = 0;
+      stringstream << std::endl;
+    }
     stringstream << "\n Rules:\n";
     for (const auto &rule : this->rules) {
       stringstream << "\t" << rule->pretty_print();

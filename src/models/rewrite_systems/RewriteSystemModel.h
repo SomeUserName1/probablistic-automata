@@ -112,14 +112,16 @@ public:
       }
     }
 
+    // FIXME cont here
     // Step 2: extract Species
+    f = std::istringstream(string);
     std::vector<std::vector<unsigned int>> pSpeciesList = {};
     std::vector<unsigned int> pSpecies;
     while (std::getline(f, line)) {
       if (line.find("->") != std::string::npos) {
         name = extract_species_name(line);
         pSpecies = convert_species_string_vector(pMapping, name);
-        while (!pSpecies.empty()) {
+        while (!name.empty()) {
           if (std::find(pSpeciesList.begin(), pSpeciesList.end(), pSpecies) ==
               pSpeciesList.end()) {
             pSpeciesList.emplace_back(pSpecies);

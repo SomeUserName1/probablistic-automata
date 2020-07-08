@@ -8,6 +8,8 @@
 #include <set>
 #include <tuple>
 #include <vector>
+#include <iterator>
+#include <cmath>
 
 class MaximalAggregation : public ReductionMethodInterface {
 private:
@@ -418,8 +420,83 @@ public:
   }
 
   std::shared_ptr<RewriteSystem> apply_reduction() {
+    std::vector<std::string> mapping = this->system->get_mapping();
+    std::vector<std::vector<unsigned int>> speciesList =
+        this->system->get_species_list();
+    std::vector<std::shared_ptr<RewriteSystem::Rule>> rules;
+    // use to cache order of the new species field in terms of blocks
+    // e.g. if block 2 was added to the mapping first, the species description
+    // will be 0...0 10... where 0...0 is the name for all previous species
+    // and 10... contains the names of the newly formed composite species
+    std::vector<size_t> collapsedSpec = {};
+    std::vector<size_t> reductionMap;
 
+    std::string accumulateName;
+    for (size_t i = 0; i < this->part.size(); i++) {
+      if (this->part[i].size() > 1) {
+        accumulateName = "{" + this->system->get_mapping()[this->part[i][0]];
+        for (size_t j = 1; j < this->part[i].size(); j++) {
+          accumulateName +=
+              ", " + this->system->get_mapping()[this->part[i][j]];
+        }
+        accumulateName += "}";
+        mapping.emplace_back(accumulateName);
+        collapsedSpec.emplace_back(i);
+      }
+    }
 
+    size_t lumped = this->system->get_mapping().size() - mapping.size();
+    std::vector<unsigned int> accumulateSpecies;
+    size_t partNo;
+    long collapsedSpecNo;
+    std::vector<size_t>::iterator findResult;
+    for (size_t i = 0; i < speciesList.size(); i++) {
+      partNo = get_block_number(static_cast<unsigned int>(i));
+      if (this->part[partNo].size() > 1) {
+        findResult = std::find(collapsedSpec.begin(), collapsedSpec.end(), partNo);
+        if (findResult != collapsedSpec.end()) {
+          collapsedSpecNo = std::distance(collapsedSpec.begin(), findResult);
+          speciesList[i] = std::vector<unsigned int>(mapping.size(), 0);
+          speciesList[i][this->system->get_mapping().size() +
+                         static_cast<size_t>(collapsedSpecNo)] =
+              1;
+        } else {
+          speciesList.erase(std::next(speciesList.begin(), static_cast<long>(i)));
+          i--;
+        }
+      } else {
+        for (size_t j = 0; j < lumped; j++) {
+          speciesList[i].emplace_back(0);
+        }
+      }
+      reductionMap.push_back(i);
+    }
+
+    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
+    std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
+    double rate;
+    double denom;
+    std::shared_ptr<RewriteSystem::Term> term;
+    for (const auto &rule: this->system->get_rules()) {
+      lhs = {};
+      for (size_t m = 0; m < rule->get_lhs().size(); m++) {
+        lhs.emplace_back(std::make_shared<RewriteSystem::Term>(rule->get_lhs()[m]->get_factor(), reductionMap[rule->get_lhs()[m]->get_species()]));
+      }
+      rhs = {};
+      for (size_t m = 0; m < rule->get_rhs().size(); m++) {
+        rhs.emplace_back(std::make_shared<RewriteSystem::Term>(rule->get_rhs()[m]->get_factor(), reductionMap[rule->get_rhs()[m]->get_species()]));
+      }
+      denom = 1.0;
+      for (size_t n = 0; n < lhs.size(); n++) {
+        partNo = get_block_number(lhs[n]->get_species());
+        denom *= std::pow(this->part[partNo].size(), lhs[n]->get_factor());
+      }
+      rate = rule->get_rate();
+      rate = rate / denom;
+      rules.emplace_back(std::make_shared<RewriteSystem::Rule>(rate, lhs, rhs));
+    }
+
+    return std::make_shared<RewriteSystem>(mapping, speciesList, rules);
   }
 
   inline void update_m(unsigned int species, long colIdx, double val,
