@@ -84,9 +84,9 @@ public:
 
   // Build labels, pos vector, mcoeff, matrix M
   void init() {
-    std::vector<std::shared_ptr<RewriteSystem::Rule>> rules =
+    const std::vector<std::shared_ptr<RewriteSystem::Rule>> &rules =
         this->system->get_rules();
-    std::vector<std::vector<unsigned int>> speciesList =
+    const std::vector<std::vector<unsigned int>> &speciesList =
         this->system->get_species_list();
 
     //#pragma omp parallel default(none)
@@ -101,8 +101,8 @@ public:
     //#pragma omp task default(none) shared(rules)
     //{
     this->partLabels = std::vector<long>(this->part.size(), -1L);
-    this->M = std::make_shared<MatDenD>(this->system->get_species_list().size(),
-                                        reactantLabels.size());
+    this->M =
+        std::make_shared<MatDenD>(speciesList.size(), reactantLabels.size());
     this->M->fill(0.0);
     // }
 
@@ -117,13 +117,14 @@ public:
     std::mutex labelPosMutex = std::mutex();
     std::mutex reactantLabelsMutex = std::mutex();
     //#pragma omp taskloop default(none) num_threads(THREADS) if (!TEST)             \
-//    shared(rules, speciesList, labelPosMutex,                                      \
+//    shared(rules, labelPosMutex,                                      \
 //           reactantLabelsMutex) private(pos, diff, candidate)
     for (size_t i = 0; i < rules.size(); i++) {
       reagents = rules[i]->get_lhs();
       pos = std::vector<long>(reagents.size());
       for (size_t k = 0; k < reagents.size(); k++) {
         // generate reduced reagents
+        alteredReagents = {};
         for (const auto &elem : reagents) {
           alteredReagents.emplace_back(std::make_shared<RewriteSystem::Term>(
               elem->get_factor(), elem->get_species()));
@@ -195,10 +196,10 @@ public:
   }
 
   void split(bool forward, std::vector<unsigned int> &currentSplitter,
-             const std::vector<std::vector<unsigned int>> &split) {
+             std::vector<std::vector<unsigned int>> &split) {
     // of species with non-zero
-    std::set<unsigned int> nonZeroRateSpecies;
-    std::vector<unsigned int> partitionsContainingNZRS;
+    std::set<unsigned int> nonZeroRateSpecies = std::set<unsigned int>();
+    std::vector<unsigned int> partitionsContainingNZRS = {};
 
     for (const auto &sj : currentSplitter) {
       if (forward) {
@@ -208,21 +209,23 @@ public:
       }
     }
     std::vector<unsigned int> marked = {};
-    unsigned int blockNo;
+    size_t blockNo;
     for (const auto &element : nonZeroRateSpecies) {
       blockNo = get_block_number(element);
       this->partLabels[blockNo] = -1;
-      if (!floating_point_compare(this->M->row(element).sum(), 0.0)) {
+      if (!floating_point_compare(this->M->row(element).norm(), 0.0)) {
         if (!contains_marked(marked, blockNo)) {
-          partitionsContainingNZRS.emplace(blockNo);
+          partitionsContainingNZRS.emplace_back(blockNo);
         }
       }
       marked.push_back(element);
     }
 
+    bool isSplitter = false;
+    std::vector<std::vector<unsigned int>> newBlocks;
     std::vector<unsigned int> currentPartition;
-    std::vecotr<unsigned int> newPartition = {};
-    while(!partitionsContainingNZRS.empty()) {
+    std::vector<unsigned int> newPartition = {};
+    while (!partitionsContainingNZRS.empty()) {
       blockNo = partitionsContainingNZRS.back();
       partitionsContainingNZRS.pop_back();
       currentPartition = this->part[blockNo];
@@ -230,21 +233,78 @@ public:
         for (size_t j = 0; j < marked.size(); j++) {
           if (currentPartition[i] == marked[j]) {
             newPartition.push_back(currentPartition[i]);
-            currentPartition.erase(currentPartition.begin() + i);
+            currentPartition.erase(currentPartition.begin() +
+                                   static_cast<long>(i));
           }
         }
       }
+      newBlocks = split_marked(newPartition);
+
       if (currentPartition.empty()) {
         this->part[blockNo] = newPartition;
+        this->partLabels[blockNo] = -1L;
       } else {
         this->part.push_back(newPartition);
+        this->partLabels.emplace_back(-1L);
+        // check if we the current partition is contained in the splitters
+        for (const auto &block : split) {
+          if (equal_block(block, this->part[blockNo])) {
+            isSplitter = true;
+          }
+        }
+        if (!isSplitter) {
+          split.emplace_back(this->part[blockNo]);
+        }
       }
-      splitIntoSubParts(newPartition);
-
+      for (size_t j = 0; j < newBlocks.size(); j++) {
+        split.emplace_back(newBlocks[j]);
+        if (j != 0) {
+          this->part.emplace_back(newBlocks[j]);
+          this->partLabels.emplace_back(-1L);
+        }
+      }
     }
+    unsigned int currentSpecies;
+    Eigen::RowVectorXd zeroVect = Eigen::MatrixXd::Zero(
+        1, static_cast<long>(this->reactantLabels.size()));
     while (!nonZeroRateSpecies.empty()) {
-      git
+      currentSpecies = *nonZeroRateSpecies.rbegin();
+      nonZeroRateSpecies.erase(std::prev(nonZeroRateSpecies.end()));
+      this->M->row(currentSpecies) = zeroVect;
     }
+  }
+
+  inline auto split_marked(std::vector<unsigned int> &markedPartition) const
+      -> std::vector<std::vector<unsigned int>> {
+    // Asumption: nothing added to partition or splitters so far
+    std::vector<std::vector<unsigned int>> result = {};
+    std::vector<unsigned int> newBlock;
+    // used to cache the indexes of the element to delete to avoid
+    //  1. changing the collection that is iterated over while iterating (UB)
+    //  2. avoid another iteration or a set difference to look up the indexes
+    std::vector<size_t> indexesToDelete;
+    double classRate;
+    std::vector<unsigned int> &currentBlock = markedPartition;
+
+    while (!currentBlock.empty()) {
+      classRate = this->M->row(currentBlock[0]).sum();
+      newBlock = {};
+      indexesToDelete = {};
+      for (size_t i = 0; i < currentBlock.size(); i++) {
+        if (!floating_point_compare<double>(
+                this->M->row(static_cast<long>(currentBlock[i])).sum(),
+                classRate)) {
+          newBlock.push_back(currentBlock[i]);
+          indexesToDelete.push_back(i);
+        }
+      }
+      for (const auto &index : indexesToDelete) {
+        currentBlock.erase(currentBlock.begin() + static_cast<long>(index));
+      }
+      result.emplace_back(currentBlock);
+      currentBlock = newBlock;
+    }
+    return result;
   }
 
   void compute_forward_rate(unsigned int species,
@@ -319,10 +379,10 @@ public:
 
         for (size_t k = 0; k < rhoMDash.size(); k++) {
           if (rhoMDash[k]->get_species() == this->partLabels[partNo]) {
-              found = true;
-              rhoMDash[k]->add_factor(alteredReagents[j]->get_factor());
-              break;
-            }
+            found = true;
+            rhoMDash[k]->add_factor(alteredReagents[j]->get_factor());
+            break;
+          }
         }
         if (!found) {
           rhoMDash.push_back(std::make_shared<RewriteSystem::Term>(
@@ -331,7 +391,7 @@ public:
       }
       // Optimize me
       long k = 0;
-      for (const auto& label : this->reactantLabels) {
+      for (const auto &label : this->reactantLabels) {
         if (equal_reagents(std::get<1>(label), rhoMDash)) {
           col = k;
           break;
@@ -357,7 +417,10 @@ public:
     }
   }
 
-  std::shared_ptr<RewriteSystem> apply_reduction() {}
+  std::shared_ptr<RewriteSystem> apply_reduction() {
+
+
+  }
 
   inline void update_m(unsigned int species, long colIdx, double val,
                        std::set<unsigned int> &nonZeroRateSpecies) {
@@ -370,7 +433,7 @@ public:
   void set_mcoeffs() {
     unsigned int upper = 0;
     unsigned long long int lower;
-    std::vector<std::shared_ptr<RewriteSystem::Rule>> rules =
+    const std::vector<std::shared_ptr<RewriteSystem::Rule>> &rules =
         this->system->get_rules();
 
     this->mcoeffs = std::vector(rules.size(), 0uLL);
@@ -392,9 +455,9 @@ public:
     }
   }
 
-  inline auto
-  get_factor_for_species(unsigned int species,
-                         std::vector<std::shared_ptr<RewriteSystem::Term>> hs)
+  inline auto get_factor_for_species(
+      unsigned int species,
+      const std::vector<std::shared_ptr<RewriteSystem::Term>> &hs)
       -> unsigned int {
     for (const auto &term : hs) {
       if (term->get_species() == species) {
@@ -416,8 +479,8 @@ public:
         "The species must be contained in one of the partitions!");
   }
 
-  inline auto equal_block(std::vector<unsigned int> part0,
-                          std::vector<unsigned int> part1) -> bool {
+  inline auto equal_block(const std::vector<unsigned int> &part0,
+                          const std::vector<unsigned int> &part1) -> bool {
     if (part0.size() != part1.size()) {
       return false;
     }
@@ -437,9 +500,9 @@ public:
     return true;
   }
 
-  inline auto
-  equal_reagents(std::vector<std::shared_ptr<RewriteSystem::Term>> reagents0,
-                 std::vector<std::shared_ptr<RewriteSystem::Term>> reagents1)
+  inline auto equal_reagents(
+      const std::vector<std::shared_ptr<RewriteSystem::Term>> &reagents0,
+      const std::vector<std::shared_ptr<RewriteSystem::Term>> &reagents1)
       -> bool {
     if (reagents0.size() != reagents1.size()) {
       return false;
@@ -461,7 +524,8 @@ public:
     return true;
   }
 
-  inline auto contains_marked(std::vector<unsigned int>& markedSpec, size_t partNo) -> bool {
+  inline auto contains_marked(std::vector<unsigned int> &markedSpec,
+                              size_t partNo) -> bool {
     for (const auto &elem : this->part[partNo]) {
       for (const auto &species : markedSpec) {
         if (elem == species) {

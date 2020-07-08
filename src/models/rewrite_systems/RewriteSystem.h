@@ -31,17 +31,17 @@ public:
 
   ~RewriteSystem() override;
 
-  [[nodiscard]] auto get_mapping() const noexcept -> std::vector<std::string> {
+  [[nodiscard]] auto get_mapping() const noexcept -> const std::vector<std::string>& {
     return this->mapping;
   }
 
   [[nodiscard]] auto get_species_list() const noexcept
-      -> std::vector<std::vector<unsigned int>> {
+      -> const std::vector<std::vector<unsigned int>>& {
     return this->speciesList;
   }
 
   [[nodiscard]] auto get_rules() const noexcept
-      -> std::vector<std::shared_ptr<Rule>> {
+      -> const std::vector<std::shared_ptr<Rule>>& {
     return this->rules;
   }
 
@@ -136,11 +136,11 @@ public:
 
     [[nodiscard]] auto get_rate() const -> double { return this->rate; }
 
-    [[nodiscard]] auto get_lhs() const -> std::vector<std::shared_ptr<Term>> {
+    [[nodiscard]] auto get_lhs() const -> const std::vector<std::shared_ptr<Term>>& {
       return this->lhs;
     }
 
-    [[nodiscard]] auto get_rhs() const -> std::vector<std::shared_ptr<Term>> {
+    [[nodiscard]] auto get_rhs() const -> const std::vector<std::shared_ptr<Term>>& {
       return this->rhs;
     }
 
