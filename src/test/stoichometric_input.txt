@@ -1,7 +1,8 @@
-Au     -> Ap	 	, 1.0
-2Ap     -> 2Au	 	, 2.0
-2 Au + 2B -> Au2B2 	, 3.0
-AuB    -> Au + B	, 4.0
-Ap + B -> ApB	 	, 3.0
-ApB    -> Ap + B 	, 4.0
-        -> Ap       , 1.0
+Auu     -> Apu	 	, 1.0
+Apu     -> Auu	 	, 2.0
+Auu     -> Aup	 	, 1.0
+Aup     -> Auu	 	, 2.0
+Apu + B -> ApuB 	, 3.0
+ApuB    -> Apu + B	, 4.0
+Aup + B -> AupB	 	, 3.0
+AupB    -> Aup + B 	, 4.0

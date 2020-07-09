@@ -4,12 +4,12 @@
 #include "../ReductionMethodInterface.h"
 #include "RewriteSystem.h"
 
+#include <cmath>
+#include <iterator>
 #include <mutex>
 #include <set>
 #include <tuple>
 #include <vector>
-#include <iterator>
-#include <cmath>
 
 class MaximalAggregation : public ReductionMethodInterface {
 private:
@@ -25,7 +25,7 @@ private:
   std::set<std::tuple<unsigned int,
                       std::vector<std::shared_ptr<RewriteSystem::Term>>>>
       reactantLabels;
-  // gives the position of the labels to be considered per species
+  // gives the position of the label for decreasing Si per rule
   std::vector<std::vector<long>> labelPos;
   // holds all rules with non-zero net flux per species
   std::vector<std::vector<std::tuple<size_t, double>>>
@@ -91,23 +91,6 @@ public:
     const std::vector<std::vector<unsigned int>> &speciesList =
         this->system->get_species_list();
 
-    //#pragma omp parallel default(none)
-    //    {
-    //#pragma omp single default(none)
-    //      {
-    //#pragma omp task default(none) shared(rules)
-    //{
-    this->set_mcoeffs();
-    //}
-
-    //#pragma omp task default(none) shared(rules)
-    //{
-    this->partLabels = std::vector<long>(this->part.size(), -1L);
-    this->M =
-        std::make_shared<MatDenD>(speciesList.size(), reactantLabels.size());
-    this->M->fill(0.0);
-    // }
-
     std::vector<long> pos;
     std::tuple<
         std::set<std::tuple<unsigned int, std::vector<std::shared_ptr<
@@ -118,6 +101,36 @@ public:
     std::vector<std::shared_ptr<RewriteSystem::Term>> alteredReagents;
     std::mutex labelPosMutex = std::mutex();
     std::mutex reactantLabelsMutex = std::mutex();
+    std::mutex posMutex = std::mutex();
+    std::set<std::tuple<unsigned int,
+                       std::vector<std::shared_ptr<RewriteSystem::Term>>>>::
+        iterator findIt;
+
+    double ns;
+    std::mutex nonZeroFluxMutex = std::mutex();
+
+    this->partLabels = std::vector<long>(this->part.size(), -1L);
+    std::vector<size_t> empty = {};
+    this->lhsContainsSpec = std::vector<std::vector<size_t>>(
+        this->system->get_species_list().size(), empty);
+    std::vector<long> emptyL = {};
+    this->labelPos = std::vector<std::vector<long>>(
+        this->system->get_rules().size(), emptyL);
+    std::vector<std::tuple<size_t, double>> emptyTup = {};
+    this->nonZeroFluxRulesPerSpecies =
+        std::vector<std::vector<std::tuple<size_t, double>>>(
+            this->system->get_species_list().size(), emptyTup);
+    this->reactantLabels = {};
+
+    //#pragma omp parallel default(none)
+    //    {
+    //#pragma omp single default(none)
+    //      {
+    //#pragma omp task default(none) shared(rules)
+    //{
+    this->set_mcoeffs();
+    //}
+
     //#pragma omp taskloop default(none) num_threads(THREADS) if (!TEST)             \
 //    shared(rules, labelPosMutex,                                      \
 //           reactantLabelsMutex) private(pos, diff, candidate)
@@ -133,6 +146,11 @@ public:
         }
         alteredReagents[k]->decrement_factor();
 
+        if (alteredReagents[k]->get_factor() == 0) {
+          alteredReagents.erase(
+              std::next(alteredReagents.begin(), static_cast<long>(k)));
+        }
+
         std::lock_guard<std::mutex> guard(reactantLabelsMutex);
         insertTuple = this->reactantLabels.emplace(
             std::make_tuple(reagents[k]->get_species(), alteredReagents));
@@ -144,24 +162,63 @@ public:
       this->labelPos[i] = pos;
     }
 
-    double ns;
-    std::mutex nonZeroFluxMutex = std::mutex();
     //#pragma omp taskloop default(none) num_threads(THREADS) if (!TEST)             \
 //    shared(rules, speciesList, nonZeroFluxMutex,                                      \
 //           ) private(ns)
     for (unsigned int i = 0; i < speciesList.size(); i++) {
       for (size_t j = 0; j < rules.size(); j++) {
-        ns = get_factor_for_species(i, rules[i]->get_rhs()) -
-             get_factor_for_species(i, rules[i]->get_lhs());
+        ns = get_factor_for_species(i, rules[j]->get_rhs()) -
+             get_factor_for_species(i, rules[j]->get_lhs());
         if (ns > 0.0) {
           std::lock_guard<std::mutex> guard(nonZeroFluxMutex);
           this->nonZeroFluxRulesPerSpecies[i].emplace_back(
-              i, ns * rules[i]->get_rate());
+              i, ns * rules[j]->get_rate());
         }
       }
     }
     //}
     //}
+
+    // Once again to build the pos vector. Cant be done in the above iteration
+    // as indexes keep changing
+
+    //#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)             \
+//    shared(rules, labelPosMutex,                                      \
+//           reactantLabelsMutex) private(pos, diff, candidate)
+    for (size_t i = 0; i < rules.size(); i++) {
+      reagents = rules[i]->get_lhs();
+      pos = std::vector<long>(reagents.size());
+      //#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)             \
+//    shared(rules, labelPosMutex,                                      \
+//           reactantLabelsMutex) private(pos, diff, candidate)
+      for (size_t k = 0; k < reagents.size(); k++) {
+        // generate reduced reagents
+        alteredReagents = {};
+        for (const auto &elem : reagents) {
+          alteredReagents.emplace_back(std::make_shared<RewriteSystem::Term>(
+              elem->get_factor(), elem->get_species()));
+        }
+        alteredReagents[k]->decrement_factor();
+
+        if (alteredReagents[k]->get_factor() == 0) {
+          alteredReagents.erase(
+              std::next(alteredReagents.begin(), static_cast<long>(k)));
+        }
+
+        findIt = this->reactantLabels.find(
+            std::make_tuple(reagents[k]->get_species(), alteredReagents));
+        std::lock_guard<std::mutex> guard(posMutex);
+        pos[k] = std::distance(this->reactantLabels.begin(),
+                               findIt);
+        this->lhsContainsSpec[reagents[k]->get_species()].emplace_back(i);
+      }
+      std::lock_guard<std::mutex> guard(labelPosMutex);
+      this->labelPos[i] = pos;
+    }
+
+    this->M =
+        std::make_shared<MatDenD>(speciesList.size(), reactantLabels.size());
+    this->M->fill(0.0);
   }
 
   void backward_prepartitioning() {
@@ -453,15 +510,16 @@ public:
     for (size_t i = 0; i < speciesList.size(); i++) {
       partNo = get_block_number(static_cast<unsigned int>(i));
       if (this->part[partNo].size() > 1) {
-        findResult = std::find(collapsedSpec.begin(), collapsedSpec.end(), partNo);
+        findResult =
+            std::find(collapsedSpec.begin(), collapsedSpec.end(), partNo);
         if (findResult != collapsedSpec.end()) {
           collapsedSpecNo = std::distance(collapsedSpec.begin(), findResult);
           speciesList[i] = std::vector<unsigned int>(mapping.size(), 0);
           speciesList[i][this->system->get_mapping().size() +
-                         static_cast<size_t>(collapsedSpecNo)] =
-              1;
+                         static_cast<size_t>(collapsedSpecNo)] = 1;
         } else {
-          speciesList.erase(std::next(speciesList.begin(), static_cast<long>(i)));
+          speciesList.erase(
+              std::next(speciesList.begin(), static_cast<long>(i)));
           i--;
         }
       } else {
@@ -477,14 +535,18 @@ public:
     double rate;
     double denom;
     std::shared_ptr<RewriteSystem::Term> term;
-    for (const auto &rule: this->system->get_rules()) {
+    for (const auto &rule : this->system->get_rules()) {
       lhs = {};
       for (size_t m = 0; m < rule->get_lhs().size(); m++) {
-        lhs.emplace_back(std::make_shared<RewriteSystem::Term>(rule->get_lhs()[m]->get_factor(), reductionMap[rule->get_lhs()[m]->get_species()]));
+        lhs.emplace_back(std::make_shared<RewriteSystem::Term>(
+            rule->get_lhs()[m]->get_factor(),
+            reductionMap[rule->get_lhs()[m]->get_species()]));
       }
       rhs = {};
       for (size_t m = 0; m < rule->get_rhs().size(); m++) {
-        rhs.emplace_back(std::make_shared<RewriteSystem::Term>(rule->get_rhs()[m]->get_factor(), reductionMap[rule->get_rhs()[m]->get_species()]));
+        rhs.emplace_back(std::make_shared<RewriteSystem::Term>(
+            rule->get_rhs()[m]->get_factor(),
+            reductionMap[rule->get_rhs()[m]->get_species()]));
       }
       denom = 1.0;
       for (size_t n = 0; n < lhs.size(); n++) {
@@ -532,7 +594,7 @@ public:
     }
   }
 
-  inline auto get_factor_for_species(
+  static inline auto get_factor_for_species(
       unsigned int species,
       const std::vector<std::shared_ptr<RewriteSystem::Term>> &hs)
       -> unsigned int {
@@ -556,8 +618,9 @@ public:
         "The species must be contained in one of the partitions!");
   }
 
-  inline auto equal_block(const std::vector<unsigned int> &part0,
-                          const std::vector<unsigned int> &part1) -> bool {
+  static inline auto equal_block(const std::vector<unsigned int> &part0,
+                                 const std::vector<unsigned int> &part1)
+      -> bool {
     if (part0.size() != part1.size()) {
       return false;
     }
@@ -577,7 +640,7 @@ public:
     return true;
   }
 
-  inline auto equal_reagents(
+  static inline auto equal_reagents(
       const std::vector<std::shared_ptr<RewriteSystem::Term>> &reagents0,
       const std::vector<std::shared_ptr<RewriteSystem::Term>> &reagents1)
       -> bool {
@@ -611,6 +674,32 @@ public:
       }
     }
     return false;
+  }
+
+  // All below methods are used for testing only
+  void set_system(const std::shared_ptr<RewriteSystem> &mSystem) {
+    this->system = mSystem;
+  }
+  void set_part(const std::vector<std::vector<unsigned int>> &mPart) {
+    this->part = mPart;
+  }
+  const std::vector<unsigned long long int> &get_mcoeffs() const {
+    return this->mcoeffs;
+  }
+  const std::set<std::tuple<
+      unsigned int, std::vector<std::shared_ptr<RewriteSystem::Term>>>> &
+  get_reactant_labels() const {
+    return this->reactantLabels;
+  }
+  const std::vector<std::vector<long>> &get_label_pos() const {
+    return this->labelPos;
+  }
+  const std::vector<std::vector<std::tuple<size_t, double>>> &
+  get_non_zero_flux_rules() const {
+    return this->nonZeroFluxRulesPerSpecies;
+  }
+  const std::vector<std::vector<size_t>> &get_lhs_contains_spec() const {
+    return this->lhsContainsSpec;
   }
 };
 

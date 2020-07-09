@@ -4,34 +4,37 @@ cmake_minimum_required(VERSION 3.14)
 
 # C++ specifics
 SET(CMAKE_CXX_COMPILER "/usr/bin/clang++")
-# SET(CMAKE_CXX_COMPILER "../include/LLOV/bin/clang++")
 SET(CMAKE_CXX_STANDARD 20)
-#SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include -Xclang -disable-O0-optnone -Xclang -load \
-# -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so") -fsanitize=undefined,address
-SET(CMAKE_CXX_FLAGS "-fprofile-instr-generate -fcoverage-mapping -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include \
-    -march=native  -fno-omit-frame-pointer -fPIC -fno-optimize-sibling-calls -Wall \
-    -Wpedantic  -Wextra -Weffc++ -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic")
-
+SET(CMAKE_CXX_FLAGS "-fsanitize=undefined,address -fopenmp -std=c++20 -fPIC -march=native  -m64 -fopenmp -std=c++20 \
+    -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include -fno-omit-frame-pointer \
+    -fno-optimize-sibling-calls -Wall -Wpedantic -Wextra -Weffc++ -Weverything -Wno-c++98-compat \
+    -Wno-c++98-compat-pedantic")
 SET(CMAKE_EXPORT_COMPILE_COMMANDS 1)
-
-#thread , -Xclang -disable-O0-optnone -Xclang -load \
-# -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so
-# find_package( OpenMP ) -Werror
-# release flags
-# SET(CMAKE_CXX_FLAGS " -I${MKLROOT}/include -O3 -mllvm -polly -mllvm \
-# -polly-vectorizer=stripmine -polly-parallel -lgomp  \
-# -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a \
-# ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl")
+# Address memory and thread sanitizer settings
 SET(ASAN_OPTIONS symbolize=1)
 SET(ASAN_OPTIONS detect_leaks=1)
 SET(ASAN_SYMBOLIZER_PATH $(which llvm-symbolizer))
 SET(ASAN_OPTIONS=fast_unwind_on_malloc=0)
-
 SET(MSAN_OPTIONS detect_leaks=1)
 SET(MSAN_OPTIONS symbolize=1)
 SET(MSAN_SYMBOLIZER_PATH $(which llvm-symbolizer))
-
 SET(TSAN_OPTIONS ignore_noninstrumented_modules=1)
+
+# OpenMP data race checker
+# SET(CMAKE_CXX_COMPILER "../include/LLOV/bin/clang++")
+#SET(CMAKE_CXX_FLAGS "-fopenmp -std=c++20 -ferror-limit=999 -ftemplate-backtrace-limit=0  -I/usr/local/include -Xclang -disable-O0-optnone -Xclang -load \
+# -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so")
+
+#thread , -Xclang -disable-O0-optnone -Xclang -load \
+# -Xclang /home/someusername/bwsync/workspace/uni/master/include/LLOV/lib/OpenMPVerify.so
+# find_package( OpenMP )
+
+# release flags
+# SET(CMAKE_CXX_FLAGS "-march=native -m64 -fPIC -fopenmp -std=c++20 -flto -I${MKLROOT}/include -O4 -mllvm -polly -mllvm -polly-vectorizer=stripmine -polly-parallel \
+#       -lgomp  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a \
+#       ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp -lpthread -lm -ldl")
+
+
 SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/include/eigen/cmake)
 find_package(SPQR)
 find_package(Cholmod)

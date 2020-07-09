@@ -54,6 +54,7 @@ public:
     size_t i = 0;
     stringstream << "\n Species:\n";
     for (const auto &elem : this->speciesList) {
+      stringstream << "\t ";
       for (const auto& digit : elem) {
         if (digit > 0) {
           stringstream << mapping[i];
@@ -123,7 +124,7 @@ public:
     [[nodiscard]] auto pretty_print() const -> std::string override {
       std::stringstream stringstream;
       stringstream.precision(PRINT_PRECISION);
-      stringstream << std::fixed << this->factor << "(x" << this->species << ")"
+      stringstream << std::fixed << this->factor << " (x" << this->species << ")"
                    << " ";
       return stringstream.str();
     }
@@ -168,7 +169,7 @@ public:
         stringstream << " + " << lhs[i]->pretty_print();
       }
 
-      stringstream << "->";
+      stringstream << "-> ";
 
       stringstream << rhs[0]->pretty_print();
       for (size_t i = 1; i < rhs.size(); i++) {

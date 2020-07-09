@@ -50,6 +50,16 @@ public:
         word[prevEntityInt] = 1;
       }
     }
+    bool isZeroVect = true;
+    for (const auto &elem : word) {
+      if (elem != 0) {
+        isZeroVect = false;
+        break;
+      }
+    }
+    if (isZeroVect) {
+      word = {};
+    }
     return word;
   }
 
@@ -58,18 +68,24 @@ public:
                const std::vector<std::vector<unsigned int>> &pSpeciesList,
                std::string &input) -> std::shared_ptr<RewriteSystem::Term> {
 
-    unsigned int factor = 0;
+    unsigned int factor = 1;
     std::vector<unsigned int> word = std::vector(pMapping.size(), 0u);
-    unsigned char next = static_cast<unsigned char>(input[0]);
-    if ((std::isdigit(next) != 0)) {
-      factor = extract_number<unsigned int>(input);
-    } else if ((std::isupper(next) != 0)) {
-      word = convert_species_string_vector(pMapping, input);
+    while (!input.empty()) {
+      unsigned char next = static_cast<unsigned char>(input[0]);
+      if ((std::isdigit(next) != 0)) {
+        factor = extract_number<unsigned int>(input);
+      } else if ((std::isupper(next) != 0)) {
+        word = convert_species_string_vector(pMapping, input);
+      }
     }
     unsigned int theSpecies = 0;
-    theSpecies = static_cast<unsigned int>(std::distance(
-        std::begin(pSpeciesList),
-        std::find(std::begin(pSpeciesList), std::end(pSpeciesList), word)));
+    auto it = std::find(std::begin(pSpeciesList), std::end(pSpeciesList), word);
+    if (it != std::end(pSpeciesList)) {
+      theSpecies = static_cast<unsigned int>(
+          std::distance(std::begin(pSpeciesList), it));
+    } else {
+      throw std::invalid_argument("Could not find species in species list!");
+    }
     return std::make_shared<RewriteSystem::Term>(factor, theSpecies);
   }
 
@@ -121,7 +137,7 @@ public:
       if (line.find("->") != std::string::npos) {
         name = extract_species_name(line);
         pSpecies = convert_species_string_vector(pMapping, name);
-        while (!name.empty()) {
+        while (!pSpecies.empty()) {
           if (std::find(pSpeciesList.begin(), pSpeciesList.end(), pSpecies) ==
               pSpeciesList.end()) {
             pSpeciesList.emplace_back(pSpecies);
@@ -179,12 +195,12 @@ public:
 
   [[nodiscard]] auto get_reduction_methods() const
       -> std::vector<std::shared_ptr<ReductionMethodInterface>> override {
-    return std::vector<std::shared_ptr<ReductionMethodInterface>>();
+    return this->reductionMethods;
   }
 
   [[nodiscard]] auto get_conversion_methods() const
       -> std::vector<std::shared_ptr<ConversionMethodInterface>> override {
-    return std::vector<std::shared_ptr<ConversionMethodInterface>>();
+    return this->conversionMethods;
   }
 
   [[nodiscard]] auto get_representation_description() const noexcept
