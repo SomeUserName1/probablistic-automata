@@ -16,12 +16,12 @@ SCENARIO("Parsing rules with many multiplicities works") {
         std::vector<std::vector<unsigned int>> trueSpecies = {
             {1, 0}, {0, 1}, {2, 2}};
 
-        auto lhs1 = std::make_shared<RewriteSystem::Term>(2, 0);
-        auto lhs2 = std::make_shared<RewriteSystem::Term>(2, 1);
-        auto rhs1 = std::make_shared<RewriteSystem::Term>(1, 2);
+        std::array<unsigned int, 2> lhs1 = {2, 0};
+        std::array<unsigned int, 2> lhs2 = {2, 1};
+        std::array<unsigned int, 2> rhs1 = {1, 2};
 
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs = {lhs1, lhs2};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs = {rhs1};
+        std::vector<std::array<unsigned int, 2>> lhs = {lhs1, lhs2};
+        std::vector<std::array<unsigned int, 2>> rhs = {rhs1};
         std::vector<std::shared_ptr<RewriteSystem::Rule>> trueRule = {
             std::make_shared<RewriteSystem::Rule>(3.0, lhs, rhs)};
 
@@ -61,43 +61,23 @@ SCENARIO("Parsing an example file yields the correctly initialized data "
         double k2 = 2.0;
         double k3 = 3.0;
         double k4 = 4.0;
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs1 = {
-            std::make_shared<RewriteSystem::Term>(1, 0)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs2 = {
-            std::make_shared<RewriteSystem::Term>(1, 1)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs3 = {
-            std::make_shared<RewriteSystem::Term>(1, 0)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs4 = {
-            std::make_shared<RewriteSystem::Term>(1, 2)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs5 = {
-            std::make_shared<RewriteSystem::Term>(1, 1),
-            std::make_shared<RewriteSystem::Term>(1, 3)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs6 = {
-            std::make_shared<RewriteSystem::Term>(1, 4)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs7 = {
-            std::make_shared<RewriteSystem::Term>(1, 2),
-            std::make_shared<RewriteSystem::Term>(1, 3)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> lhs8 = {
-            std::make_shared<RewriteSystem::Term>(1, 5)};
+        std::vector<std::array<unsigned int, 2>> lhs1 = {{1, 0}};
+        std::vector<std::array<unsigned int, 2>> lhs2 = {{1, 1}};
+        std::vector<std::array<unsigned int, 2>> lhs3 = {{1, 0}};
+        std::vector<std::array<unsigned int, 2>> lhs4 = {{1, 2}};
+        std::vector<std::array<unsigned int, 2>> lhs5 = {{1, 1}, {1, 3}};
+        std::vector<std::array<unsigned int, 2>> lhs6 = {{1, 4}};
+        std::vector<std::array<unsigned int, 2>> lhs7 = {{1, 2}, {1, 3}};
+        std::vector<std::array<unsigned int, 2>> lhs8 = {{1, 5}};
 
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs1 = {
-            std::make_shared<RewriteSystem::Term>(1, 1)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs2 = {
-            std::make_shared<RewriteSystem::Term>(1, 0)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs3 = {
-            std::make_shared<RewriteSystem::Term>(1, 2)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs4 = {
-            std::make_shared<RewriteSystem::Term>(1, 0)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs5 = {
-            std::make_shared<RewriteSystem::Term>(1, 4)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs6 = {
-            std::make_shared<RewriteSystem::Term>(1, 1),
-            std::make_shared<RewriteSystem::Term>(1, 3)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs7 = {
-            std::make_shared<RewriteSystem::Term>(1, 5)};
-        std::vector<std::shared_ptr<RewriteSystem::Term>> rhs8 = {
-            std::make_shared<RewriteSystem::Term>(1, 2),
-            std::make_shared<RewriteSystem::Term>(1, 3)};
+        std::vector<std::array<unsigned int, 2>> rhs1 = {{1, 1}};
+        std::vector<std::array<unsigned int, 2>> rhs2 = {{1, 0}};
+        std::vector<std::array<unsigned int, 2>> rhs3 = {{1, 2}};
+        std::vector<std::array<unsigned int, 2>> rhs4 = {{1, 0}};
+        std::vector<std::array<unsigned int, 2>> rhs5 = {{1, 4}};
+        std::vector<std::array<unsigned int, 2>> rhs6 = {{1, 1}, {1, 3}};
+        std::vector<std::array<unsigned int, 2>> rhs7 = {{1, 5}};
+        std::vector<std::array<unsigned int, 2>> rhs8 = {{1, 2}, {1, 3}};
 
         std::vector<std::shared_ptr<RewriteSystem::Rule>> rules = {
             std::make_shared<RewriteSystem::Rule>(k1, lhs1, rhs1),
@@ -146,41 +126,29 @@ SCENARIO("Initializations of the necessary data structures for reduction works "
       reduction.init();
 
       THEN("initializes all data strucures to the values expected") {
-        std::vector<std::tuple<unsigned int,
-                            std::vector<std::shared_ptr<RewriteSystem::Term>>>>
-            truePossibleReagents = {
-                {0, {}},
-                {1, {}},
-                {1, {std::make_shared<RewriteSystem::Term>(1, 3)}},
-                {2, {}},
-                {2, {std::make_shared<RewriteSystem::Term>(1, 3)}},
-                {3, {std::make_shared<RewriteSystem::Term>(1, 1)}},
-                {3, {std::make_shared<RewriteSystem::Term>(1, 2)}},
-                {4, {}},
-                {5, {}}};
+        std::vector<std::vector<std::array<unsigned int, 2>>>
+            truePossibleReagents = {{}, {{1, 1}}, {{1, 2}}, {{1, 3}}};
         std::vector<std::vector<long>> trueLabelPos = {
-            {0L}, {1L}, {0L}, {3L}, {2L, 5L}, {7L}, {4L, 6L}, {8L}};
+            {0L}, {0L}, {0L}, {0L}, {3L, 1L}, {0L}, {3L, 2L}, {0L}};
         std::vector<std::vector<size_t>> trueLhsContainsSpec = {
             {0, 2}, {1, 4}, {3, 6}, {4, 6}, {5}, {7}};
         std::vector<std::vector<std::tuple<size_t, double>>> trueNZF = {
-            {{0, -1.0}, {1, 1.0}, {2, -1.0}, {3, 1.0}},
-            {{0, 1.0}, {1, -1.0}, {4, -1.0}, {5, 1.0}},
-            {{2, 1.0}, {3, -1.0}, {6, -1.0}, {7, 1.0}},
-            {{4, -1.0}, {5, 1.0}, {6, -1.0}, {7, 1.0}},
-            {{4, 1.0}, {5, -1.0}},
-            {{6, 1.0}, {7, -1.0}}};
+            {{0, -1.0}, {1, 2.0}, {2, -1.0}, {3, 2.0}},
+            {{0, 1.0}, {1, -2.0}, {4, -3.0}, {5, 4.0}},
+            {{2, 1.0}, {3, -2.0}, {6, -3.0}, {7, 4.0}},
+            {{4, -3.0}, {5, 4.0}, {6, -3.0}, {7, 4.0}},
+            {{4, 3.0}, {5, -4.0}},
+            {{6, 3.0}, {7, -4.0}}};
 
-        std::set<std::tuple<unsigned int,
-                            std::vector<std::shared_ptr<RewriteSystem::Term>>>>
-            actualLabels = reduction.get_reactant_labels();
+        std::vector<unsigned long> trueMcoeffs = {1, 1, 1, 1, 2, 1, 2, 1};
+
+        const std::set<std::vector<std::array<unsigned int, 2>>> actualLabels =
+            reduction.get_reactant_labels();
         REQUIRE(truePossibleReagents.size() == actualLabels.size());
         size_t k = 0;
         for (const auto &elem : actualLabels) {
-          REQUIRE(std::get<0>(elem) ==
-                  std::get<0>(truePossibleReagents[k]));
-          REQUIRE(MaximalAggregation::equal_reagents(
-              std::get<1>(elem),
-              std::get<1>(truePossibleReagents[k])));
+          REQUIRE(MaximalAggregation::equal_reagents(elem,
+                                                     truePossibleReagents[k]));
           k++;
         }
 
@@ -211,8 +179,14 @@ SCENARIO("Initializations of the necessary data structures for reduction works "
           for (size_t j = 0; j < nZF[i].size(); j++) {
             REQUIRE(std::get<0>(nZF[i][j]) == std::get<0>(trueNZF[i][j]));
             REQUIRE(floating_point_compare<double>(std::get<1>(nZF[i][j]),
-                                           std::get<1>(trueNZF[i][j])));
+                                                   std::get<1>(trueNZF[i][j])));
           }
+        }
+
+        std::vector<unsigned long> mcoeffs = reduction.get_mcoeffs();
+        REQUIRE(mcoeffs.size() == trueMcoeffs.size());
+        for (size_t i = 0; i < mcoeffs.size(); i++) {
+          REQUIRE(mcoeffs[i] == trueMcoeffs[i]);
         }
       }
     }
@@ -240,6 +214,51 @@ SCENARIO("Test Parsing Helpers") {
           REQUIRE(result[i] == name);
         }
       }
+    }
+  }
+}
+
+SCENARIO("Test the split predicate") {
+  GIVEN(
+      "The example from the PNAS paper, parsed and the reduction initialized") {
+    std::string input =
+        UserInterface::read_file("../src/test/stoichometric_input.txt");
+    auto model = std::make_shared<RewriteSystemModel>();
+    auto repr = model->parse(input);
+    auto rs = std::static_pointer_cast<RewriteSystem>(repr);
+
+    MaximalAggregation reduction = MaximalAggregation();
+    std::vector<unsigned int> initBlock = {};
+    for (unsigned int i = 0; i < rs->get_mapping().size(); i++) {
+      initBlock.emplace_back(i);
+    }
+    std::vector<std::vector<unsigned int>> initPart = {initBlock};
+    reduction.set_part(initPart);
+    reduction.set_system(rs);
+    reduction.init();
+    WHEN("computing the forward rate") {
+      std::set<unsigned int> nZRS = std::set<unsigned int>();
+      for (size_t i = 0; i < initBlock.size(); i++) {
+        reduction.compute_forward_rate(initBlock[i], nZRS);
+      }
+      THEN("the correct values are computed") {
+        MatDenDPtr M = std::make_shared<MatDenD>(
+            reduction.get_system()->get_species_list().size(),
+            reduction.get_reactant_labels().size());
+        *M << 0, 0, 0, 0,
+             0, 0, 0, -3.0/2.0,
+             0, 0, 0, -3.0/2.0,
+             0, -3.0/2.0, -3.0/2.0, 0,
+             4, 0, 0, 0,
+             4, 0, 0, 0;
+        std::cout << *(reduction.get_m()) << std::endl;
+        std::cout << "True:\n" << *M << std::endl;
+        REQUIRE(floating_point_compare((*(reduction.get_m()) - *M).norm(), 0.0));
+      }
+    }
+
+    WHEN("computing the backward rate") {
+      THEN("the correct values are computed") {}
     }
   }
 }
