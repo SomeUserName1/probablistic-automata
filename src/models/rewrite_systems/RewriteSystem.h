@@ -13,7 +13,6 @@
 
 class RewriteSystem : public RepresentationInterface {
 public:
-  class Term;
   class Rule;
 
 private:
@@ -31,17 +30,18 @@ public:
 
   ~RewriteSystem() override;
 
-  [[nodiscard]] auto get_mapping() const noexcept -> const std::vector<std::string>& {
+  [[nodiscard]] auto get_mapping() const noexcept
+      -> const std::vector<std::string> & {
     return this->mapping;
   }
 
   [[nodiscard]] auto get_species_list() const noexcept
-      -> const std::vector<std::vector<unsigned int>>& {
+      -> const std::vector<std::vector<unsigned int>> & {
     return this->speciesList;
   }
 
   [[nodiscard]] auto get_rules() const noexcept
-      -> const std::vector<std::shared_ptr<Rule>>& {
+      -> const std::vector<std::shared_ptr<Rule>> & {
     return this->rules;
   }
 
@@ -55,7 +55,7 @@ public:
     stringstream << "\n Species:\n";
     for (const auto &elem : this->speciesList) {
       stringstream << "\t ";
-      for (const auto& digit : elem) {
+      for (const auto &digit : elem) {
         if (digit > 0) {
           stringstream << mapping[i];
           if (digit > 1) {
@@ -99,88 +99,56 @@ public:
     return true;
   }
 
-  class Term : public RepresentationInterface {
-  private:
-    unsigned int factor;
-    unsigned int species;
-
-  public:
-    Term(unsigned int mFactor, unsigned int mSpecies)
-        : factor(mFactor), species(mSpecies) {}
-    ~Term() override;
-
-    [[nodiscard]] auto get_factor() const -> unsigned int {
-      return this->factor;
-    }
-
-    auto decrement_factor() -> void { this->factor--; }
-
-    [[nodiscard]] auto get_species() const -> unsigned int {
-      return this->species;
-    }
-
-    void add_factor(unsigned int addition) { this->factor += addition; }
-
-    [[nodiscard]] auto pretty_print() const -> std::string override {
-      std::stringstream stringstream;
-      stringstream.precision(PRINT_PRECISION);
-      stringstream << std::fixed << this->factor << " (x" << this->species << ")"
-                   << " ";
-      return stringstream.str();
-    }
-
-    [[nodiscard]] auto
-    equivalent(const std::shared_ptr<RepresentationInterface> &other) const
-        -> bool override {
-      auto oTerm = static_pointer_cast<Term>(other);
-      return (this->factor == oTerm->get_factor() &&
-              this->species == oTerm->get_species());
-    }
-  };
-
   class Rule : public RepresentationInterface {
   private:
     double rate;
-    std::vector<std::shared_ptr<Term>> lhs;
-    std::vector<std::shared_ptr<Term>> rhs;
+    // each term in a hand-side consists of an uint giving the factor and an
+    // uint giving the index of the species stored in the species list
+    std::vector<std::array<unsigned int, 2>> lhs;
+    std::vector<std::array<unsigned int, 2>> rhs;
 
   public:
-    Rule(double mRate, std::vector<std::shared_ptr<Term>> mLhs,
-         std::vector<std::shared_ptr<Term>> mRhs)
+    Rule(double mRate, std::vector<std::array<unsigned int, 2>> mLhs,
+         std::vector<std::array<unsigned int, 2>> mRhs)
         : rate(mRate), lhs(std::move(mLhs)), rhs(std::move(mRhs)) {}
     ~Rule() override;
 
     [[nodiscard]] auto get_rate() const -> double { return this->rate; }
 
-    [[nodiscard]] auto get_lhs() const -> const std::vector<std::shared_ptr<Term>>& {
+    [[nodiscard]] auto get_lhs() const
+        -> const std::vector<std::array<unsigned int, 2>> & {
       return this->lhs;
     }
 
-    [[nodiscard]] auto get_rhs() const -> const std::vector<std::shared_ptr<Term>>& {
+    [[nodiscard]] auto get_rhs() const
+        -> const std::vector<std::array<unsigned int, 2>> & {
       return this->rhs;
     }
 
+    // FIXME
+    //  use mapping n stuff
     [[nodiscard]] auto pretty_print() const -> std::string override {
       std::stringstream stringstream;
       stringstream.precision(PRINT_PRECISION);
 
-      stringstream << lhs[0]->pretty_print();
+      stringstream << lhs[0][0] << " (x" << lhs[0][1] << ")";
       for (size_t i = 1; i < lhs.size(); i++) {
-        stringstream << " + " << lhs[i]->pretty_print();
+        stringstream << " + " << lhs[i][0];
       }
 
       stringstream << "-> ";
 
-      stringstream << rhs[0]->pretty_print();
+      stringstream << rhs[0][0] << " (x" << rhs[0][1] << ")";
       for (size_t i = 1; i < rhs.size(); i++) {
-        stringstream << " + " << rhs[i]->pretty_print();
+        stringstream << " + " << rhs[0][0] << " (x" << rhs[0][1] << ")";
       }
       stringstream << "\t, " << std::fixed << rate << std::endl;
       return stringstream.str();
     }
 
-    // FIXME Dummy: Only checks if they are exactly the same, not in terms of
-    // dynamic semantics
+    // FIXME
+    //  Dummy: Only checks if they are exactly the same, not in terms of
+    //  dynamic semantics
     [[nodiscard]] auto
     equivalent(const std::shared_ptr<RepresentationInterface> &other) const
         -> bool override {
@@ -197,7 +165,7 @@ public:
       for (const auto &term : this->lhs) {
         found = false;
         for (const auto &oTerm : oRule->get_lhs()) {
-          if ((*term).equivalent(oTerm)) {
+          if (term[0] == oTerm[0] && term[1] == oTerm[1]) {
             found = true;
           }
         }
@@ -208,7 +176,7 @@ public:
       for (const auto &term : this->rhs) {
         found = false;
         for (const auto &oTerm : oRule->get_rhs()) {
-          if ((*term).equivalent(oTerm)) {
+          if (term[0] == oTerm[0] && term[1] == oTerm[1]) {
             found = true;
           }
         }

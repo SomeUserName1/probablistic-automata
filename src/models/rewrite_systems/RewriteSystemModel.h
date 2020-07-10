@@ -66,7 +66,7 @@ public:
   static inline auto
   extract_term(const std::vector<std::string> &pMapping,
                const std::vector<std::vector<unsigned int>> &pSpeciesList,
-               std::string &input) -> std::shared_ptr<RewriteSystem::Term> {
+               std::string &input) -> std::array<unsigned int, 2> {
 
     unsigned int factor = 1;
     std::vector<unsigned int> word = std::vector(pMapping.size(), 0u);
@@ -86,15 +86,15 @@ public:
     } else {
       throw std::invalid_argument("Could not find species in species list!");
     }
-    return std::make_shared<RewriteSystem::Term>(factor, theSpecies);
+    return {factor, theSpecies};
   }
 
   static inline auto
   extract_terms(const std::vector<std::string> &pMapping,
                 const std::vector<std::vector<unsigned int>> &pSpeciesList,
                 std::string &input)
-      -> std::vector<std::shared_ptr<RewriteSystem::Term>> {
-    std::vector<std::shared_ptr<RewriteSystem::Term>> result = {};
+      -> std::vector<std::array<unsigned int, 2>> {
+    std::vector<std::array<unsigned int, 2>> result = {};
     std::string term;
     size_t pos = 0;
     size_t prev = 0;
@@ -150,8 +150,8 @@ public:
 
     // Step 3: extract rules
     std::vector<std::shared_ptr<RewriteSystem::Rule>> pRules = {};
-    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs = {};
-    std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
+    std::vector<std::array<unsigned int, 2>> lhs = {};
+    std::vector<std::array<unsigned int, 2>> rhs;
     std::string lhsInput;
     std::string rhsInput;
     std::string rateInput;
