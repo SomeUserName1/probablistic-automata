@@ -15,6 +15,7 @@
 #define THREADS 1
 #endif
 
+
 // FIXME check pointers: unique vs shared, plain vectors vs vec<ptr<>>
 // 1. reduce all possible to unique
 // 2. use unique pointers for all non-primitive types in vectors, consider
@@ -25,6 +26,9 @@
 // primitive numeric
 // FIXME add const where possible
 // FIXME OpenMP rest
+
+// TODO add constraints for stochastic/probabilistic automata
+// Meeting: Monday 14.00
 
 static inline auto iequals(const std::string &str1, const std::string &str2)
     -> bool {
