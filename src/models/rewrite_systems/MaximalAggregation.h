@@ -20,11 +20,9 @@ private:
   // holds labels of the partitions
   std::vector<long> partLabels;
   // holds multinomial coefficients for each reaction
-  std::vector<unsigned long long int> mcoeffs;
+  std::vector<unsigned long> mcoeffs;
   // holds all reactants to be considered when computing fr/br; species, reagent
-  std::set<std::tuple<unsigned int,
-                      std::vector<std::shared_ptr<RewriteSystem::Term>>>>
-      reactantLabels;
+  std::set<std::vector<std::array<unsigned int, 2>>> reactantLabels;
   // gives the position of the label for decreasing Si per rule
   std::vector<std::vector<long>> labelPos;
   // holds all rules with non-zero net flux per species
@@ -92,19 +90,13 @@ public:
         this->system->get_species_list();
 
     std::vector<long> pos;
-    std::tuple<
-        std::set<std::tuple<unsigned int, std::vector<std::shared_ptr<
-                                              RewriteSystem::Term>>>>::iterator,
-        bool>
-        insertTuple;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> reagents;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> alteredReagents;
+    std::vector<std::array<unsigned int, 2>> reagents;
+    std::vector<std::array<unsigned int, 2>> alteredReagents;
     std::mutex labelPosMutex = std::mutex();
     std::mutex reactantLabelsMutex = std::mutex();
     std::mutex posMutex = std::mutex();
-    std::set<std::tuple<unsigned int,
-                       std::vector<std::shared_ptr<RewriteSystem::Term>>>>::
-        iterator findIt;
+    std::set<std::vector<std::array<unsigned int, 2>>>::iterator
+        findIt;
 
     double ns;
     std::mutex nonZeroFluxMutex = std::mutex();
@@ -136,30 +128,20 @@ public:
 //           reactantLabelsMutex) private(pos, diff, candidate)
     for (size_t i = 0; i < rules.size(); i++) {
       reagents = rules[i]->get_lhs();
-      pos = std::vector<long>(reagents.size());
       for (size_t k = 0; k < reagents.size(); k++) {
         // generate reduced reagents
         alteredReagents = {};
         for (const auto &elem : reagents) {
-          alteredReagents.emplace_back(std::make_shared<RewriteSystem::Term>(
-              elem->get_factor(), elem->get_species()));
+          alteredReagents.push_back(elem);
         }
-        alteredReagents[k]->decrement_factor();
-
-        if (alteredReagents[k]->get_factor() == 0) {
+        alteredReagents[k][0]--;
+        if (alteredReagents[k][0] == 0) {
           alteredReagents.erase(
               std::next(alteredReagents.begin(), static_cast<long>(k)));
         }
-
         std::lock_guard<std::mutex> guard(reactantLabelsMutex);
-        insertTuple = this->reactantLabels.emplace(
-            std::make_tuple(reagents[k]->get_species(), alteredReagents));
-        pos[k] = std::distance(this->reactantLabels.begin(),
-                               std::get<0>(insertTuple));
-        this->lhsContainsSpec[reagents[k]->get_species()].emplace_back(i);
+        this->reactantLabels.emplace(alteredReagents);
       }
-      std::lock_guard<std::mutex> guard(labelPosMutex);
-      this->labelPos[i] = pos;
     }
 
     //#pragma omp taskloop default(none) num_threads(THREADS) if (!TEST)             \
@@ -167,12 +149,14 @@ public:
 //           ) private(ns)
     for (unsigned int i = 0; i < speciesList.size(); i++) {
       for (size_t j = 0; j < rules.size(); j++) {
-        ns = get_factor_for_species(i, rules[j]->get_rhs()) -
-             get_factor_for_species(i, rules[j]->get_lhs());
-        if (ns > 0.0) {
+        ns =
+            static_cast<double>(
+                get_factor_for_species(i, rules[j]->get_rhs())) -
+            static_cast<double>(get_factor_for_species(i, rules[j]->get_lhs()));
+        if (!floating_point_compare(ns, 0.0)) {
           std::lock_guard<std::mutex> guard(nonZeroFluxMutex);
           this->nonZeroFluxRulesPerSpecies[i].emplace_back(
-              i, ns * rules[j]->get_rate());
+              j, ns * rules[j]->get_rate());
         }
       }
     }
@@ -195,22 +179,17 @@ public:
         // generate reduced reagents
         alteredReagents = {};
         for (const auto &elem : reagents) {
-          alteredReagents.emplace_back(std::make_shared<RewriteSystem::Term>(
-              elem->get_factor(), elem->get_species()));
+          alteredReagents.push_back(elem);
         }
-        alteredReagents[k]->decrement_factor();
-
-        if (alteredReagents[k]->get_factor() == 0) {
+        alteredReagents[k][0]--;
+        if (alteredReagents[k][0] == 0) {
           alteredReagents.erase(
               std::next(alteredReagents.begin(), static_cast<long>(k)));
         }
-
-        findIt = this->reactantLabels.find(
-            std::make_tuple(reagents[k]->get_species(), alteredReagents));
+        findIt = this->reactantLabels.find(alteredReagents);
         std::lock_guard<std::mutex> guard(posMutex);
-        pos[k] = std::distance(this->reactantLabels.begin(),
-                               findIt);
-        this->lhsContainsSpec[reagents[k]->get_species()].emplace_back(i);
+        pos[k] = std::distance(this->reactantLabels.begin(), findIt);
+        this->lhsContainsSpec[reagents[k][1]].emplace_back(i);
       }
       std::lock_guard<std::mutex> guard(labelPosMutex);
       this->labelPos[i] = pos;
@@ -227,8 +206,7 @@ public:
     for (const auto &rule : this->system->get_rules()) {
       if (rule->get_lhs().size() == 0) {
         for (const auto &term : rule->get_rhs()) {
-          v[term->get_species()] +=
-              static_cast<double>(term->get_factor()) * rule->get_rate();
+          v[term[1]] += static_cast<double>(term[0]) * rule->get_rate();
         }
       }
     }
@@ -371,9 +349,9 @@ public:
     size_t ruleIdx;
     std::shared_ptr<RewriteSystem::Rule> rule;
     double rate;
-    unsigned long long int mcoeff;
+    unsigned long mcoeff;
     std::vector<long> pos;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> terms;
+    std::vector<std::array<unsigned int, 2>> terms;
     for (size_t i = 0; i < this->nonZeroFluxRulesPerSpecies[species].size();
          i++) {
       ruleIdx = std::get<0>(this->nonZeroFluxRulesPerSpecies[species][i]);
@@ -383,8 +361,8 @@ public:
       pos = this->labelPos[ruleIdx];
       terms = rule->get_lhs();
       for (size_t j = 0; j < terms.size(); j++) {
-        update_m(terms[j]->get_species(), pos[j],
-                 rate / static_cast<double>(mcoeff), nonZeroRateSpecies);
+        update_m(terms[j][1], pos[j], rate / static_cast<double>(mcoeff),
+                 nonZeroRateSpecies);
       }
     }
   }
@@ -392,14 +370,14 @@ public:
                              std::vector<unsigned int> &currentSplitter,
                              std::set<unsigned int> &nonZeroRateSpecies) {
     std::shared_ptr<RewriteSystem::Rule> rule;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
+    std::vector<std::array<unsigned int, 2>> lhs;
+    std::vector<std::array<unsigned int, 2>> rhs;
     double alpha;
     size_t ruleIdx;
     size_t termIdx = 0;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> alteredReagents;
+    std::vector<std::array<unsigned int, 2>> alteredReagents;
     unsigned int ct;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> rhoMDash;
+    std::vector<std::array<unsigned int, 2>> rhoMDash;
     size_t partNo;
     unsigned int currentSpecies;
     long col = -1;
@@ -412,7 +390,7 @@ public:
       // We know that the rule must contain the species, i.e. posIdx is well
       // defined after the loop
       for (size_t j = 0; i < lhs.size(); j++) {
-        if (lhs[j]->get_species() == species) {
+        if (lhs[j][1] == species) {
           termIdx = j;
         }
       }
@@ -420,12 +398,12 @@ public:
       // using pos as it saves per rule the position of the label where the j-th
       // term was reduced by 1, i.e. pos[RuleIdx][termIdx] is the index to the
       // label where Sj was subtracted from
-      alteredReagents = std::get<1>(*(std::next(
-          this->reactantLabels.begin(), this->labelPos[ruleIdx][termIdx])));
+      alteredReagents = *(std::next(
+          this->reactantLabels.begin(), this->labelPos[ruleIdx][termIdx]));
       ct = 1;
       rhoMDash = {};
       for (size_t j = 0; j < alteredReagents.size(); j++) {
-        currentSpecies = alteredReagents[j]->get_species();
+        currentSpecies = alteredReagents[j][1];
         partNo = this->get_block_number(currentSpecies);
         if (this->equal_block(this->part[partNo], currentSplitter) &&
             currentSpecies != species) {
@@ -437,21 +415,22 @@ public:
         // Error prone?
 
         for (size_t k = 0; k < rhoMDash.size(); k++) {
-          if (rhoMDash[k]->get_species() == this->partLabels[partNo]) {
+          if (rhoMDash[k][1] == this->partLabels[partNo]) {
             found = true;
-            rhoMDash[k]->add_factor(alteredReagents[j]->get_factor());
+            rhoMDash[k][0] += alteredReagents[j][0];
             break;
           }
         }
         if (!found) {
-          rhoMDash.push_back(std::make_shared<RewriteSystem::Term>(
-              alteredReagents[j]->get_factor(), this->partLabels[partNo]));
+          rhoMDash.push_back(
+              {alteredReagents[j][0],
+               static_cast<unsigned int>(this->partLabels[partNo])});
         }
       }
       // Optimize me
       long k = 0;
       for (const auto &label : this->reactantLabels) {
-        if (equal_reagents(std::get<1>(label), rhoMDash)) {
+        if (equal_reagents(label, rhoMDash)) {
           col = k;
           break;
         }
@@ -464,14 +443,12 @@ public:
 
       alpha = rule->get_rate();
       for (size_t j = 0; j < alteredReagents.size(); j++) {
-        update_m(alteredReagents[j]->get_species(), col,
-                 -alpha * alteredReagents[j]->get_factor() / ct,
-                 nonZeroRateSpecies);
+        update_m(alteredReagents[j][1], col,
+                 -alpha * alteredReagents[j][0] / ct, nonZeroRateSpecies);
       }
       rhs = rule->get_rhs();
       for (size_t j = 0; j < rhs.size(); j++) {
-        update_m(rhs[j]->get_species(), col, alpha * rhs[j]->get_factor() / ct,
-                 nonZeroRateSpecies);
+        update_m(rhs[j][1], col, alpha * rhs[j][0] / ct, nonZeroRateSpecies);
       }
     }
   }
@@ -530,28 +507,23 @@ public:
       reductionMap.push_back(i);
     }
 
-    std::vector<std::shared_ptr<RewriteSystem::Term>> lhs;
-    std::vector<std::shared_ptr<RewriteSystem::Term>> rhs;
+    std::vector<std::array<unsigned int, 2>> lhs;
+    std::vector<std::array<unsigned int, 2>> rhs;
     double rate;
     double denom;
-    std::shared_ptr<RewriteSystem::Term> term;
     for (const auto &rule : this->system->get_rules()) {
       lhs = {};
       for (size_t m = 0; m < rule->get_lhs().size(); m++) {
-        lhs.emplace_back(std::make_shared<RewriteSystem::Term>(
-            rule->get_lhs()[m]->get_factor(),
-            reductionMap[rule->get_lhs()[m]->get_species()]));
+        lhs.push_back(rule->get_lhs()[m]);
       }
       rhs = {};
       for (size_t m = 0; m < rule->get_rhs().size(); m++) {
-        rhs.emplace_back(std::make_shared<RewriteSystem::Term>(
-            rule->get_rhs()[m]->get_factor(),
-            reductionMap[rule->get_rhs()[m]->get_species()]));
+        rhs.push_back(rule->get_rhs()[m]);
       }
       denom = 1.0;
       for (size_t n = 0; n < lhs.size(); n++) {
-        partNo = get_block_number(lhs[n]->get_species());
-        denom *= std::pow(this->part[partNo].size(), lhs[n]->get_factor());
+        partNo = get_block_number(lhs[n][1]);
+        denom *= std::pow(this->part[partNo].size(), lhs[n][0]);
       }
       rate = rule->get_rate();
       rate = rate / denom;
@@ -575,7 +547,7 @@ public:
     const std::vector<std::shared_ptr<RewriteSystem::Rule>> &rules =
         this->system->get_rules();
 
-    this->mcoeffs = std::vector(rules.size(), 0uLL);
+    this->mcoeffs = std::vector(rules.size(), 0uL);
 
     std::mutex mcoeffsMutex = std::mutex();
     //#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
@@ -586,21 +558,28 @@ public:
       //#pragma omp parallel for default(none) num_threads(THREADS) if (!TEST)         \
 //    shared(upper, lower, i)
       for (const auto &term : rules[i]->get_lhs()) {
-        upper += term->get_factor();
-        lower *= FACTORIALS[term->get_factor()];
+        upper += term[0];
+        lower *= FACTORIALS[term[0]];
+      }
+      if (upper > 20) {
+        throw std::invalid_argument(
+            "the sum of the factors in a rules lhs is greater than 20. This "
+            "implies that a number needs to be calculated with that is larger "
+            "as the largest number a computer can accurately represent. Please "
+            "reduce the factors to the minimal possible values");
       }
       std::lock_guard<std::mutex> guard(mcoeffsMutex);
       this->mcoeffs[i] = FACTORIALS[upper] / lower;
     }
   }
 
-  static inline auto get_factor_for_species(
-      unsigned int species,
-      const std::vector<std::shared_ptr<RewriteSystem::Term>> &hs)
+  static inline auto
+  get_factor_for_species(unsigned int species,
+                         const std::vector<std::array<unsigned int, 2>> &hs)
       -> unsigned int {
     for (const auto &term : hs) {
-      if (term->get_species() == species) {
-        return term->get_factor();
+      if (term[1] == species) {
+        return term[0];
       }
     }
     return 0;
@@ -640,9 +619,9 @@ public:
     return true;
   }
 
-  static inline auto equal_reagents(
-      const std::vector<std::shared_ptr<RewriteSystem::Term>> &reagents0,
-      const std::vector<std::shared_ptr<RewriteSystem::Term>> &reagents1)
+  static inline auto
+  equal_reagents(const std::vector<std::array<unsigned int, 2>> &reagents0,
+                 const std::vector<std::array<unsigned int, 2>> &reagents1)
       -> bool {
     if (reagents0.size() != reagents1.size()) {
       return false;
@@ -650,8 +629,7 @@ public:
     bool found = false;
     for (const auto &term0 : reagents0) {
       for (const auto &term1 : reagents1) {
-        if (term0->get_factor() == term1->get_factor() &&
-            term0->get_species() == term1->get_species()) {
+        if (term0[0] == term1[0] && term0[1] == term1[1]) {
           found = true;
         }
       }
@@ -683,11 +661,16 @@ public:
   void set_part(const std::vector<std::vector<unsigned int>> &mPart) {
     this->part = mPart;
   }
-  const std::vector<unsigned long long int> &get_mcoeffs() const {
+  const std::shared_ptr<RewriteSystem> &get_system() {
+    return this->system;
+  }
+  const std::vector<std::vector<unsigned int>> &get_part() {
+    return this->part;
+  }
+  const std::vector<unsigned long> &get_mcoeffs() const {
     return this->mcoeffs;
   }
-  const std::set<std::tuple<
-      unsigned int, std::vector<std::shared_ptr<RewriteSystem::Term>>>> &
+  const std::set<std::vector<std::array<unsigned int, 2>>> &
   get_reactant_labels() const {
     return this->reactantLabels;
   }
@@ -700,6 +683,9 @@ public:
   }
   const std::vector<std::vector<size_t>> &get_lhs_contains_spec() const {
     return this->lhsContainsSpec;
+  }
+  const MatDenDPtr &get_m() {
+    return this->M;
   }
 };
 
