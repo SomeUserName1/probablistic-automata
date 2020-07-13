@@ -229,7 +229,7 @@ SCENARIO("Test the split predicate") {
 
     MaximalAggregation reduction = MaximalAggregation();
     std::vector<unsigned int> initBlock = {};
-    for (unsigned int i = 0; i < rs->get_mapping().size(); i++) {
+    for (unsigned int i = 0; i < rs->get_species_list().size(); i++) {
       initBlock.emplace_back(i);
     }
     std::vector<std::vector<unsigned int>> initPart = {initBlock};
@@ -240,25 +240,50 @@ SCENARIO("Test the split predicate") {
       std::set<unsigned int> nZRS = std::set<unsigned int>();
       for (size_t i = 0; i < initBlock.size(); i++) {
         reduction.compute_forward_rate(initBlock[i], nZRS);
+        std::cout << *(reduction.get_m()) << std::endl;
       }
       THEN("the correct values are computed") {
         MatDenDPtr M = std::make_shared<MatDenD>(
             reduction.get_system()->get_species_list().size(),
             reduction.get_reactant_labels().size());
-        *M << 0, 0, 0, 0,
-             0, 0, 0, -3.0/2.0,
-             0, 0, 0, -3.0/2.0,
-             0, -3.0/2.0, -3.0/2.0, 0,
-             4, 0, 0, 0,
-             4, 0, 0, 0;
+        *M << 0, 0, 0, 0, 0, 0, 0, -3.0 / 2.0, 0, 0, 0, -3.0 / 2.0, 0,
+            -3.0 / 2.0, -3.0 / 2.0, 0, 4, 0, 0, 0, 4, 0, 0, 0;
         std::cout << *(reduction.get_m()) << std::endl;
         std::cout << "True:\n" << *M << std::endl;
-        REQUIRE(floating_point_compare((*(reduction.get_m()) - *M).norm(), 0.0));
+        REQUIRE(
+            floating_point_compare((*(reduction.get_m()) - *M).norm(), 0.0));
       }
     }
 
     WHEN("computing the backward rate") {
       THEN("the correct values are computed") {}
+    }
+  }
+}
+
+SCENARIO(
+    "A full forward run yields the resulting system given in the PNAS paper") {
+  GIVEN(
+      "The example from the PNAS paper, parsed and the reduction initialized") {
+    std::string input =
+        UserInterface::read_file("../src/test/stoichometric_input.txt");
+    auto model = std::make_shared<RewriteSystemModel>();
+    auto repr = model->parse(input);
+    auto rs = std::static_pointer_cast<RewriteSystem>(repr);
+
+    MaximalAggregation reduction = MaximalAggregation();
+    std::vector<unsigned int> initBlock = {};
+    for (unsigned int i = 0; i < rs->get_species_list().size(); i++) {
+      initBlock.emplace_back(i);
+    }
+    std::vector<std::vector<unsigned int>> initPart = {initBlock};
+    reduction.set_part(initPart);
+    reduction.set_system(rs);
+    reduction.init();
+    WHEN("computing the forward reduction") {
+      reduction.largest_equivalent_parition(true);
+      reduction.apply_reduction();
+      THEN("the correct reductions are computed") {}
     }
   }
 }

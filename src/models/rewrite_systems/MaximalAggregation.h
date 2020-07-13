@@ -45,7 +45,8 @@ public:
   reduce(const std::shared_ptr<RepresentationInterface> &ptr) override {
     auto rewriteSystem = static_pointer_cast<RewriteSystem>(ptr);
     std::vector<unsigned int> initBlock = {};
-    for (unsigned int i = 0; i < rewriteSystem->get_mapping().size(); i++) {
+    for (unsigned int i = 0; i < rewriteSystem->get_species_list().size();
+         i++) {
       initBlock.emplace_back(i);
     }
     std::vector<std::vector<unsigned int>> initPart = {initBlock};
@@ -79,7 +80,7 @@ public:
       splitters.pop_back();
       this->split(forward, currentBlock, splitters);
     }
-    return part;
+    return this->part;
   }
 
   // Build labels, pos vector, mcoeff, matrix M
@@ -95,8 +96,7 @@ public:
     std::mutex labelPosMutex = std::mutex();
     std::mutex reactantLabelsMutex = std::mutex();
     std::mutex posMutex = std::mutex();
-    std::set<std::vector<std::array<unsigned int, 2>>>::iterator
-        findIt;
+    std::set<std::vector<std::array<unsigned int, 2>>>::iterator findIt;
 
     double ns;
     std::mutex nonZeroFluxMutex = std::mutex();
@@ -398,8 +398,8 @@ public:
       // using pos as it saves per rule the position of the label where the j-th
       // term was reduced by 1, i.e. pos[RuleIdx][termIdx] is the index to the
       // label where Sj was subtracted from
-      alteredReagents = *(std::next(
-          this->reactantLabels.begin(), this->labelPos[ruleIdx][termIdx]));
+      alteredReagents = *(std::next(this->reactantLabels.begin(),
+                                    this->labelPos[ruleIdx][termIdx]));
       ct = 1;
       rhoMDash = {};
       for (size_t j = 0; j < alteredReagents.size(); j++) {
@@ -465,13 +465,15 @@ public:
     std::vector<size_t> collapsedSpec = {};
     std::vector<size_t> reductionMap;
 
+    std::vector<unsigned int> specV;
     std::string accumulateName;
     for (size_t i = 0; i < this->part.size(); i++) {
       if (this->part[i].size() > 1) {
-        accumulateName = "{" + this->system->get_mapping()[this->part[i][0]];
+        specV = this->system->get_species_list()[this->part[i][0]];
+        accumulateName = "{" + this->system->get_name_for_species(specV);
         for (size_t j = 1; j < this->part[i].size(); j++) {
-          accumulateName +=
-              ", " + this->system->get_mapping()[this->part[i][j]];
+          specV = this->system->get_species_list()[this->part[i][j]];
+          accumulateName += ", " + this->system->get_name_for_species(specV);
         }
         accumulateName += "}";
         mapping.emplace_back(accumulateName);
@@ -494,6 +496,7 @@ public:
           speciesList[i] = std::vector<unsigned int>(mapping.size(), 0);
           speciesList[i][this->system->get_mapping().size() +
                          static_cast<size_t>(collapsedSpecNo)] = 1;
+          collapsedSpec.erase(std::next(collapsedSpec.begin(), collapsedSpecNo));
         } else {
           speciesList.erase(
               std::next(speciesList.begin(), static_cast<long>(i)));
@@ -509,16 +512,22 @@ public:
 
     std::vector<std::array<unsigned int, 2>> lhs;
     std::vector<std::array<unsigned int, 2>> rhs;
+    std::array<unsigned int, 2> term;
     double rate;
     double denom;
     for (const auto &rule : this->system->get_rules()) {
+      // TODO adjust rules according to mapping
       lhs = {};
       for (size_t m = 0; m < rule->get_lhs().size(); m++) {
-        lhs.push_back(rule->get_lhs()[m]);
+        term = rule->get_lhs()[m];
+        term[1] = static_cast<unsigned int>(reductionMap[term[1]]);
+        lhs.push_back(term);
       }
       rhs = {};
       for (size_t m = 0; m < rule->get_rhs().size(); m++) {
-        rhs.push_back(rule->get_rhs()[m]);
+        term = rule->get_rhs()[m];
+        term[1] = static_cast<unsigned int>(reductionMap[term[1]]);
+        rhs.push_back(term);
       }
       denom = 1.0;
       for (size_t n = 0; n < lhs.size(); n++) {
@@ -661,9 +670,7 @@ public:
   void set_part(const std::vector<std::vector<unsigned int>> &mPart) {
     this->part = mPart;
   }
-  const std::shared_ptr<RewriteSystem> &get_system() {
-    return this->system;
-  }
+  const std::shared_ptr<RewriteSystem> &get_system() { return this->system; }
   const std::vector<std::vector<unsigned int>> &get_part() {
     return this->part;
   }
@@ -684,9 +691,7 @@ public:
   const std::vector<std::vector<size_t>> &get_lhs_contains_spec() const {
     return this->lhsContainsSpec;
   }
-  const MatDenDPtr &get_m() {
-    return this->M;
-  }
+  const MatDenDPtr &get_m() { return this->M; }
 };
 
 #endif // STOCHASTIC_SYSTEM_MINIMIZATION_MAXIMALAGGREGATION_H
