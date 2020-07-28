@@ -1,4 +1,4 @@
-\documentclass[11pt, rgb]{scrreprt}
+\documentclass[11pt, rgb]{scrartcl}
 \usepackage{themeKonstanz} % Muss immer verwendet werden (Standardpaket)
 \format{a4}
 
@@ -12,26 +12,19 @@
 \unisection{Faculty of Sciences}
 \department{Department of Computer and Information Science}
 \group{Modelling of Complex Self-Organizing Systems Group}
-\supervisorOne{Dr. Stefano Tognazzi}
-\supervisorTwo{Prof. Dr. Tatjana Petrov}
+\supervisorOne{Prof. Dr. Tatjana Petrov}
 
 \bibliography{resources} 
 
 \begin{document}
     \newgeometry{left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}
-    \thesistitlepage[language=english]{M.Sc. Project Report}
+    \thesistitlepage[language=english]{Software Requirement Specification \& Design Documentation}
     \restoregeometry
     \tableofcontents
     
-    
-    \include{01-introduction}
-    \include{02-models} 
-    \include{03-red_min}
-    \include{04-eval}
+   
+\include{05-srsdd}
 
-    \nocite{*}
-    \printbibliography
+\printbibliography
 
-    \appendix
-    \include{05-srsdd}
 \end{document}
