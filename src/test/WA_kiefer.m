@@ -2,10 +2,18 @@ function WA_kiefer
   %for reproducible results
   rng(1);
   % Stefanos example
-  alpha  = [1 0 0 0];
+  a = sym('a');
+  b = sym('b');
+  c = sym('c');
+  d = sym('d');
+  e = sym('e');
+  f = sym('f');
+  g = sym('g');
+  h = sym('h');
+  alpha  = [a b c d];
   mu_a   = [0 1 1 0 ; 0 0 0 0 ; 0 0 0 0 ; 0 0 0 0 ];
   mu_b   = [0 0 0 0 ; 0 0 0 1 ; 0 0 0 1 ; 0 0 0 0 ]; 
-  eta    = [0;0;0;1];
+  eta    = [e;f;g;h];
 
   % example random vectors from report
   f1 = [9 5 5 7 ;   6 11 2 1];
@@ -21,16 +29,16 @@ function WA_kiefer
   probe_and_display(alpha_arrow, mu_a_arrow, mu_b_arrow, eta_arrow);
     
    % example random vectors from report
-  b1 = [1 6 2;   4 5 4];
-  b2 = [8 1 8;   7 8 2];
-  b3 = [1 6 5;   9 2 1];
+%  b1 = [1 6 2;   4 5 4];
+%  b2 = [8 1 8;   7 8 2];
+%  b3 = [1 6 5;   9 2 1];
     
   % Forward reduction
-   [alpha_arrow2, mu_a_arrow2, mu_b_arrow2, eta_arrow2] = ...
-      BackwardSchuetzenbergerConstruction(alpha_arrow, mu_a_arrow, ...
-        mu_b_arrow, eta_arrow, b1, b2, b3);  
-    
-  probe_and_display(alpha_arrow2, mu_a_arrow2, mu_b_arrow2, eta_arrow2);
+%   [alpha_arrow2, mu_a_arrow2, mu_b_arrow2, eta_arrow2] = ...
+%      BackwardSchuetzenbergerConstruction(alpha_arrow, mu_a_arrow, ...
+%        mu_b_arrow, eta_arrow, b1, b2, b3);  
+%    
+%  probe_and_display(alpha_arrow2, mu_a_arrow2, mu_b_arrow2, eta_arrow2);
 end
 
 function [alpha_arrow, mu_a_arrow, mu_b_arrow, eta_arrow] = ...
@@ -51,16 +59,18 @@ function [alpha_arrow, mu_a_arrow, mu_b_arrow, eta_arrow] = ...
   end
   
   % calculate the forward version of v_i = rho(r^i)
-  v1 = r1(1,1) * [0 1 1 0] + r1(1,1)*r1(2,2) * [0 0 0 2];
-  v2 = r2(1,1) * [0 1 1 0] + r2(1,1)*r2(2,2) * [0 0 0 2];
-  v3 = r3(1,1) * [0 1 1 0] + r3(1,1)*r3(2,2) * [0 0 0 2];
-  v4 = r4(1,1) * [0 1 1 0] + r4(1,1)*r4(2,2) * [0 0 0 2];
+  a = sym('a');
+  v1 = r1(1,1) * [0 a a 0] + r1(1,1)*r1(2,2) * [0 0 0 2*a];
+  v2 = r2(1,1) * [0 a a 0] + r2(1,1)*r2(2,2) * [0 0 0 2*a];
+  v3 = r3(1,1) * [0 a a 0] + r3(1,1)*r3(2,2) * [0 0 0 2*a];
+  v4 = r4(1,1) * [0 a a 0] + r4(1,1)*r4(2,2) * [0 0 0 2*a];
   
   % Stack alpha as first row vector onto the matrix
   F = [alpha; v1; v2; v3; v4];
   % extract the maximally linearly independent subset
   F = F(1:rank( F ), 1:4);
-  % Calculate the new transition matricies
+  disp(F);
+  % Calculate the new transition matricies  
   mu_a_arrow = F*mu_a/F;
   mu_b_arrow = F*mu_b/F;
 
@@ -141,6 +151,7 @@ disp("alpha "); disp(alpha);
     
     prev_err2 = alpha*mu_b*eta;
     disp("alpha b eta"); disp(prev_err2);
+    disp("______________________________________")
 end
 
 function [equal] = numeric_isequal(mat1, mat2, precision)
