@@ -2,16 +2,17 @@
  
 ## Documentation
 ### Reports
- - [Proposal](doc/project/proposal/proposal.pdf)  
+ - [Project Proposal](doc/project/proposal/proposal.pdf)  
  - [Software Requirement Specification & Design Document](doc/project/software/SRS_SDD.pdf)
- 
+- [Thesis Proposal](doc/thesis/proposal/thesis_proposal.pdf)  
+
 ### Presentations
 - [Proposal](doc/project/proposal/proposal_presentation.pdf)  
 - [Kiefer-Schützenberger](doc/project/software/KieferPresentation)  
 - [Project Final Presentation](doc/project/Project_Presentation.pdf)  
 
 #### TODOs
-- [ ] Write Thesis Proposal  
+- [x] Write Thesis Proposal  
 
 #### Software TODOs (Optional)  
 - [-] Implementation of rewriting system algorithm (WIP)  
