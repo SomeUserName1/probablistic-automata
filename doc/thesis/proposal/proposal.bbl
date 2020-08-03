@@ -1,0 +1,567 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{boreale2017algebra}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=7fb6ba31261dbc6e32b2d250f75785f2}{%
+           family={Boreale},
+           familyi={B\bibinitperiod},
+           given={Michele},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{7fb6ba31261dbc6e32b2d250f75785f2}
+      \strng{fullhash}{7fb6ba31261dbc6e32b2d250f75785f2}
+      \strng{bibnamehash}{7fb6ba31261dbc6e32b2d250f75785f2}
+      \strng{authorbibnamehash}{7fb6ba31261dbc6e32b2d250f75785f2}
+      \strng{authornamehash}{7fb6ba31261dbc6e32b2d250f75785f2}
+      \strng{authorfullhash}{7fb6ba31261dbc6e32b2d250f75785f2}
+      \field{sortinit}{B}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{International Conference on Foundations of Software Science and Computation Structures}
+      \field{title}{Algebra, coalgebra, and minimization in polynomial differential equations}
+      \field{year}{2017}
+      \field{pages}{71\bibrangedash 87}
+      \range{pages}{17}
+    \endentry
+    \entry{brzozowski}{article}{}
+      \name{author}{1}{}{%
+        {{hash=f96b365e70aead4762511a84e458de06}{%
+           family={Brzozowski},
+           familyi={B\bibinitperiod},
+           given={Janusz\bibnamedelima A},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{f96b365e70aead4762511a84e458de06}
+      \strng{fullhash}{f96b365e70aead4762511a84e458de06}
+      \strng{bibnamehash}{f96b365e70aead4762511a84e458de06}
+      \strng{authorbibnamehash}{f96b365e70aead4762511a84e458de06}
+      \strng{authornamehash}{f96b365e70aead4762511a84e458de06}
+      \strng{authorfullhash}{f96b365e70aead4762511a84e458de06}
+      \field{sortinit}{B}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Mathematical theory of Automata}
+      \field{number}{6}
+      \field{title}{Canonical regular expressions and minimal state graphs for definite events}
+      \field{volume}{12}
+      \field{year}{1962}
+      \field{pages}{529\bibrangedash 561}
+      \range{pages}{33}
+    \endentry
+    \entry{buchholz2008bisimulation}{article}{}
+      \name{author}{1}{}{%
+        {{hash=d7e45ff99cf4384b0df4b7c75fed672e}{%
+           family={Buchholz},
+           familyi={B\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{fullhash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{bibnamehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{authorbibnamehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{authornamehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{authorfullhash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \field{extraname}{1}
+      \field{sortinit}{B}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Theoretical Computer Science}
+      \field{number}{1-3}
+      \field{title}{Bisimulation relations for weighted automata}
+      \field{volume}{393}
+      \field{year}{2008}
+      \field{pages}{109\bibrangedash 123}
+      \range{pages}{15}
+    \endentry
+    \entry{buchholz}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=d7e45ff99cf4384b0df4b7c75fed672e}{%
+           family={Buchholz},
+           familyi={B\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{fullhash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{bibnamehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{authorbibnamehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{authornamehash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \strng{authorfullhash}{d7e45ff99cf4384b0df4b7c75fed672e}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Exact and ordinary lumpability in finite Markov chains}
+      \field{year}{1994}
+    \endentry
+    \entry{Cardelli2017MaximalAO}{article}{}
+      \name{author}{4}{}{%
+        {{hash=081a17a005a2ab94a60ccd76c206e9f0}{%
+           family={Cardelli},
+           familyi={C\bibinitperiod},
+           given={Luca},
+           giveni={L\bibinitperiod}}}%
+        {{hash=59c67ea116a4ee09ab36888e84ded722}{%
+           family={Tribastone},
+           familyi={T\bibinitperiod},
+           given={Mirco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=bf66e43a8176dce1d4c4eda71e88667a}{%
+           family={Tschaikowski},
+           familyi={T\bibinitperiod},
+           given={Max},
+           giveni={M\bibinitperiod}}}%
+        {{hash=bab0dce7b8a11d35b0ff0c1ec86243ca}{%
+           family={Vandin},
+           familyi={V\bibinitperiod},
+           given={Andrea},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{9816a2b3a6ea82771ca0666587443d1e}
+      \strng{fullhash}{1f8cc9923d80a439be37209ec4712630}
+      \strng{bibnamehash}{9816a2b3a6ea82771ca0666587443d1e}
+      \strng{authorbibnamehash}{9816a2b3a6ea82771ca0666587443d1e}
+      \strng{authornamehash}{9816a2b3a6ea82771ca0666587443d1e}
+      \strng{authorfullhash}{1f8cc9923d80a439be37209ec4712630}
+      \field{sortinit}{C}
+      \field{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the National Academy of Sciences of the United States of America}
+      \field{title}{Maximal aggregation of polynomial dynamical systems}
+      \field{volume}{114 38}
+      \field{year}{2017}
+      \field{pages}{10029\bibrangedash 10034}
+      \range{pages}{6}
+    \endentry
+    \entry{feret2012lumpability}{article}{}
+      \name{author}{4}{}{%
+        {{hash=0b675ea519462a4765e8803185df88b8}{%
+           family={Feret},
+           familyi={F\bibinitperiod},
+           given={Jerome},
+           giveni={J\bibinitperiod}}}%
+        {{hash=456bfba94ff7a4fab3c51e2571122000}{%
+           family={Henzinger},
+           familyi={H\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod}}}%
+        {{hash=836aadfafb99a418e0308c121a0ac626}{%
+           family={Koeppl},
+           familyi={K\bibinitperiod},
+           given={Heinz},
+           giveni={H\bibinitperiod}}}%
+        {{hash=3970bc5b0e316e7567d6186899737ffc}{%
+           family={Petrov},
+           familyi={P\bibinitperiod},
+           given={Tatjana},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{7ca90d4c1e580c6bede1e3b815bab3a1}
+      \strng{fullhash}{19c01c3e413c25884f2d84b5dcdeed76}
+      \strng{bibnamehash}{7ca90d4c1e580c6bede1e3b815bab3a1}
+      \strng{authorbibnamehash}{7ca90d4c1e580c6bede1e3b815bab3a1}
+      \strng{authornamehash}{7ca90d4c1e580c6bede1e3b815bab3a1}
+      \strng{authorfullhash}{19c01c3e413c25884f2d84b5dcdeed76}
+      \field{sortinit}{F}
+      \field{sortinithash}{fb0c0faa89eb6abae8213bf60e6799ea}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Theoretical Computer Science}
+      \field{title}{Lumpability abstractions of rule-based systems}
+      \field{volume}{431}
+      \field{year}{2012}
+      \field{pages}{137\bibrangedash 164}
+      \range{pages}{28}
+    \endentry
+    \entry{hopcroft1971n}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=a8813c6fc67d61735e9349b0c2b8d89f}{%
+           family={Hopcroft},
+           familyi={H\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{a8813c6fc67d61735e9349b0c2b8d89f}
+      \strng{fullhash}{a8813c6fc67d61735e9349b0c2b8d89f}
+      \strng{bibnamehash}{a8813c6fc67d61735e9349b0c2b8d89f}
+      \strng{authorbibnamehash}{a8813c6fc67d61735e9349b0c2b8d89f}
+      \strng{authornamehash}{a8813c6fc67d61735e9349b0c2b8d89f}
+      \strng{authorfullhash}{a8813c6fc67d61735e9349b0c2b8d89f}
+      \field{sortinit}{H}
+      \field{sortinithash}{6db6145dae8dc9e1271a8d556090b50a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Theory of machines and computations}
+      \field{title}{An n log n algorithm for minimizing states in a finite automaton}
+      \field{year}{1971}
+      \field{pages}{189\bibrangedash 196}
+      \range{pages}{8}
+    \endentry
+    \entry{kieferstab}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=1da5a776b17388dd07916d6a9208aa73}{%
+           family={Kiefer},
+           familyi={K\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=3098d061cbfc6bdad4b453ad63244434}{%
+           family={Wachter},
+           familyi={W\bibinitperiod},
+           given={Bj{ö}rn},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{201d0159f5989e27ed6f199ad99c3b50}
+      \strng{fullhash}{201d0159f5989e27ed6f199ad99c3b50}
+      \strng{bibnamehash}{201d0159f5989e27ed6f199ad99c3b50}
+      \strng{authorbibnamehash}{201d0159f5989e27ed6f199ad99c3b50}
+      \strng{authornamehash}{201d0159f5989e27ed6f199ad99c3b50}
+      \strng{authorfullhash}{201d0159f5989e27ed6f199ad99c3b50}
+      \field{sortinit}{K}
+      \field{sortinithash}{d3edc18d54b9438a72c24c925bfb38f4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{International Colloquium on Automata, Languages, and Programming}
+      \field{title}{Stability and complexity of minimising probabilistic automata}
+      \field{year}{2014}
+      \field{pages}{268\bibrangedash 279}
+      \range{pages}{12}
+    \endentry
+    \entry{Kiefer2013OnTC}{article}{}
+      \name{author}{5}{}{%
+        {{hash=1da5a776b17388dd07916d6a9208aa73}{%
+           family={Kiefer},
+           familyi={K\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=02d21dc049b2a43559ac68a6051f211c}{%
+           family={Murawski},
+           familyi={M\bibinitperiod},
+           given={Andrzej\bibnamedelima S.},
+           giveni={A\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=9dcad644e9ede71fbd155e846e020375}{%
+           family={Ouaknine},
+           familyi={O\bibinitperiod},
+           given={Jo{ë}l},
+           giveni={J\bibinitperiod}}}%
+        {{hash=3098d061cbfc6bdad4b453ad63244434}{%
+           family={Wachter},
+           familyi={W\bibinitperiod},
+           given={Bj{ö}rn},
+           giveni={B\bibinitperiod}}}%
+        {{hash=4225ab35a9e84541465345977a7f9c42}{%
+           family={Worrell},
+           familyi={W\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{e86e8aa5c1e565636593c0d509648de5}
+      \strng{fullhash}{f4a8d2c17ade93a432944f0bd9f41d94}
+      \strng{bibnamehash}{e86e8aa5c1e565636593c0d509648de5}
+      \strng{authorbibnamehash}{e86e8aa5c1e565636593c0d509648de5}
+      \strng{authornamehash}{e86e8aa5c1e565636593c0d509648de5}
+      \strng{authorfullhash}{f4a8d2c17ade93a432944f0bd9f41d94}
+      \field{sortinit}{K}
+      \field{sortinithash}{d3edc18d54b9438a72c24c925bfb38f4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Logical Methods in Computer Science}
+      \field{title}{On the Complexity of Equivalence and Minimisation for Q-weighted Automata}
+      \field{volume}{9}
+      \field{year}{2013}
+    \endentry
+    \entry{kolo}{book}{}
+      \name{author}{1}{}{%
+        {{hash=bc86b88b8b70b104fb502d470821aba9}{%
+           family={Kolomogoroff},
+           familyi={K\bibinitperiod},
+           given={A},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer-Verlag}%
+      }
+      \strng{namehash}{bc86b88b8b70b104fb502d470821aba9}
+      \strng{fullhash}{bc86b88b8b70b104fb502d470821aba9}
+      \strng{bibnamehash}{bc86b88b8b70b104fb502d470821aba9}
+      \strng{authorbibnamehash}{bc86b88b8b70b104fb502d470821aba9}
+      \strng{authornamehash}{bc86b88b8b70b104fb502d470821aba9}
+      \strng{authorfullhash}{bc86b88b8b70b104fb502d470821aba9}
+      \field{sortinit}{K}
+      \field{sortinithash}{d3edc18d54b9438a72c24c925bfb38f4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Grundbegriffe der wahrscheinlichkeitsrechnung}
+      \field{year}{1933}
+    \endentry
+    \entry{larsen1991bisimulation}{article}{}
+      \name{author}{2}{}{%
+        {{hash=1d74b0c6afa306c62f868ed08f077ddd}{%
+           family={Larsen},
+           familyi={L\bibinitperiod},
+           given={Kim\bibnamedelima G},
+           giveni={K\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=b6a11773a7da427b8bd7674bdb30c0b7}{%
+           family={Skou},
+           familyi={S\bibinitperiod},
+           given={Arne},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{cccacca72a3c2af006b35df5e9a7c1cd}
+      \strng{fullhash}{cccacca72a3c2af006b35df5e9a7c1cd}
+      \strng{bibnamehash}{cccacca72a3c2af006b35df5e9a7c1cd}
+      \strng{authorbibnamehash}{cccacca72a3c2af006b35df5e9a7c1cd}
+      \strng{authornamehash}{cccacca72a3c2af006b35df5e9a7c1cd}
+      \strng{authorfullhash}{cccacca72a3c2af006b35df5e9a7c1cd}
+      \field{sortinit}{L}
+      \field{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Information and computation}
+      \field{number}{1}
+      \field{title}{Bisimulation through probabilistic testing}
+      \field{volume}{94}
+      \field{year}{1991}
+      \field{pages}{1\bibrangedash 28}
+      \range{pages}{28}
+    \endentry
+    \entry{paigetarjan}{article}{}
+      \name{author}{2}{}{%
+        {{hash=db72af74034e8e53c7d7321752fecaf0}{%
+           family={Paige},
+           familyi={P\bibinitperiod},
+           given={Robert},
+           giveni={R\bibinitperiod}}}%
+        {{hash=5db7b92ac36b92505a52cbe66bcce4d6}{%
+           family={Tarjan},
+           familyi={T\bibinitperiod},
+           given={Robert\bibnamedelima E.},
+           giveni={R\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{e10b215eb8bab99ebeff2afd76867f80}
+      \strng{fullhash}{e10b215eb8bab99ebeff2afd76867f80}
+      \strng{bibnamehash}{e10b215eb8bab99ebeff2afd76867f80}
+      \strng{authorbibnamehash}{e10b215eb8bab99ebeff2afd76867f80}
+      \strng{authornamehash}{e10b215eb8bab99ebeff2afd76867f80}
+      \strng{authorfullhash}{e10b215eb8bab99ebeff2afd76867f80}
+      \field{sortinit}{P}
+      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{SIAM Journal on Computing}
+      \field{number}{6}
+      \field{title}{Three Partition Refinement Algorithms}
+      \field{volume}{16}
+      \field{year}{1987}
+      \field{pages}{973\bibrangedash 989}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1137/0216062
+      \endverb
+      \verb{eprint}
+      \verb https://doi.org/10.1137/0216062
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1137/0216062
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1137/0216062
+      \endverb
+    \endentry
+    \entry{petrov2019markov}{incollection}{}
+      \name{author}{1}{}{%
+        {{hash=3970bc5b0e316e7567d6186899737ffc}{%
+           family={Petrov},
+           familyi={P\bibinitperiod},
+           given={Tatjana},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{3970bc5b0e316e7567d6186899737ffc}
+      \strng{fullhash}{3970bc5b0e316e7567d6186899737ffc}
+      \strng{bibnamehash}{3970bc5b0e316e7567d6186899737ffc}
+      \strng{authorbibnamehash}{3970bc5b0e316e7567d6186899737ffc}
+      \strng{authornamehash}{3970bc5b0e316e7567d6186899737ffc}
+      \strng{authorfullhash}{3970bc5b0e316e7567d6186899737ffc}
+      \field{sortinit}{P}
+      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Modeling Biomolecular Site Dynamics}
+      \field{title}{Markov chain aggregation and its application to rule-based modelling}
+      \field{year}{2019}
+      \field{pages}{297\bibrangedash 313}
+      \range{pages}{17}
+    \endentry
+    \entry{rubino1989weak}{article}{}
+      \name{author}{2}{}{%
+        {{hash=6b4ba52ad75153357befb3678af106ae}{%
+           family={Rubino},
+           familyi={R\bibinitperiod},
+           given={Gerardo},
+           giveni={G\bibinitperiod}}}%
+        {{hash=5494491df7f6d7c958c5af21731d8bb4}{%
+           family={Sericola},
+           familyi={S\bibinitperiod},
+           given={Bruno},
+           giveni={B\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {JSTOR}%
+      }
+      \strng{namehash}{6bd492acd51f7eb069531e5c732d88fa}
+      \strng{fullhash}{6bd492acd51f7eb069531e5c732d88fa}
+      \strng{bibnamehash}{6bd492acd51f7eb069531e5c732d88fa}
+      \strng{authorbibnamehash}{6bd492acd51f7eb069531e5c732d88fa}
+      \strng{authornamehash}{6bd492acd51f7eb069531e5c732d88fa}
+      \strng{authorfullhash}{6bd492acd51f7eb069531e5c732d88fa}
+      \field{sortinit}{R}
+      \field{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Applied Probability}
+      \field{title}{On weak lumpability in Markov chains}
+      \field{year}{1989}
+      \field{pages}{446\bibrangedash 457}
+      \range{pages}{12}
+    \endentry
+    \entry{schutz}{article}{}
+      \name{author}{1}{}{%
+        {{hash=7abefe7a5693efc7fa98b424155f6c42}{%
+           family={Sch{ü}tzenberger},
+           familyi={S\bibinitperiod},
+           given={Marcel\bibnamedelima Paul},
+           giveni={M\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \strng{namehash}{7abefe7a5693efc7fa98b424155f6c42}
+      \strng{fullhash}{7abefe7a5693efc7fa98b424155f6c42}
+      \strng{bibnamehash}{7abefe7a5693efc7fa98b424155f6c42}
+      \strng{authorbibnamehash}{7abefe7a5693efc7fa98b424155f6c42}
+      \strng{authornamehash}{7abefe7a5693efc7fa98b424155f6c42}
+      \strng{authorfullhash}{7abefe7a5693efc7fa98b424155f6c42}
+      \field{sortinit}{S}
+      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Information and control}
+      \field{number}{2-3}
+      \field{title}{On the definition of a family of automata}
+      \field{volume}{4}
+      \field{year}{1961}
+      \field{pages}{245\bibrangedash 270}
+      \range{pages}{26}
+    \endentry
+    \entry{segala1995probabilistic}{article}{}
+      \name{author}{2}{}{%
+        {{hash=8c67d7e20cab348809fe7f99ded2caaa}{%
+           family={Segala},
+           familyi={S\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod}}}%
+        {{hash=6613a6fcc0482e691a0e8d84039b9458}{%
+           family={Lynch},
+           familyi={L\bibinitperiod},
+           given={Nancy},
+           giveni={N\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Publishing Association Nordic Journal of Computing}%
+      }
+      \strng{namehash}{e6f58714e940341498edf7dc7ba7b9f9}
+      \strng{fullhash}{e6f58714e940341498edf7dc7ba7b9f9}
+      \strng{bibnamehash}{e6f58714e940341498edf7dc7ba7b9f9}
+      \strng{authorbibnamehash}{e6f58714e940341498edf7dc7ba7b9f9}
+      \strng{authornamehash}{e6f58714e940341498edf7dc7ba7b9f9}
+      \strng{authorfullhash}{e6f58714e940341498edf7dc7ba7b9f9}
+      \field{sortinit}{S}
+      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nordic Journal of Computing}
+      \field{number}{2}
+      \field{title}{Probabilistic simulations for probabilistic processes}
+      \field{volume}{2}
+      \field{year}{1995}
+      \field{pages}{250\bibrangedash 273}
+      \range{pages}{24}
+    \endentry
+    \entry{valmari}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=1fe20dd44d8fdf9ed7f5d5807b282228}{%
+           family={Valmari},
+           familyi={V\bibinitperiod},
+           given={Antti},
+           giveni={A\bibinitperiod}}}%
+        {{hash=147365a995b14f92031b8ae425686851}{%
+           family={Franceschinis},
+           familyi={F\bibinitperiod},
+           given={Giuliana},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{1ad0afd0304ffa8140b804aa5a2d34b8}
+      \strng{fullhash}{1ad0afd0304ffa8140b804aa5a2d34b8}
+      \strng{bibnamehash}{1ad0afd0304ffa8140b804aa5a2d34b8}
+      \strng{authorbibnamehash}{1ad0afd0304ffa8140b804aa5a2d34b8}
+      \strng{authornamehash}{1ad0afd0304ffa8140b804aa5a2d34b8}
+      \strng{authorfullhash}{1ad0afd0304ffa8140b804aa5a2d34b8}
+      \field{sortinit}{V}
+      \field{sortinithash}{02432525618c08e2b03cac47c19764af}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{International Conference on Tools and Algorithms for the Construction and Analysis of Systems}
+      \field{title}{Simple O (m logn) time Markov chain lumping}
+      \field{year}{2010}
+      \field{pages}{38\bibrangedash 52}
+      \range{pages}{15}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

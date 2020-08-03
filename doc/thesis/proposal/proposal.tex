@@ -17,16 +17,17 @@
 \bibliography{resources} 
 
 \begin{document}
-
+\tikzset{every state/.style={minimum size=0pt,inner sep=2pt}}
 \newgeometry{left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}
 \thesistitlepage[language=english]{M.Sc. Thesis Proposal, Draft v0.1}
 \restoregeometry
-\textit{@Tanja:
+\textit{@Tanja/Stefano:
 \begin{itemize}
  \item What would be a more suitable title?
   \item Are introduction and problem statement okay like that?
- \item Wrt. Methods and literature: Is it okay to describe the literature you showed, explained and sent to me or should I look for/add additional relevant literature?
+ \item Wrt. Methods and literature: Is it okay as is or should I look for/add additional relevant literature?
  \item shall I add something on how the presentations and meetings are planned? I wouldnt add a roadmap as last time as my roadmap was completely off and overly optimistic
+ \item Is the depiction of the models okay like this for the proposal? I'd include a more comprehensive/formal version in the thesis itself in the background section. Also include the MC as labeled version, WLTS, LTS, CRNs, CTMCs, formal power series, formal laurent series, $\dots$
  \item Comments/Feedback?
 \end{itemize}
 }
@@ -45,7 +46,7 @@ Thus the matrix constructed is some sort of projection from $n$ to $m$ dimension
 The method of Kiefer continues by applying the same steps using the postfix space instead of the prefix space. \\
 This procedure has a worst case complexity that is exponential as the powerset of words with up to $n$ letters has to be constructed: $|\text{Alphabet}|^n$. If we are assuming a sparse prefix space, that is only a few of all possible words are a possible prefix of the language accepted by the automaton, we get the average runtime. As Schuetzenberger construction uses matrix multiplication, which is in $\mathcal{O}(n^3)$ the algorithm also has an asymptotic average runtime of $\mathcal{O}(n^3)$. The algorithm is guarenteed to yield a minimal representation with respect to the number of states but produces often more non zero entries in the transition matrix. \\
 
-On the other hand, a method by Tribastone et al.\autocite{Cardelli2017MaximalAO}, that builds upon the algorithm of Valmari for Markov Chains\autocite{valmari} and thus Paigeand Tarjan\autocite{paigetarjan}, extending it to the framework of chemical reaction networks (CRNs) or to be formally more strictly abstract rewrite systems. The algorithm is actually targeted at polynomial ordinary differential equations (ODEs), but the authors provide a conversion from ODEs to CRNS. The algorithm then proceeds by calculating a quantity for each species and possible left-handside of the rule set and use this to split the species into partitions using the standard partition refinememnt approach that corresponds closely to~\autocite{valmari}. The quantitiy to compute is the contribution by the authors and comes in two flavors: Forward differential equivalence uses stoichiometry per partition to find species that behave the same when ``reacting'' to other species, while backward differential equivalence tries to find species that behave the same with respect to the reagents they are ``reacted'' from. According to the authors this shall be in correspondence with ordinary lumpability for forward differential equivalence (FDE) and exact lumpability for backward differential equivalence (BDE). While the first correspondence seems to be quite close, the latter assumes uniform initial values which is an aspect that weak lumpability handles, thus BDE seems to be closer related to weak lumpability. To state it in Buchholz's terms~\autocite{buchholz}:
+On the other hand, a method by Tribastone et al.\autocite{Cardelli2017MaximalAO}, that builds upon the algorithm of Valmari for Markov Chains\autocite{valmari} --- thus also Paige and Tarjan\autocite{paigetarjan} --- extending it to the framework of chemical reaction networks (CRNs) or to be formally more strictly stochastic rewriting systems. The algorithm is actually targets polynomial ordinary differential equations (ODEs), but the authors provide a conversion from ODEs to CRNs. The algorithm then proceeds by calculating a quantity for each species and possible left-handside of the rule set and use this to split the species into partitions using the standard partition refinememnt approach that corresponds closely to~\autocite{valmari}. The quantitiy to compute is the contribution by the authors and comes in two flavors: Forward differential equivalence uses stoichiometry per partition to find species that behave the same when ``reacting'' to other species, while backward differential equivalence tries to find species that behave the same with respect to the reagents they are ``reacted'' from. According to the authors this shall be in correspondence with ordinary lumpability for forward differential equivalence (FDE) and exact lumpability for backward differential equivalence (BDE). While the first correspondence seems to be quite close, the latter assumes uniform initial values which is an aspect that weak lumpability handles, thus BDE seems to be closer related to weak lumpability. To state it in Buchholz's terms~\autocite{buchholz}:
 \begin{quote}
  For exactly lumpable partitions exact results for individual probabilities of the original Markov chain can be computed for a special class of initial vectors, namely for all vectors for which the partition is weakly lumpable.
 \end{quote}
@@ -62,8 +63,93 @@ In the end, questions on which framework is more flexible, expressive, succint, 
 
 
 \section{Methods and Literature}
+The two methods under consideration are described by the two concrete publications by Kiefer et al.~\autocite{Kiefer2013OnTC} and Tribastone at al.~\autocite{Cardelli2017MaximalAO} respectively. 
+The methods used by the before mentioned authors were originally introduced by Schützenberger~\autocite{schutz} and Paige \& Tarjan~\autocite{paigetarjan}. \\
+There are plenty of other derived methods using these tools: 
+Kiefer et al. provided a similar method that enables the basis to preserve the Kolmogorov axioms~\autocite{kolo} of probability theory~\autocite{kieferstab}. \\
+Buchholz describes lumpability, bisimulation and the connection to partitions~\autocite{buchholz2008bisimulation, buchholz}. 
+Feret et al.~\autocite{feret2012lumpability} generalize the notion of lumpability to weighted labeled transition systems. 
+Larsen and Skou transfer the notion of bisimulation to probabilistic transition systems~\autocite{larsen1991bisimulation}.
+Partition refinement has also been used earlier by Hopcroft ~\autocite{hopcroft1971n} for the minimization of finite automata. Partition-based approaches that act on markov chains acn also be found. Petrov~\autocite{petrov2019markov} describes an algorithm to aggregate species for which the deterministic semantics of the thermodynamic limit is preserved in chemical reaction networks. Valmari and Franceschinis elaborate on an algorithm using partition refinement on markov chains. Rubino and Secola introduce an algorithm that computes weak bisimulations on markov chains~\autocite{rubino1989weak}.
+Even though Brzozowski's method~\autocite{brzozowski} seems to be related to backwards reduction introduced by Schützenberger, it uses rather a minimal partition construction approach, that is it constructs the automaton, such that there is no coarser partition.
 
-TODO: Papers send by tanja, fully probabilistic Segala, Picture WA, PA, MC ,CRN, ODE
+When trying to connect both bisimulation methods, it is reasonable to restrict oneself to a concrete model that both other models --- that is CRNs and WAs --- shall be reduced to such that one is able to execute both algorithms on the representation used by the other each. We set this model to be the fully probabilistic Segala automaton~\autocite{segala1995probabilistic}. An overview of the models can be fond in the graphic below. \\
+
+\begin{minipage}{0.29\textwidth}
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+        \node[state,initial] (z_0)   {$z_0$}; 
+        \node[state] (z_1) [above right=of z_0] {$z_1$}; 
+        \node[state] (z_2) [below right=of z_0] {$z_2$}; 
+        \node[state,accepting](z_3) [below right=of z_1] {$z_3$};
+            \path[->] 
+            (z_0) edge  node {a,1} (z_1)
+                edge  node [swap] {a,1} (z_2)
+            (z_1) edge  node  {b,1} (z_3)
+            (z_2) edge  node [swap] {b,1} (z_3);
+    \end{tikzpicture}
+    Weighted Automaton
+    \[ \delta: S \rightarrow \Sigma \times W \times S \]
+    with $W$ elements from a semi-ring
+\end{center}
+\end{minipage} \hfill \begin{minipage}{0.29\textwidth}
+\begin{center}
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+        \node[state,initial] (z_0)   {$z_0$}; 
+        \node[state] (z_1) [above right=of z_0] {$z_1$}; 
+        \node[state] (z_2) [below right=of z_0] {$z_2$}; 
+        \node[state,accepting](z_3) [below right=of z_1] {$z_3$};
+            \path[->] 
+            (z_0) edge  node {a,0.5} (z_1)
+                edge  node [swap] {a,0.5} (z_2)
+            (z_1) edge  node  {b,0.5} (z_3)
+            (z_2) edge  node [swap] {b,0.5} (z_3);
+    \end{tikzpicture}
+    Fully probabilistic Segala Automaton
+    \[ \delta: S \rightarrow \mathcal{D} \left(\Sigma \times S \oplus \{ \bot \} \right) \]
+    with $D$ the set of possible distributions over the parameter.
+\end{center}
+\end{minipage}\hfill \begin{minipage}{0.29\textwidth}
+\begin{center}
+    \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+        \node[state,initial] (z_0)   {$z_0$}; 
+        \node[state] (z_1) [above right=of z_0] {$z_1$}; 
+        \node[state] (z_2) [below right=of z_0] {$z_2$}; 
+        \node[state,accepting](z_3) [below right=of z_1] {$z_3$};
+            \path[->] 
+            (z_0) edge  node {0.3} (z_1)
+                edge  node [swap] {0.7} (z_2)
+            (z_1) edge  node  {0.2} (z_3)
+            (z_2) edge  node [swap] {0.8} (z_3);
+    \end{tikzpicture}
+    Discrete-Time Markov Chain or\\
+    uniformized CTMC
+    \[ \delta: S \rightarrow \mathcal{D} \left(S\right) \]
+    with $D$ the set of possible distributions over the parameter.
+\end{center}
+\end{minipage} \\ \vspace{0.3cm}
+\begin{minipage}{0.49\textwidth}
+\begin{center}
+\[ A_{p,u} \overrightarrow{k_1} A_{u,u} \]
+\[ A_{u,p} \overrightarrow{k_1} A_{u,u} \]
+\[ A_{u,u} \overrightarrow{k_2} A_{p,u} \]
+\[ A_{u,u} \overrightarrow{k_2} A_{u,p} \]
+\[ A_{p,u} + B \overrightarrow{k_3} A_{p,u}B \]
+Stochastic Rewrite System \\
+with rates $k_i$
+\end{center}
+\end{minipage} \hfill
+\begin{minipage}{0.49\textwidth}
+\begin{center}
+\[ \dfrac{dx_0}{dt}= x_0^3 + 2 x_0 + x_0' -3 x_0'' + x_0x_1^2 \]
+\[ \dfrac{dx_1}{dt}= x_1^5 + x_2 + x_1' -3 x_0''  \]
+\[ \dfrac{dx_2}{dt}= 2 x_0 x_1 x_2^2 x_3^{-1}  \]
+\[ \dfrac{dx_4}{dt}= x_3''' + x_0' + x_1'' + x_2^{(4)} \]
+System of Polynomial Ordinary Differential Equations, in general:
+\[ \dfrac{dx_i}{dt} = f(x_0, \dots, x_n, x_0', \dots, x_n', \dots) \] 
+with f a ploynomial.
+\end{center}
+\end{minipage}
 
 
 
