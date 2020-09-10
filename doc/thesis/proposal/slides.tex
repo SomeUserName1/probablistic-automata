@@ -1,16 +1,23 @@
- \documentclass[rgb]{beamer}
+ \documentclass[rgb, pdf]{beamer}
+\usepackage{listings}
+\usepackage[algoruled,boxed,vlined]{algorithm2e}
+\makeatletter 
+\g@addto@macro{\@algocf@init}{\SetKwInOut{Parameters}{Parameters}} 
+\makeatother
+\newcommand{\hrulealg}[0]{\vspace{1mm} \hrule \vspace{1mm}}
+
 
 \usetheme{Konstanz}
 \format{169}
 
-\title{Minimization of Stochastic Dynamical Systems:}
-\titleCorporateDesign{Minimization of}{Stochastic Dynamical Systems}{A Comparison of}{Models \& Methods}
-\author{Fabian Klopfer} 
-\date{10.03.2020}
+\title{Thesis Proposal Summary}
+\titleCorporateDesign{Thesis}{Proposal}{Summary}{}
+\author{Fabian Klopfer}
+\date{\today}
 \institute{Modelling of Complex Self-Organizing Systems Group}
 
 \bibliography{resources}
-%\renewcommand*{\bibfont}{\tiny}
+\renewcommand*{\bibfont}{\tiny}
 
 \begin{document}
     \usebeamerfont{normalfont}
@@ -18,177 +25,195 @@
         \titlepage
     \end{frame}
 
-    \begin{frame}{Motivation}
-     \begin{itemize}
-      \item Dynamical processes describe everything that changes
-      \item DEs are the most common modelling tool in natural sciences
-      \item Automata are the underlying computational model in current hardware and software systems
-      \item Automata also describe dynamical processes
-      \item Continuous time Markov chains e.g. for chemical reaction networks, quantum automata, $\dots$
-     \end{itemize}
-    \end{frame}
-    
-    \begin{frame}{Motivation}
-        Differential Equations (DE) are omni-present in natural science:
-        \begin{columns}
-            \begin{column}{0.3\textwidth}
-            Phisics \& Chemistry
-                \begin{itemize}
-                    \item electrodynamics
-                    \item thermodynamics \& diffusion
-                    \item fluid dynamics \& plasma physics
-                    \item classical mechanics
-                    \item celestial motion \& general relativity
-                    \item nuclear physics \& quantum mechanics
-                    \item Chemical reactions
-                \end{itemize}
-            \end{column}
-            \begin{column}{0.3\textwidth}  %%<--- here
-                Biology
-                \begin{itemize}
-                 \item Population dynamics
-                 \item wound healing
-                 \item epidemology
-                \item blood flow
-                \item reaction-diffusion equations
-                \item Hodgkin Huxley model
-                \item capiliary pressure
-                 \end{itemize}
-            \end{column}
-            \begin{column}{0.3\textwidth}  %%<--- here
-                Engineering \& Economics
-                \begin{itemize}
-                 \item optimal control
-                 \item optimization techniques
-                 \item electrial engineering
-                \item signal processing
-                \item trafic flow
-                \item mean field game theory
-                \item advertising effects
-                \item economic growth
-                \item price evolution
-                 \end{itemize}
-            \end{column}
-        \end{columns}
-    \end{frame}
-    
-    \begin{frame}{Why \alert{Stochastic} Dynamical Sytems?}
-        Laplace's demon:
-        \begin{center}
-            \textit{An intellect which would know all forces that set nature in motion, and all positions of all items of which nature is composed, if this intellect were also vast enough to submit these data to analysis, it would embrace in a single formula the movements of the greatest bodies of the universe and those of the tiniest atom; for such an intellect nothing would be uncertain and the future just like the past would be present before its eyes.} \\
-            - Pierre-Simon Laplace, \autocite{laplace1998pierre}
-        \end{center}
-        \vfill
+    \begin{frame}{Introduction}
+        In the last presentation $\dots$ \\ \vspace{0.5cm}
         \begin{itemize}
-            \item Only the universe itself exists since its' beginnings $\Rightarrow$ initial condition problem
-            \item Thermodynamic and quantum mechanical irreversability $\Rightarrow$ Cannot certainly infer past
-            \item Chaos Theory: Butterfly effect
+            \item introduced CRNs \& ODEs \\ \vspace{0.7cm}
+            \item looked at Tribastone et al.~\autocite{Cardelli2017MaximalAO} \\ \vspace{0.7cm}
+            \item compared the algorithms informally \\ \vspace{0.7cm}
+            \item tried to find representations between CRNs \& WAs \\ \vspace{0.7cm}
         \end{itemize}
     \end{frame}
     
-    \begin{frame}{Research Questions}
-        \begin{enumerate}
-            \item How to model stochastic dynamics universally and exactly?
-            \item How do automata and DE models relate? 
-            \item How do reduction, approximation and minimization methods relate?
-            \item Is it possible to automatically combine bounded-error approximations, minimizations, reductions of order, $\dots$ to achieve minimal computational effort?
-        \end{enumerate}
-        \vfill
-        \textbf{TL;DR:} What's the most exact, interpretable, computationally fastest and memory-greediest approach of modelling arbitrary stochastic dynamical systems and \alert{why} is that so?
-    \end{frame}
-    
-    
-    \begin{frame}{Example: Chemical Reaction Networks}
-        Taken from \autocite{mc_agg_crn} with support of \autocite{van1992stochastic}. \\
-        Let the chemical reaction network $CRN$ be a 2-tuple $(S,R)$ with 
-        \[S = \{S_1, S_2, \dots, S_n\}\] the set of distinct species and 
-        $R = \{R_1, R_2, \dots, R_k\}$ the set of reactions in the form 
-        \[ a_{1j} S_1, a_{2j} S_2 \dots, a_{nj} S_n \xrightarrow{k_j}  a'_{1j} S_1, a'_{2j} S_2 \dots, a'_{nj} S_n \]
-        where $a_j$ is called to consumption vector, $a'_j$ the production vector, $k_j$ the reaction rate contant and 
-        \[ \nu_j = a'_j - a_j \]
-        the change vector of $R_j$
-    \end{frame}
-  
-    \begin{frame}{Classical chemical kinetics}
+    \begin{frame}{What we discussed then}
         \begin{itemize}
-            \item Continuous, deterministic ODE-based model.
-            \item Assumes constant pressure and temperature, well-stirredness.
-            \item Based on concentrations rather then particles.
-            % $[N] = \frac{|S_i|}{A \cdot V} \frac{mol}{dm^3}$ where $A = 6.23 \cdot 10^{23} \text{mol}^{-1}$ 
+            \item Look at classical lumping rather than CRN species lumping \\  \vspace{0.7cm}
+            \item Construct ``middle ground'' between WAs \& CTMCs using fully probabilistic Segala \\ \vspace{0.7cm}
+            \item Elaborate on connection between Kiefer~\autocite{Kiefer2013OnTC} and partition refinement-based lumping e.g. Valmari et al.~\autocite{valmari} \\ \vspace{0.7cm}
         \end{itemize}
-        \vskip 1cm
-        Let $s_0 = (s_1, s_2, \dots, s_n)$ be an initial state. The deterministic reaction rate is given by 
-            \[ \lambda_j (s_i) = k_j \prod_{i=1}^n s_i^{a_{ij}} \]
-        and the model by the solution of n coupled non-linear ODEs
-            \[ \frac{d}{dt} s_i(t) = \sum_{j = 1}^{k} \nu_{ij} \lambda_j (s_i(t))  \]
-        \vfill
-        Problem: Can not explain variations present in reality
     \end{frame}
     
-    \begin{frame}[allowframebreaks]{Stochastic chemical kinetics}
-    \begin{itemize}
-        \item Discrete, stochastic CTMC-based model.
-        \item Assumption: Thermal equilibrium, well-stirred
-        \item Based on particles.
-        \item Transient probability distribution is measure of interest
-        % $[N] = \frac{|S_i|}{A \cdot V} \frac{mol}{dm^3}$ where $A = 6.23 \cdot 10^{23} \text{mol}^{-1}$ 
-    \end{itemize}
-    \vfill
-    Let $x_0 = (x_1, x_2, \dots, x_n)$ be an initial state. The stochastic reaction rate for each reaction is given by 
-        \[ \tilde\lambda_j (x_) = c_j \prod_{i=1}^n \binom{x_i}{a_{ij}} \]
-        
+    \begin{frame}[allowframebreaks]{Tribastone et al. \& Valmari et al.}
+    \begin{minipage}{0.45\textwidth}
+     \includegraphics[height=0.2\textheight, width=\textwidth, keepaspectratio]{img/largest_equi.png}\\
+     \includegraphics[height=0.78\textheight, width=\textwidth, keepaspectratio]{img/split.png}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+     \includegraphics[height=\textheight, width=\textwidth, keepaspectratio]{img/valmari.png}
+    \end{minipage}     
     \framebreak
-        
-    The model is def'ed by the CTMC ${X_t}$ over the states $$S = \{x | x \text{ reachable from } x_0 \}$$ with $p_0(x_0) = 1$ and the generator matirx
-        \[ w(x,y) = \sum_{j = 1}^k \lambda_j(x) 1_{y = x - \nu_j}  \]
-
-        
-    Transient probability distributions can then be obtained by solving the chemical master equation (CME)
-    \[ \frac{d}{dt} p^{(t)} (x) = \sum_{x-\nu_j \in S} \sum_{j = 1}^{k} \lambda_j (x - \nu_{j}) p{(t)}(x - \nu_{j}) - \sum_{j = 1}^k \lambda_j (x) p{(t)}(x) \]
-    
     \begin{itemize}
-     \item Instead of solving the CME, do dynamic MCMC approximation on the CTMC
-     \item stochastic simulation algorithm (SSA)
+    \item Uses MCs \& partition-refinement with same complexity bounds~\autocite{valmari} \\ \vspace{0.7cm}
+     \item What Tribastone et al. base their algorithm on~\autocite{Cardelli2017MaximalAO}: \\
+     \vspace{1.5cm}
+     \begin{quotation}
+       This structural interpretation allows the development of an algorithm for computing maximal equivalences, building on analogous partition refinement techniques developed for Markov chain lumping (16, 17).
+     \end{quotation}
+
+        \includegraphics[height=0.8\textheight, width=\textwidth, keepaspectratio]{img/pnas_corectness.png}
     \end{itemize}
     \end{frame}
-    
-    \begin{frame}
-        To summarize:
-        \begin{itemize}
-             \item classical chem. kin. use coupled ODEs to approx. stochastic model in the limit of species and volume to infinity at constant concentrations
-             \item Continuous Markov Process (CMP) models stochastic chem. kin.
-             \item solving Master Equation provides transient probability distribution
-             \item which is in turn approx. by MCMC on the CTMC def'ed by the CMP
-        \end{itemize}
-        Questions:
-        \begin{itemize}
-         \item Are Monte Carlo methods on automata always cheaper than numerical solution of high dimension \& order DEs?
-         \item Is there always an automaton that can approximate the DE?
-         \item If reducting the complexity in either the CTMC (minimization) or the DE (reduction of order, fwd/bwd eq., QSSA), how does the counterpart change if existant?
-         \item When only interested in certain quantities: How do we adapt the models?
-        \end{itemize}
-
-       
-    \end{frame}
 
     
-    \begin{frame}{Goals}
-        \begin{enumerate}
-            \item Implement minimization algorithm for weighted automata \autocite{Kiefer2013OnTC}.
-            \item Implement model reduction algorithm for ODEs \autocite{Cardelli2017MaximalAO}.
-            \item Develop reproducible benchmarks
-            \item Write report including 
+   
+    \begin{frame}[allowframebreaks]{Schützenberger's construction \& Bisimulation}
+       Schützenberger~\autocite{schutz} vs. Buchholz~\autocite{buchholz2008bisimulation}: 
+        \begin{align}
+         \overrightarrow{\mu}(\sigma) & = \overrightarrow{F} \mu(\sigma) \overrightarrow{F}^{-1}_R 
+         & \overrightarrow{F} \mu(\sigma) & = \overrightarrow{\mu}(\sigma)\overrightarrow{F} \\
+       \hat{P} & = W P V & W P & = \hat{P} V_R^{-1} 
+        \end{align}   With $W \cdot V = I$ and $P$ the transition matrix. \\
+        \vspace{0.7cm}
+        \[ W \cdot V = I \]
+        \[ W \cdot V \cdot V^{-1}_R = I \cdot V^{-1}_R \]
+        \[ W = V^{-1}_R \]
+        Thus we get 
+        \begin{align}
+         \overrightarrow{\mu}(\sigma) & = \overrightarrow{F} \mu(\sigma) \overrightarrow{F}^{-1}_R 
+         & \overrightarrow{F} \mu(\sigma) & = \overrightarrow{\mu}(\sigma)\overrightarrow{F} \\
+       \hat{P} & = W P W^{-1}_R & W P & = \hat{P} W
+        \end{align}
+        \end{frame}
+        
+        \begin{frame}{WA $\leftrightarrow$ f.p.S. $\leftrightarrow$ CTMC}
+        $\Rightarrow$
+         A \textbf{WA} may be normalized by left. mult. vector of sum of row sums, yielding a \textbf{f.p. Segala}, i.e. the row sum of all matrices together equals 1. \\ 
+         Rescaling each row of a \textbf{f.p. Segala} to have a row sum of 1 per matrix yields a \textbf{labelled DTMC}, which can be viewed as \textbf{labelled uniformized CTMC}. \\ \vspace{1.4cm}
+         
+         $\Leftarrow$
+         A \textbf{labelled CTMC} can be uniformized to a \textbf{labelled DTMC}. Scaling each probability by the number of letters yields a \textbf{f.p. Segala}, which is already a \textbf{WA}\\ \vspace{1.4cm}
+         
+         No need for a common ground: WA $\leftrightarrow$ CTMC is more straight forward: A labelled CTMC is already a WA and scale the WA by the row sum per row and letter to get a labeled DTMC which can be interpreted as uniformized labelled CTMC \hfill $\qed$
+         
+        \end{frame}
+
+    
+    \begin{frame}[allowframebreaks]{Connection between the algorithms}
+         Weighted automaton $\mathcal{A} = (n, \Sigma, \mu, \alpha, \eta)$ with \\ \vspace{0.5cm}
+            \begin{minipage}{0.27\textwidth}
                 \begin{itemize}
-                 \item formal description of models, properties, specializations
-                 \item connections \& discords of models
-                 \item Description of dimensionality reductions, minimizations, approximations, reduction to partial models for each
-                 \item compare reduction, minimization and approximation techniques
-                 \item compare 1. \& 2. quantitively by results 3.
+                    \item $n = 3$,
+                    \item $\Sigma = \{a, b\}$,
+                    \item $\alpha = (\alpha_0,\alpha_1, \alpha_2, \alpha_3)$,
+                    \item $\eta = (\eta_0,\eta_1, \eta_2, \eta_3)$,
                 \end{itemize}
-        \end{enumerate}
-    \end{frame}
-
+            \end{minipage} \begin{minipage}{0.28\textwidth}
+             \begin{itemize}
+                 \item $\mu(a) = \begin{pmatrix}
+                                    0 & \frac{1}{2} & \frac{1}{2} & 0 \\
+                                    0 & 0 & 0 & 0 \\
+                                    0 & 0 & 0 & 0 \\
+                                    0 & 0 & 0 & 0
+                                \end{pmatrix}$, \vspace{0.2cm} \\
+                    \item $\mu(b)= \begin{pmatrix}
+                                    0 & 0 & 0 & 0 \\
+                                    0 & 0 & 0 & 1 \\
+                                    0 & 0 & 0 & 1 \\
+                                    0 & 0 & 0 & 0
+                                 \end{pmatrix}
+                                $.
+                \end{itemize}
+            \end{minipage}
+            \begin{minipage}{0.3\textwidth}
+            \begin{center}
+                \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] 
+                    \node[state,initial] (z_0)   {$z_0$}; 
+                    \node[state] (z_1) [above right=of z_0] {$z_1$}; 
+                    \node[state] (z_2) [below right=of z_0] {$z_2$}; 
+                    \node[state](z_3) [below right=of z_1] {$z_3$};
+                        \path[->] 
+                        (z_0) edge  node {a/$\frac{1}{2}$} (z_1)
+                            edge  node [swap] {a/$\frac{1}{2}$} (z_2)
+                        (z_1) edge  node  {b/1} (z_3)
+                        (z_2) edge  node [swap] {b/1} (z_3);
+                \end{tikzpicture}
+            \end{center}
+            \end{minipage}
+            
+            \framebreak
+            
+            \[  \mu(a)^2 = (0);  \ \ \mu(b)^2 = (0); \ \ \mu(b) \mu(a) = 0  \]
+            $\Rightarrow$ Words to consider: a, b, ab
+            
+            
+            \[  r^{(i)}= \begin{pmatrix}
+                        r^{(i)}_{a,0} & r^{(i)}_{a,1} & r^{(i)}_{a,2} & r^{(i)}_{a,3} \\
+                        r^{(i)}_{b,0} & r^{(i)}_{b,1} & r^{(i)}_{b,2} & r^{(i)}_{b,3}
+                    \end{pmatrix}                     
+        \] \vspace{0.5cm}
+        \[ v_i = \alpha \mu(a) r^{(i)}_a + \alpha \mu(b) r^{(i)}_b + \alpha \mu(a) \mu(b) r^{(i)}_{ab} \]
+        \[= \left(0, \frac{1}{2} \alpha_0, \frac{1}{2} \alpha_0, 0\right) r^{(i)}_a + \left(0, 0, 0,\alpha_1 + \alpha_2\right) r^{(i)}_b + \left(0,0,0,\alpha_0\right) r^{(i)}_{ab} \]
+        \[ = \left(0, \frac{1}{2} r^{(i)}_{a,0} \alpha_0, \frac{1}{2} r^{(i)}_{a,0} \alpha_0, r^{(i)}_{b,0} [\alpha_1 + \alpha_2] + r^{(i)}_{a,0} r^{(i)}_{b,1} [\alpha_0] \right) \]
+        
+         \[ \overrightarrow{F} = \begin{pmatrix}
+                                    \alpha_0 & \alpha_1 & \alpha_2 & \alpha_3 \\
+                                    0 & \frac{1}{2} r^{(1)}_{a,0} \alpha_0 & \frac{1}{2} r^{(1)}_{a,0} \alpha_0 & r^{(1)}_{b,0} [\alpha_1 + \alpha_2] + r^{(1)}_{a,0} r^{(1)}_{b,1} [\alpha_0]   \\
+                                    0 & \frac{1}{2} r^{(2)}_{a,0} \alpha_0 & \frac{1}{2} r^{(2)}_{a,0} \alpha_0 & r^{(2)}_{b,0} [\alpha_1 + \alpha_2] + r^{(2)}_{a,0} r^{(2)}_{b,1} [\alpha_0]   \\
+                                \end{pmatrix}
+        \] \\ \vspace{0.6cm}
+        Using partition refinement we get $\{s_1, s_2\}$, thus \[ W = \begin{pmatrix}
+                                    1 & 0 & 0 & 0 \\
+                                    0 & \frac{1}{2} & \frac{1}{2} & 0 \\
+                                    0 & 0 & 0 & 1
+                                \end{pmatrix} \]\\
+                                \framebreak
+                                
+        Chose $\alpha = (1,0,0,0)$. \\
+        Now Kiefer restricts the $r^{(i)}_{\sigma,k}$ to $\mathbb{N_+}$. \\
+        Resulting in that it is not possible to find parameters such that $\overrightarrow{F} = W$. \\
+        Even when we loosen that restriction, chose $r^{(1)}_{a,0} = 1, r^{(1)}_{b,0} = r^{(1)}_{b,1} = 0, r^{(2)}_{a,0} = 0, r^{(2)}_{b,0} = 1$.\\
+        Then almost $\overrightarrow{F} = W$ but the entry with $i=j=4$ is $0$ instead of $1$. \\
+        \end{frame}
+        
+        \begin{frame}[allowframebreaks]{Summary}
+        \begin{itemize}
+         \item Kiefers et al.~\autocite{Kiefer2013OnTC} basis construction not able to produce the same basis as partition refinement
+         \item yields non-sparse transition matrices 
+         \item induces computational overhead, possibly more overhead than gaining by dimensionality reduction
+         \item Alternative: Use Householder reflectors for finding the basis~\autocite{kieferstab}, yields triangular basis at least
+         \item Partition-refinement does \textbf{not} explicitly construct a basis.
+         \item rather constructs new Q-matrix than transforming old one
+        \end{itemize}
+        \framebreak
+         \includegraphics[height=0.8\textheight, width=\textwidth, keepaspectratio]{img/derisavi_pseudocode.png}
+        \end{frame}
+        
+    \begin{frame}[allowframebreaks]{Where to go from here}
+    Options:
+     \begin{enumerate}
+     \item Your proposals
+     \item Work out an overview of frameworks for (stochastic) dynamical systems and methods for minimization (in brief)
+      \item Explore the space of possible bisimulations and how to construct them; ~\autocite{buchholz2008bisimulation} and ~\autocite{schutz} describe them in abstract/general form (?)
+      \item Carry over the bisimulation/Schützenberger's construction approach to ODEs/CRNs as Tribastone et al. did for partition refinement/MC lumping (?)
+      \item Or other topic
+    \end{enumerate}
+      \framebreak
+      
+    \textbf{What's your big picture/frame of reference/context?} \\ \vspace{0.6cm}
     
+    Where is this going? \\ \vspace{0.6cm}
+    
+    How/why is it important/significant? \\
+    Am I creating something of value in the thesis (for you)?\\ \vspace{0.6cm}
+     
+    I don't feel comfortable/feel frustrated as I do not know where Kiefer $\leftrightarrow$ Valmari/Tribastone is heading \\ \vspace{0.6cm}
+    
+    Is it enough for a thesis? \\ \vspace{0.6cm}
+    
+    What's your view on that?
+    \end{frame}
+    
+        
     \begin{frame}{Bibliography}
         \printbibliography
     \end{frame}
