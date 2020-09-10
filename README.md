@@ -8,14 +8,14 @@
 
 ### Presentations
 - [Proposal](doc/project/proposal/proposal_presentation.pdf)  
-- [Kiefer-Schützenberger](doc/project/software/KieferPresentation)  
+- [Kiefer-Schützenberger](doc/project/software/KieferPresentation.pdf)  
 - [Project Final Presentation](doc/project/Project_Presentation.pdf)  
 
 #### TODOs
 - [x] Write Thesis Proposal  
 
 #### Software TODOs (Optional)  
-- [-] Implementation of rewriting system algorithm (WIP)  
+- [ ] Implementation of rewriting system algorithm (WIP)  
 - [ ] Parser for ODE  
 - [ ] higher order ODE to system of first order ODEs  
 - [ ] ODE to rewriting system conversion
