@@ -21,4 +21,4 @@
 - [ ] Look into decidability stuff
 - [ ] Start thesis document with extended background on PA types (brief) and the transformations between the types
 - [ ] Look for thesis title, e.g. Probabilistic Automata: On the Semantics, Types, Languages, Equivalence & Minimization
-
+- Alter the "proposal" presentation to be showable to public
