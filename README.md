@@ -10,6 +10,8 @@
 - [Kiefer-Schützenberger](doc/project/software/KieferPresentation.pdf)  
 - [Project Final Presentation](doc/project/Project_Presentation.pdf)  
 
+- [Thesis Proposal]( master/doc/thesis/proposal/slides.pdf ) 
+
 #### TODOs
 - [ ] Read Rubino, Sericola
 - [ ] Read Doyen properly
