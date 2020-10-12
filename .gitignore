@@ -137,4 +137,4 @@ include/
 .idea/
 statistics*
 compile_commands.json
-literature/
+literature/archive/*/

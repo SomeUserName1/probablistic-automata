@@ -68,7 +68,7 @@
         \end{itemize}
         \vspace{7cm}
         Reduction to Schwarz-Zippel Lemma (Polynomial Identity Testing) provide bounds on correctness $\frac{n}{K}$\\ \vspace{0.5cm}
-        Author claims complexity is in $\mathcal{RNC}$, this is not correct (c.f. later) \\ \vspace{0.5cm}
+        $\mathcal{RNC}$, i.e. in $\mathcal{O}(log_k n)$ using $\mathcal{O}(n^k)$ processors. \\ \vspace{0.5cm}
         In the following slides use forward reduction, the backwards reduction is similar \\ \vspace{2cm}
         
         Basic scheme of the algorithm: \\
@@ -100,6 +100,7 @@
     \begin{frame}[allowframebreaks]{The Weighted Automaton Minimization Algorithm: Pseudo Code}
         \begin{center}
             \begin{minipage}{0.6\textwidth}
+            \normalem
                 \begin{algorithm}[H]
                     \KwIn{A weighted automata WA}
                     \Parameters{K setting the maximal random number}
@@ -118,13 +119,14 @@
                         \Return minWA\;
                     }
                 \caption{minimize(WeightedAutomaton WA)}
-                \end{algorithm}
+                \end{algorithm} \ULforem
             \end{minipage} 
         \end{center}
     \framebreak
     
         \begin{center}
             \begin{minipage}{0.7\textwidth}
+            \normalem
                 \begin{algorithm}[H]
                     \KwIn{A weighted automata WA, random vectors randVs}
                     \KwOut{WA transformed by a random minimal forward space base}
@@ -142,12 +144,12 @@
                         Vector $\overrightarrow{\eta} \leftarrow \overrightarrow{F}$ $\cdot \eta$\;
                         \vspace{0.15cm}
                         \ForEach{$\mu_i \in \text{WA.}\mu$}{
-                            $\overrightarrow{\mu_i} \leftarrow$ \alert{Solver($\overrightarrow{F}^T$).solve(($\overrightarrow{F} \cdot \mu_i)^T)^T$}\;
+                            $\overrightarrow{\mu_i} \leftarrow$ Solver($\overrightarrow{F}^T$).solve(($\overrightarrow{F} \cdot \mu_i)^T)^T$\;
                         }
                         \Return $\left(\overrightarrow{n}, \text{WA.}\Sigma, \overrightarrow{\alpha}, \overrightarrow{\mu}, \overrightarrow{\eta} \right)$\;
                     }
                 \caption{forward\_reduction(WA, randVs)}
-                \end{algorithm}
+                \end{algorithm} \ULforem
             \end{minipage}
         \end{center}
     \framebreak
@@ -155,6 +157,7 @@
     \vspace{0.5cm}
     \begin{center}
       \begin{minipage}{0.64\textwidth}
+      \normalem
             \begin{algorithm}[H]
                 \KwIn{A weighted automata WA, random vectors randVs}
                 \KwOut{Candidate vectors as base of the Forward space}
@@ -169,10 +172,11 @@
                     \Return $\{ v_0, \dots, v_{\text{randVs.length} - 1} \}$\;
                 }
             \caption{calculate\_rho\_forward\_vectors(WA, randVs)}
-            \end{algorithm}
+            \end{algorithm} \ULforem
         \end{minipage} \hfill
         \begin{minipage}{0.35\textwidth}
         \vspace{0.35cm}
+        \normalem
         \begin{algorithm}[H]
             \KwIn{Word w, randVs random vector}
             \KwOut{WA transformed by a random minimal forward space base}
@@ -184,7 +188,7 @@
                 }
             }
         \caption{get\_word\_factor(WA, randVs)}
-        \end{algorithm}
+        \end{algorithm} \ULforem
         \vspace{1cm}
     \end{minipage} \hfill
     \end{center}
@@ -194,6 +198,7 @@
     \begin{center}
         \begin{minipage}{0.59\textwidth}
         \SetAlFnt{\footnotesize}
+        \normalem
             \begin{algorithm}[H]
                 \KwIn{A weighted automata WA, length of words k}
                 \KwOut{List of Tuples of word and corresponding vector}
@@ -227,7 +232,7 @@
                     \Return result\;
                 }
             \caption{generate\_words\_forward(WA, randVs)}
-            \end{algorithm}
+            \end{algorithm} \ULforem
         \end{minipage}
     \end{center}
     \end{frame}
