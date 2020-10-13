@@ -1,0 +1,80 @@
+\chapter{Semantics, Equivalence \& Minimization}\label{\positionnumber}  
+        The general case, may help with some things, e.g. if proven independent of the semiring used. So for each subsection here starting with WAs independent of the Semiring that is used, continue with PA results that are as independent as possible from the concrete transition structure. Finally apply the aforementioned results to LMCs/MCs. Also discriminate between DTMC, MDP, PA model(s) I.e. per subsection apply the folling structure
+        
+            \paragraph{WA - General Case for arbitrary Semirings}
+            
+            \paragraph{PA - Results for other transition structures}
+            
+            \paragraph{MC-like models - Application of above and other literature on specific example of LMC}
+
+
+    \section{Semantics}
+        \subsection{Parametrization and Initialization}
+    
+        \subsection{Trace Semantics}
+            Execution as Sparse Matrix Multiplication, 
+            (constrained) reachability (pr.), path/trace distributions,
+            ergodicity, state residency time, Uniformization
+            
+        
+        
+        \subsection{Transient Semantics \& Cylinder Sets of Executions (incl. Reward/weighted semantics)}
+        wrt. probabilities?!
+            
+            \begin{definition}[Transient probability distributiin]
+            \end{definition}
+                       
+        
+        \subsection{Threshold semantics}
+            
+        
+        \subsection{Funtion Transient Semantics (?)}
+        word functions instead of probability functions?
+           
+        
+        
+        %\paragraph{Connection to Systems of Equations}
+        %\paragraph{Initial \& Boundary Value Problems}
+        %paragraph{Parametrized Automata as Stochastic Phase Space Approximaters}
+        
+    %\section{Languages \& Grammars}
+    %    \paragraph{Threshold Language}
+        
+    %    \paragraph{Transient/Population Language}
+        
+    %    \paragraph{}
+        
+    \section{Equivalence \& Tanja's Draft Equivalences}
+        
+        \subsection{Trace semantics is decidable in P for all}
+                paz p.36, Kiefer  , Tzeng, Schützenberger, Bollig \& Zeitoun, Kiefer WA should hold for PA when using sufficient eps (theoretically unclean), Doyen, 
+            
+        \subsection{Transient semantics is lower NP, upper EXP}
+            As we need to construct the postfix space which is a cylinder set, transfers also to reward/weighted transient
+            
+        \subsection{Word Function-based}
+            Same as above, just that lower bound is less; stop on first false; maybe eq of kiefer helps here
+                
+        
+            
+     
+    \section{Minimization + wrt. Draft Eqs.}
+        \begin{definition}[Lumping/lumpable]
+         
+        \end{definition}
+        \subsection{Approaches}
+            \subsubsection{Partition Refinement - Coalgebraic Approach}
+            Proof: PA minimization is in P for uninitialized. \\
+            Deiffel, Wißmann, Paz p.24ff (IntroToProbabilisticAutomata)
+            for all in O(n log n) as partition refinement is minimal (see sources above) for uninitialized Automata. \\
+        
+            \subsubsection{Schützenberger's Construction $\pm$ Arnoldi Iteration with Housholder Reflectors \& }
+            Show either that is also in P oder correct Kiefers runtime analysis.
+            For uninitialized see kiefer; TODO figure out if kiefers reduction is flawed or if the runtime analysis of his algo is flawed.
+            
+        \subsection{Wrt. different semantics}
+            \subsubsection{Decidability}
+            
+            \subsubsection{Complexity}
+    
+    %\section{Learning \& Parameter Synthesis}

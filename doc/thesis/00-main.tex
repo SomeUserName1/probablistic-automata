@@ -6,7 +6,7 @@
 \date{\today}
 \year{2020}
 \author{Fabian Klopfer}
-\title{Some New Title}
+\title{Probabilistic Automata: Semantics, Equivalence \& Minimization}
 \subtitle{Master Thesis}
 \unisection{Faculty of Sciences}
 \department{Department of Computer and Information Science}
@@ -16,11 +16,12 @@
 \headFoot{14}
 \bibliography{resources} 
 
+
 \begin{document}
 
 \newgeometry{left=2.5cm, right=2.5cm, bottom=2cm, top=2.5cm, headheight=12pt, headsep=0.8cm, footskip=22pt}
 \thesistitlepage[language=english]{Master Thesis}
-\input{01-abstract.tex}  
+\input{01-abstract.tex}
 \cleardoublepage
 \tableofcontents
 \cleardoublepage
@@ -31,19 +32,13 @@
 \rmfamily 
 \normalsize
 
-\include{01-introduction}
+\include{02-introduction}
 \cleardoublepage
-\include{02-background}
+\include{03-background}
 \cleardoublepage
-\include{03-clustering_algorithms}
+\include{04-minimization_complexity}
 \cleardoublepage
-\include{04-label_inference}
-\cleardoublepage
-\include{05-evaluation}
-\cleardoublepage
-\include{06-conclusions}
-\cleardoublepage
-\include{07-appendix}
+\include{05-conclusions}
 
 \nocite{*}
 \printbibliography
