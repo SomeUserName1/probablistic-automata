@@ -1,4 +1,48 @@
 \chapter{Background}\label{\positionnumber} 
+    \section{Category Theory}
+        \begin{definition}[Category, Semicategory, final object, graph homomorphism, functor]
+            ``set of objects and arrows/morphisms``, ''arrows``/morphism are compositional. \\
+            every object needs to have an identity morphism, i.e. neutral elem wrt. compostion. morphism composition is associative \\
+            
+            A Semicategory is a category that does not require an identity morphism for every object
+            
+            A final/terminal object F is such that for any other object A there is exactly one morphism to F.
+            
+            An initial object I is such that for each other object there is exactly one morphism from I.
+            
+            A graph homomorphism f is a function from one graph to another s.t. if vertex u is linked to v then f(u) is linked to f(v)
+            
+            An isomorphism f is a morphism from object A to object B, if there extists a morphism g that maps from B to A such that when applying f and then g, it is the identity morphism
+            
+            A covariant functor F from category C to category D is such that fir each object A of C we have F(A) is in D. For each morphism f:A to B in C we have F(f):F(A) to F(B) in D such that F(g)°F(f) = F ( g ° f) and F(id_A) = id_F(A). A Functor preserves the structure of a category mapping it into another category
+            
+            A contravariant functor G from category C to category D is such that fir each object A of C we have F(A) is in D. For each morphism f:A to B in C we have F(f):F(B) to F(A) in D such that F(g)°F(g) = F ( g ° f) and F(id_A) = id_F(A). A Functor reverses the morphisms of a category when mapping it into another category
+            
+            The categorical product is a candidate AxB, pi_1:AxB -> A, pi_2:AxB -> B s.t. for any other candidate X, f:X->A, g:X->B there eiszs a unique h:X->AxB s.t. pi_1°h=f and pi_2°h=g
+        \end{definition}
+        
+        \begin{remark}
+         All terminal objects in a category are isomorphic
+        \end{remark}
+
+        
+        \begin{example}[Empty, Set, Ord, Product, Monoid, Bimonoidal/Semiring, cat \& CAT]
+         The empty category contains no objects and no morphisms. 
+         
+         The Set Category contains objects that are sets and morphisms that are total functions between sets. 
+         
+        The Ord Category contains objects that are ordered sets and the morphisms are functors between objects
+         
+         The Product Category for two categories C, D is the category whose objects are ordered pairs of objects from C and D, morphisms are ordered pairs, compostition is defined component wise. 
+         
+         The Mon category is a category C equipped with a functor out of the product category of C with itself called tensor product, a unit object, a left unitor, a right unitor and and associator. 
+         
+         A Bimon or Semiring category C is a category with to symmetric monoidal structure for addition and a monoidal structure for multiplication, together with distributivity natural and absorption isomorphisms
+         
+         The cat Category is the category of all small categories having functors as morphisms. The CAT Category is the category of all large objects (such as Set or Mon) having functors as morphisms
+        \end{example}
+
+        
     \section{Algebraic Preliminaries}
         \begin{definition}[Equivalence Relation]
             
@@ -15,9 +59,11 @@
         \begin{theorem}[The Ring of Formal Power Series]
          
         \end{theorem}
-
-
-    \section{Category Theory}
+        
+        \begin{definition}[Coalgebra, F-Coalgebra]
+        \end{definition}
+        
+ 
         
 
     \section{Probability Theory}\label{\positionnumber}

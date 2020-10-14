@@ -42,29 +42,6 @@
             \item Elaborate on connection between Kiefer~\autocite{Kiefer2013OnTC} and partition refinement-based lumping e.g. Valmari et al.~\autocite{valmari} \\ \vspace{0.7cm}
         \end{itemize}
     \end{frame}
-    
-    \begin{frame}[allowframebreaks]{Tribastone et al. \& Valmari et al.}
-    \begin{minipage}{0.45\textwidth}
-     \includegraphics[height=0.2\textheight, width=\textwidth, keepaspectratio]{img/largest_equi.png}\\
-     \includegraphics[height=0.78\textheight, width=\textwidth, keepaspectratio]{img/split.png}
-    \end{minipage}
-    \begin{minipage}{0.45\textwidth}
-     \includegraphics[height=\textheight, width=\textwidth, keepaspectratio]{img/valmari.png}
-    \end{minipage}     
-    \framebreak
-    \begin{itemize}
-    \item Uses MCs \& partition-refinement with same complexity bounds~\autocite{valmari} \\ \vspace{0.7cm}
-     \item What Tribastone et al. base their algorithm on~\autocite{Cardelli2017MaximalAO}: \\
-     \vspace{1.5cm}
-     \begin{quotation}
-       This structural interpretation allows the development of an algorithm for computing maximal equivalences, building on analogous partition refinement techniques developed for Markov chain lumping (16, 17).
-     \end{quotation}
-
-        \includegraphics[height=0.8\textheight, width=\textwidth, keepaspectratio]{img/pnas_corectness.png}
-    \end{itemize}
-    \end{frame}
-
-    
    
     \begin{frame}[allowframebreaks]{Schützenberger's construction \& Bisimulation}
        Schützenberger~\autocite{schutz} vs. Buchholz~\autocite{buchholz2008bisimulation}: 
@@ -85,16 +62,40 @@
         \end{align}
         \end{frame}
         
-        \begin{frame}{WA $\leftrightarrow$ f.p.S. $\leftrightarrow$ CTMC}
-        $\Rightarrow$
+        \begin{frame}[allowframebreaks]{WA $\leftrightarrow$ labelled CTMC}
+        WA $\leftrightarrow$ CTMC: A labelled CTMC is already a WA. \\ scale WA by row sum per row and letter to get (sort of) a labeled DTMC which can be interpreted as uniformized labelled CTMC (sort of).
+        \framebreak
+        
+        Problem: Only one labelled transition possible per state. \\
+        
+        What we get is actually not a MC but rather a deterministic Rabin PA. \\
+        
+        \begin{center}
+        \includegraphics[keepaspectratio, height=0.4\textheight]{img/lmc_rpa}
+        \end{center}    
+        
+           $\Rightarrow$
          A \textbf{WA} may be normalized by left. mult. vector of sum of row sums, yielding a \textbf{f.p. Segala}, i.e. the row sum of all matrices together equals 1. \\ 
-         Rescaling each row of a \textbf{f.p. Segala} to have a row sum of 1 per matrix yields a \textbf{labelled DTMC}, which can be viewed as \textbf{labelled uniformized CTMC}. \\ \vspace{1.4cm}
+         Drop the labels of the \textbf{f.p. Segala} and add the matrices together to get a \textbf{DTMC}, which can be viewed as \textbf{uniformized CTMC}. \\ \vspace{1.4cm}
          
          $\Leftarrow$
-         A \textbf{labelled CTMC} can be uniformized to a \textbf{labelled DTMC}. Scaling each probability by the number of letters yields a \textbf{f.p. Segala}, which is already a \textbf{WA}\\ \vspace{1.4cm}
+         A \textbf{CTMC} can be uniformized to a \textbf{DTMC}. Scaling each probability by the number of letters yields a \textbf{f.p. Segala}, which is already a \textbf{WA}\\ \vspace{1.4cm}
          
-         No need for a common ground: WA $\leftrightarrow$ CTMC is more straight forward: A labelled CTMC is already a WA and scale the WA by the row sum per row and letter to get a labeled DTMC which can be interpreted as uniformized labelled CTMC \hfill $\qed$
+         \includegraphics[keepaspectratio, height=0.4\textheight]{img/fps}
          
+         Problem: Paths \& Probabilities are preserved but what are the labels?
+         \framebreak
+         
+         Labelled CTMC is already a WA.\\
+         
+         WA $\rightarrow$ CTMC: Resort to the following:
+            \begin{enumerate}
+             \item Generate the language, i.e. all weights with all words
+             \item for every word build a LCTMC with the adequate labels and all transition probabilities set to 1.
+             \item sum the weights for all words.
+             \item connect all generated LCTMCs to an extra state, add an extra empty label transition matrix with transitions from extra state to respective word with probability $\frac{\text{word weight}}{\text{weight sum}}$
+            \end{enumerate}
+
         \end{frame}
 
     
@@ -172,7 +173,7 @@
         Now Kiefer restricts the $r^{(i)}_{\sigma,k}$ to $\mathbb{N_+}$. \\
         Resulting in that it is not possible to find parameters such that $\overrightarrow{F} = W$. \\
         Even when we loosen that restriction, chose $r^{(1)}_{a,0} = 1, r^{(1)}_{b,0} = r^{(1)}_{b,1} = 0, r^{(2)}_{a,0} = 0, r^{(2)}_{b,0} = 1$.\\
-        Then almost $\overrightarrow{F} = W$ but the entry with $i=j=4$ is $0$ instead of $1$. \\
+        Still impossible as $\overrightarrow{F}{i=j=4} \new 1$. \\
         \end{frame}
         
         \begin{frame}[allowframebreaks]{Summary}
@@ -180,40 +181,14 @@
          \item Kiefers et al.~\autocite{Kiefer2013OnTC} basis construction not able to produce the same basis as partition refinement
          \item yields non-sparse transition matrices 
          \item induces computational overhead, possibly more overhead than gaining by dimensionality reduction
-         \item Alternative: Use Householder reflectors for finding the basis~\autocite{kieferstab}, yields triangular basis at least
+         \item Alternative: Use Householder reflectors for finding the basis~\autocite{kieferstab}, yield potentially sparser transition matrices while numerically stable wo. hacks
          \item Partition-refinement does \textbf{not} explicitly construct a basis.
-         \item rather constructs new Q-matrix than transforming old one
+         \item rather constructs new  transition matrix than transforming old one
         \end{itemize}
         \framebreak
          \includegraphics[height=0.8\textheight, width=\textwidth, keepaspectratio]{img/derisavi_pseudocode.png}
-        \end{frame}
-        
-    \begin{frame}[allowframebreaks]{Where to go from here}
-    Options:
-     \begin{enumerate}
-     \item Your proposals
-     \item Work out an overview of frameworks for (stochastic) dynamical systems and methods for minimization (in brief)
-      \item Explore the space of possible bisimulations and how to construct them; ~\autocite{buchholz2008bisimulation} and ~\autocite{schutz} describe them in abstract/general form (?)
-      \item Carry over the bisimulation/Schützenberger's construction approach to ODEs/CRNs as Tribastone et al. did for partition refinement/MC lumping (?)
-      \item Or other topic
-    \end{enumerate}
-      \framebreak
-      
-    \textbf{What's your big picture/frame of reference/context?} \\ \vspace{0.6cm}
-    
-    Where is this going? \\ \vspace{0.6cm}
-    
-    How/why is it important/significant? \\
-    Am I creating something of value in the thesis (for you)?\\ \vspace{0.6cm}
-     
-    I don't feel comfortable/feel frustrated as I do not know where Kiefer $\leftrightarrow$ Valmari/Tribastone is heading \\ \vspace{0.6cm}
-    
-    Is it enough for a thesis? \\ \vspace{0.6cm}
-    
-    What's your view on that?
     \end{frame}
-    
-        
+
     \begin{frame}{Bibliography}
         \printbibliography
     \end{frame}

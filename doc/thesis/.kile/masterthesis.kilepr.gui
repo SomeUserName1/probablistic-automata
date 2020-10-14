@@ -80,8 +80,8 @@ open=false
 order=-1
 
 [view-settings,view=0,item:00-main.tex]
-CursorColumn=0
-CursorLine=41
+CursorColumn=20
+CursorLine=36
 Dynamic Word Wrap=false
 JumpList=
 TextFolding=[]
