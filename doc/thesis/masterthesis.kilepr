@@ -30,13 +30,25 @@ encoding=UTF-8
 highlight=LaTeX
 mode=LaTeX
 
-[item:01-introduction.tex]
+[item:02-introduction.tex]
 archive=true
 encoding=
 highlight=
 mode=
 
-[item:02-background.tex]
+[item:03-background.tex]
+archive=true
+encoding=UTF-8
+highlight=LaTeX
+mode=LaTeX
+
+[item:04-minimization_complexity.tex]
+archive=true
+encoding=UTF-8
+highlight=LaTeX
+mode=LaTeX
+
+[item:05-conclusions.tex]
 archive=true
 encoding=
 highlight=
