@@ -82,7 +82,7 @@ open=false
 order=-1
 
 [item:04-minimization_complexity.tex]
-open=true
+open=false
 order=0
 
 [item:05-conclusions.tex]

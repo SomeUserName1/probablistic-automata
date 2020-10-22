@@ -12,12 +12,9 @@
 - [Thesis Proposal](master/doc/thesis/proposal/slides.pdf)  
 
 #### TODOs
-- [x] Put thesis structure to tex
-- [x] Changes slides to be showable to the group
-- [x] glance at doyen, Deiffel & Wissmann, Rubino Sericola
-- [x] Learn basic coalgebra and category theory stuff
-- [ ] Read Rubino, Sericola properly (WIP)
-- [ ] Read Doyen properly (WIP)
+- [ ] Read Finite-Horizon Bisimulation minimization
 - [ ] Read Deiffel, Wißmann et al. properly (WIP)
+- [ ] Flesh out background part
+- [ ] Same for chapter 3 as far as possible
 - [ ] Look for PA minimization reduction to P for uninitialized & check for initialized (kiefers is algo det poly, part ref is minimal)
 - [ ] Look into decidability stuff

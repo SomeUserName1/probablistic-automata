@@ -18,10 +18,10 @@
             
         
         
-        \subsection{Transient Semantics \& Cylinder Sets of Executions (incl. Reward/weighted semantics)}
+        \subsection{Transient Semantics (incl. Reward/weighted semantics)}
         wrt. probabilities?!
             
-            \begin{definition}[Transient probability distributiin]
+            \begin{definition}[Transient probability distribution]
             \end{definition}
                        
         
@@ -45,6 +45,7 @@
     %    \paragraph{}
         
     \section{Equivalence \& Tanja's Draft Equivalences}
+        exact/ordinary(=strong bisim)/strict lumping, forward/backward/strong bisimulation, weak bisimulation, trace Equivalence, transient equivalence, branching bisimulation (considers internal actions), rooted \& Divergence preserving branching bisimulation, finite-horizon bisimulation (bisimulation up to time-step k)
         
         \subsection{Trace semantics is decidable in P for all}
                 paz p.36, Kiefer  , Tzeng, Schützenberger, Bollig \& Zeitoun, Kiefer WA should hold for PA when using sufficient eps (theoretically unclean), Doyen, \\
@@ -55,7 +56,7 @@
                 
                 Problem with proof in [1]: don't they construct the powerset (sum-sustituting recursively, i.e. for each letter in alphabet replace in last formula), negating this by ``there are only $n_1+n_2$ linear independent formulas with $n_1+n_2$ variables...?
                 
-        \subsection{Transient semantics is lower NP, upper EXP}
+        \subsection{Transient semantics is lower NP, upper EXP(?)}
             As we need to construct the postfix space which is a cylinder set, transfers also to reward/weighted transient \\
             
             What is T here? A Trace with a certain property (e.g. ending with $\sigma$ or up to $k$ steps?)
@@ -83,13 +84,13 @@
             
         \subsection{Wrt. different semantics}
             \subsubsection{Decidability}
-            trace semantics: is decidable, see e.g. Kiefer or Mateus, Qiu, Li \\
-            Transient semantics ? \\
+            trace semantics: is decidable, see e.g. Kiefer or Mateus, Qiu, Li;;;; Trace equivalence PSpace Complete (according to TU Eindhoven's j.f. Groote \\
+            Transient semantics ? finite horizon bisimulation minimization using partition refinement \\
             weighted transient semantics? \\
             
             \subsubsection{Complexity}
             trace semantics: TODO figure out if kiefers reduction is flawed or if the runtime analysis of his algo is flawed. \\
-            Transient semantics? \\
+            Transient semantics? n log m ?\\
             weighted transient semantics? \\
             
     
