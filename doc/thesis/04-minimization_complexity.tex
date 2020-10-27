@@ -34,7 +34,8 @@
         
         
         %\paragraph{Connection to Systems of Equations}
-        %\paragraph{Initial \& Boundary Value Problems}
+        % ODEs as central limit of CTMCs & their SDEs
+        %[Prof. Thomas G. Kurtz, wisc]
         %paragraph{Parametrized Automata as Stochastic Phase Space Approximaters}
         
     %\section{Languages \& Grammars}
@@ -42,12 +43,17 @@
         
     %    \paragraph{Transient/Population Language}
         
-    %    \paragraph{}
         
     \section{Equivalence \& Tanja's Draft Equivalences}
-        exact/ordinary(=strong bisim)/strict lumping, forward/backward/strong bisimulation, weak bisimulation, trace Equivalence, transient equivalence, branching bisimulation (considers internal actions), rooted \& Divergence preserving branching bisimulation, finite-horizon bisimulation (bisimulation up to time-step k)
+            \begin{definition}[Bisimulation Relations, Strong, weak, forward, backward Prob., Buchholz]
+            
+        \end{definition}
         
         \subsection{Trace semantics is decidable in P for all}
+                \begin{definition}[trace Equivalence, branching bisim.]
+                 
+                \end{definition}
+
                 paz p.36, Kiefer  , Tzeng, Schützenberger, Bollig \& Zeitoun, Kiefer WA should hold for PA when using sufficient eps (theoretically unclean), Doyen, \\
                 Let automata $A_i = \left( S_i, \Sigma_i, M^{(i)}, \pi_i, \eta_i \right)$ for $i \in \{1, 2\}$
                 Equivalence of initialized automata:
@@ -56,31 +62,33 @@
                 
                 Problem with proof in [1]: don't they construct the powerset (sum-sustituting recursively, i.e. for each letter in alphabet replace in last formula), negating this by ``there are only $n_1+n_2$ linear independent formulas with $n_1+n_2$ variables...?
                 
-        \subsection{Transient semantics is lower NP, upper EXP(?)}
-            As we need to construct the postfix space which is a cylinder set, transfers also to reward/weighted transient \\
-            
+        \subsection{Transient semantics}
+        \begin{definition}
+         transient equivalence, , finite-horizon bisimulation (bisimulation up to time-step k)
+        \end{definition}
+
+            Finite horizon bisim.
             What is T here? A Trace with a certain property (e.g. ending with $\sigma$ or up to $k$ steps?)
             \[ A_1(\pi_1) ~ A_2(\pi_2) \Leftrightarrow \forall \sigma \in \Sigma: \ \pi_1 M^{(1)}_{\sigma} \eta_1 = \pi_2 M^{(2)}_{\sigma} \eta_2 \wedge \pi_1 T_1 = \pi_2  T_2 \]
             
         \subsection{Word Function-based}
-            Same as above, just that lower bound is less; stop on first false; maybe eq of kiefer helps here
+            finite-horizon + reward fn
             \[ A_1(\pi_1) ~ A_2(\pi_2) \Leftrightarrow \forall \sigma \in \Sigma: \ \pi_1 M^{(1)}_{\sigma} \eta_1 \mu_{\sigma} = \pi_2 M^{(2)}_{\sigma} \eta_2 \mu_{\sigma} \wedge \pi_1 T_1 = \pi_2  T_2 \]    
         
             
      
     \section{Minimization + wrt. Draft Eqs.}
-        \begin{definition}[Lumping/lumpable]
-         
-        \end{definition}
         \subsection{Approaches}
             \subsubsection{Partition Refinement - Coalgebraic Approach}
-            Proof: PA minimization is in P for uninitialized. \\
+            Proof: PA minimization is in P for uninitialized/strict lumpability \\
             Deiffel, Wißmann, Paz p.24ff (IntroToProbabilisticAutomata)
             for all in O(n log n) as partition refinement is minimal (see sources above) for uninitialized Automata. \\
+            Rubino sericola \\
+            in case ODEs: Tribastones work \& boreale
         
-            \subsubsection{Schützenberger's Construction $\pm$ Arnoldi Iteration with Housholder Reflectors \& }
+            \subsubsection{Schützenberger's Construction and Arnoldi Iteration with Housholder Reflectors \& }
             Show either that is also in P oder correct Kiefers runtime analysis.
-            For uninitialized see kiefer; 
+            For initialized see kiefer; 
             
         \subsection{Wrt. different semantics}
             \subsubsection{Decidability}

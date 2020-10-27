@@ -32,7 +32,7 @@
 % Unterstreichungen (Anpassen der Dicke und der Farbe)
 \usepackage{soul}
 
-% Fuer das Merken und Markieren Element, sowie Überschriften
+% % Fuer das Merken und Markieren Element, sowie Überschriften
 \usepackage{tikz}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
@@ -70,9 +70,6 @@
 % Laengenberechnung
 \usepackage{calc}
 \usepackage{float}
-
-% Schriften
-\usepackage{cmbright}
 
 % Paket für Unter- und Überschrift für Abbildungen und Tabellen
 % Möchte man eine andere Unter- und / oder Überschrift können hier
@@ -118,10 +115,11 @@ citestyle=numeric]{biblatex}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
-\newtheorem{definition}{Definition}[chapter]
+\newtheorem{definition}{Definition}[section]
 \newtheorem{theorem}{Theorem}[definition]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem*{remark}{Remark}
+\newtheorem*{example}{Example}
 
 % Randnotizen und Bilder für tufte style
 %\usepackage[side]{footmisc}
@@ -351,6 +349,11 @@ citestyle=numeric]{biblatex}
 \def\docDepartment{#1}
 }
 
+\def\docGroup{}
+\newcommand{\group}[1]{
+\def\docGroup{#1}
+}
+
 \def\docSupervisorOne{}
 \newcommand{\supervisorOne}[1]{
 \def\docSupervisorOne{#1}
@@ -524,16 +527,18 @@ citestyle=numeric]{biblatex}
 \begin{sffamily}%
 % Dokumenten Titel
 \begin{textblock*}{\textwidth}(0.5\footspace, 4cm)%
-\selectfontsize{18pt}\centering\textbf{\docTitle}%
+\selectfontsize{18pt}\centering\textbf{\docTitle}\\%
+\vskip 0.5cm
+\selectfontsize{16pt}\centering\textbf{\docSubtitle}
 \end{textblock*}%
 % Art der Arbeit, z.b. Bachelorarbeit, Masterarbeit, ...
-\begin{textblock*}{\textwidth}(0.5\footspace, 8cm)%
+\begin{textblock*}{\textwidth}(0.5\footspace, 9cm)%
 \selectfontsize{18pt}\centering\textbf{#1}%
 \end{textblock*}%
 % Autor (Deutsch, English)
 \ifthenelse{\equal{\lanUser}{\lanEnglish}}%
 {%
-\begin{textblock*}{\textwidth}(0.5\footspace, 10cm)%
+\begin{textblock*}{\textwidth}(0.5\footspace, 9.8cm)%
 \selectfontsize{14pt}\centering%
 by\\%
 \vskip 2pt
@@ -568,7 +573,9 @@ an der%
 \selectfontsize{14pt}\centering%
 \docUnisection\\%
 \vskip 2pt%
-\docDepartment%
+\docDepartment\\%
+\vskip 2pt%
+\docGroup
 \end{textblock*}%
 % Gutachter (Deutsch, English)
 \ifthenelse{\equal{\lanUser}{\lanEnglish}}%
@@ -811,7 +818,6 @@ Konstanz, \jahr%
     }[#5]
 }
 
-\renewcommand{\thefootnote}{\fnsymbol{footnote}} 
 \newcommand{\note}[1]{\footnote{\noindent\textit{#1}}}
 
 

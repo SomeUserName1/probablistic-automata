@@ -1,86 +1,172 @@
 \chapter{Background}\label{\positionnumber} 
-
+    As one aim of this thesis is to connect aspects from different domains --- namely automata theory, systems of equations and some notions of category theory and algebra --- we introduce all terms used in the following sections and chapters carefully. The intention is that every individual that has received basic training in one of the natural sciences is able to understand this work without having to look up concepts in other literature.
+    We start out by defining the terminology from category theory, continue with some notions from algebra and probability theory and finally introduce formalisms to describe dynamical systems, namely automata theory and systems of equations.
+    
 % TODO minimize category theroy & coalgebraic stuff, semirings, WA & PA; Focus on the important stuff
+    \section{Preliminaries \& Category Theory}
+        \subsection{Preliminaries}
+            The following paragraphs introduce the most basic mathematical objects and notions around them: Sets, classes, conglomerates. This is followed by the definition of relations --- like equivalence --- and some definitions of algebraic structures: Monoids, groups, rings and semi-rings.
+            Then we give some examples of algebraic structures in the form of the ring of formal power series, the polynomial ring and the ring of Laurent polynomials.
+        
+        
+            The axiomatic definition of sets by Zermalo-Frenkel~\autocite{ZF} with the extension of the axiom of choice (in short ZFC) or the formally equivalent definition of sets by von Neumann, Bernays and Gödel (NBG)~\autocite{NBG} can be used. While ZFC~\autocite{ZFC} is the standard definition, NBG matches here more closely due to the extension of classes which are defined afterwards. \\
+                % TODO give definition of NGB here
+                
+            The following additional constructions are required~\autocite{CT1}:
+            \begin{definition}[Set]
+                \begin{enumerate}
+                 \item We can form subsets, that have certain properties: \\
+                 Let $X$ be a set and $P$ be a formula in first-order logic over one variable called "`property"', then $\forall X \forall P: \left\{ x \in X | P(x) \right\} $
+                 
+                 \item We can form the set of all subsets, called the \textbf{Power Set} $\mathcal{P}$: $\forall X: \mathcal{P}(X)$
+                
 
-    \section{Category Theory}
-        \begin{definition}[Category, Semicategory, final object, graph homomorphism, functor]
-            ``set of objects and arrows/morphisms``, ''arrows``/morphism are compositional. \\
-            every object needs to have an identity morphism, i.e. neutral elem wrt. compostion. morphism composition is associative \\
+                \item For a family of sets $\left( X_i\right)_{i \in I}$~\footnote{see \ref{class} with for a definition} we can form the following sets:
+                    \begin{enumerate}
+                     \item the set containing two sets: $\left\{ X_1, X_2 \right\}$
+                     
+                     \item for $n \in \mathbb{N}$ sets $X_1, X_2, \dots, X_n$ the \textbf{ordered $n$-tuple} $(X_1, X_2, \dots, X_n)$
+                     
+                     \item the \textbf{image} of the indexing function \footnote{\label{note1}see \ref{rel} for a definition}: $\left\{ X_i | i \in I \right\}$
+                     
+                      \item the \textbf{Cartesian product} with f being a function\footnote{\ref{note1}} $\Pi_{i \in I} X_i = \left\{ f: I \rightarrow \bigcup_{i \in I} | \forall i \in I: f(i) \in X_i \right\}$
+                      
+                      \item the \textbf{union} $\bigcup_{i \in I} X_i = \left\{ x | x \in X_i, i \in I \right\}$
+                     
+                     \item the \textbf{disjoint union} $\uplus_i X_i = \bigcup_{i \in I} \left( X_i \times \{ i \} \right)$
+                     
+                     \item the \textbf{intersection} $\bigcap_i X_i = \left\{ x | \forall i: x \in X_i \right\}$
+                     
+                     \item the \textbf{relative complement} $X_1 \setminus X_2 = \{ x | x \in X_1 \wedge x \not\in X_2 \}$
+                     
+                     \item the \textbf{set of all functions}\footnote{\ref{note1}} $X_2^{X_1}$, that is $\{f | f: X \rightarrow Y\}$.
+                    \end{enumerate}
+                    
+                    \item We can also form the following sets: $\mathbb{N}$ of all natural numbers, $\mathbb{Z}$ of all integers, $\mathbb{Q}$ of all rational numbers, $\mathbb{R}$ of all real numbers, $\mathbb{C}$ of all complex numbers.
+             \end{enumerate}
+            \end{definition}
             
-            A Semicategory is a category that does not require an identity morphism for every object
+            Every automaton is a set when using this definition. As we want to investigate how to minimize automata and how to check their equivalence, it is useful to define the notions of an equivalence relation, which is tightly related to a category theoretical point of view, as we will see.
             
-            A final/terminal object F is such that for any other object A there is exactly one morphism to F.
+            \begin{definition}[Binary Relation]\label{rel}
+            A \textbf{binary relation} $R$ over sets $X,Y$ is a subset of the Cartesian product $R \subseteq (X \times Y)$. $R$ is a set of ordered pairs $(x, y)$ with $x \in X, y \in Y$. Thus two elements are related, if the ordered pair of those elements is contained in the set $xRy \Leftrightarrow (x,y) \in R$. $X$ is called the \textbf{domain}, while $Y$ is called the \textbf{co-domain}.
+            \end{definition}
             
-            An initial object I is such that for each other object there is exactly one morphism from I.
+           
+            \begin{definition}[Function]\label{fun}
+            A \textbf{function} $f$ over two sets $X, Y$ is a binary relation which maps every element of the domain to exactly one element of the co-domain.
+            \[ \forall x \in X \exists_1 y \in Y : (x,y) \in f \]
+            We write $f: X \rightarrow Y$ to define function, domain and co-domain, while we write $f(x) = y$ to refer to a specific pair in the set or $x \mapsto f(x)$. 
+            The \textbf{image} of a function is the set defined with $X_0 \subseteq X$ by
+            \[ f(X_0) = \{ f(x) \in Y | x \in X_0 \} \]
+            The pre-image of $f$ on a subset of the co-domain $Y_0 \subseteq Y$ is given by
+            \[ f^{-1}(Y_0) = \{ x \in X | f(x) \in Y_0 \} \]
+            A function is called \textbf{injective}, if no two elements of the domain map to the same element in the co-domain.
+            \[ \forall x \in X \forall z \in X: (x \neq z) \Rightarrow f(x) \neq f(z) \]
+            A function is called \textbf{surjective}, if every element in the co-domain is mapped to.
+                \[ \forall y \in Y \exists x \in X: y = f(x) \]
+                
+            A function is called bijective, if every element in the co-domain is mapped to exactly once or in different terminology if it is surjective and injective.
+            \[ \forall y \in Y  \exists_1 x \in X: y = f(x) \]
             
-            A graph homomorphism f is a function from one graph to another s.t. if vertex u is linked to v then f(u) is linked to f(v)
+            Functions can be composed, if the image of the co- domain of the first applied function is equal to the domain of the second applied one. For $x \in X, f: X \rightarrow Y$ and $g: Y \rightarrow Z$ the composition $g \circ f: X \rightarrow Z$ is defined by
+            \[ (g \circ f)(x) = g(f(x)) \in Z  \]
+            \end{definition}
             
-            An isomorphism f is a morphism from object A to object B, if there extists a morphism g that maps from B to A such that when applying f and then g, it is the identity morphism
+             We are going to consider functions between different types of automata that preserve their structure. We are especially interested in surjective functions between two automata where the co-domain automata is a minimal realization of the domain automata. To be sure that the this function produces indeed the same behaviour, we have to define special notions of equivalence, thus introduce here what a equivalence relation is in general.
             
-            A covariant functor F from category C to category D is such that fir each object A of C we have F(A) is in D. For each morphism f:A to B in C we have F(f):F(A) to F(B) in D such that F(g)°F(f) = F ( g ° f) and F(id_A) = id_F(A). A Functor preserves the structure of a category mapping it into another category
+            \begin{definition}[Equivalence Relation, Equivalence Class]\label{eqrel}
+            An equivalence relation $~\subseteq X \times X$ is a relation that is for $\forall x, y \in X$
+            \begin{enumerate}
+             \item reflexive: $ x ~ x$.
+             \item symmetric: $x ~ y \Rightarrow y ~ x$
+             \item and transitive $x ~ y \wedge y ~ z \Rightarrow x ~ z$
+            \end{enumerate} 
+            \end{definition}
             
-            A contravariant functor G from category C to category D is such that fir each object A of C we have F(A) is in D. For each morphism f:A to B in C we have F(f):F(B) to F(A) in D such that F(g)°F(g) = F ( g ° f) and F(id_A) = id_F(A). A Functor reverses the morphisms of a category when mapping it into another category
+            We will be looking for cannonical surjections between automata defined over special equivalence relations, that we define in the next chapter.
+            \begin{definition}[Equivalence Class]
+            Let $~ \subseteq X \times X$ be a equivalence relation. An \textbf{equivalence class} is the class that is induced by the property of the equivalence relation $~$: For $x \in X$
+            \[ [x] = \{ z \in X | x ~ z\} \]
+            Equivalence classes are disjoint. The set of all equivalence classes 
+            \[ X \setminus ~ = \{ [x] | x \in X \} \]
+            is called quotient set of $X$ and $~$. The surjective function $q: X \rightarrow X \setminus ~$ is called canonical surjection and is defined by $x \mapsto [x]$ for.
+            \end{definition}
             
-            The categorical product is a candidate AxB, pi_1:AxB -> A, pi_2:AxB -> B s.t. for any other candidate X, f:X->A, g:X->B there eiszs a unique h:X->AxB s.t. pi_1°h=f and pi_2°h=g
-        \end{definition}
-        
-        \begin{remark}
-         All terminal objects in a category are isomorphic
-        \end{remark}
+            In order to construct functions between classes of automata we need another level of abstraction to be able to avoid certain problems with sets of sets and functions on these~\autocite{CT2}.
+            \begin{definition}[Class~\autocite{CT1}]\label{class}
+             A \textbf{class} is a "large" collection of sets. It satisfies the following axioms:
+             \begin{enumerate}
+                \item the members of a class are sets.
+                \item every set is a class. A class is called \textbf{proper} if it is not a set.
+                \item There is no surjection from a set to a proper class.
+                \item We can form The class of all sets with property $P$: \\
+                    Let $X$ be a set and $P$ be a formula in first-order logic over one set called "`property"', then $\forall P \forall S: \left\{ S | P(S) \} \right\}$.
+                 \item If $X_1, X_2, \dots, X_n$ are classes then then the $n$-tuple $(X_1, X_2, \dots, X_n)$ is a class.
+                 \item classes are closed under countable union, intersection and Cartesian product.
+             \end{enumerate}
+            \end{definition}
+            
+            \begin{definition}[Universe, Family, Large Classes, Small Classes, Proper Classes]
+            The class of all sets is called \textbf{universe} $\mathcal{U}$. All classes are sub-collections of $\mathcal{U}$. \\
+            A \textbf{family} of sets $(A_i)_{i \in I}$ is a function $f:I \rightarrow U$. If $I$ is a set, then the family is said to be \textbf{set-indexed}. \\
+            A proper class is also called large, while a set is called a small class.
+            \end{definition}
+            
+            The class of all automata is a proper class. The notion of classes and sets is needed to evade Russell's paradox and to be able to abstract sets and relations between those abstract classes in the rest of the thesis. Since we are interested in automata only we do not consider the notion of conglomerates. If interested, the reader is referred to Herrlich \& Strecker~\autocite{CT2}.
+                        
+            In order to define the word structures of different types of automata, we define the notions of monoid, which M.P. Schützenberger used when he first defined the notion of weighted automata --- also presenting some fundamental theorems for minimization we consider in the next chapter~\autocite{schutz}.            
+            \begin{definition}[Monoid]
+            A \textbf{Monoid} is a 3-tuple $M = (S, \circ, 0)$ consisting of a set $S$ and a binary relation $\circ$, where $M$ has the following properties, with $\forall x, y, z \in S$:
+            \begin{enumerate}
+            \item $M$ has a neutral element: $\exists 0 \in S: x \circ 0 = 0 \circ x = x $
+             \item $M$ is associative: $(x \circ y) \circ z = x \circ (y \circ z)$ 
+            \end{enumerate}
+            If a monoid is also commutative, that is 
+            \[ \forall x,y \in S: x \circ y = y \circ x \]
+            we call it a commutative monoid.
+            \end{definition}
+            
+            
+            In order to define the notion of ring later on we also need to know what a group is.
+            \begin{definition}[Group]
+            A group is a 3-tuple $G = (S, \circ, 0)$ consisting of a set $S$ and a binary relation $\circ$, where $G$ is a monoid and has an inverse for each element:
+            \[ \forall x \in S \exists i \in S: x \circ i = i \circ x = 0 \]
+            \end{definition}
+            
+            Many authors in the field of weighted automata considered semirings as the algebraic structure over which a weighted automaton operates~\autocite{HWA, WA}. In order to leverage their results in the next chapter we define:
+            \begin{definition}[Semiring]
+            \end{definition}            
+            
+            \begin{definition}[Ring]
+            \end{definition}
+            
+            \begin{corollary}
+            A ring is also a semiring.
+            \end{corollary}
+                        
+            \begin{example}
+            Boolean Semiring, Rational Semiring, Polynomial Semiring, plus-max, min-plus Semiring, Probability Semiring
+            \end{example}
 
-        
-        \begin{example}[Empty, Set, Ord, Product, Monoid, Bimonoidal/Semiring, cat \& CAT]
-         The empty category contains no objects and no morphisms. 
-         
-         The Set Category contains objects that are sets and morphisms that are total functions between sets. 
-         
-        The Ord Category contains objects that are ordered sets and the morphisms are functors between objects
-         
-         The Product Category for two categories C, D is the category whose objects are ordered pairs of objects from C and D, morphisms are ordered pairs, compostition is defined component wise. 
-         
-         The Mon category is a category C equipped with a functor out of the product category of C with itself called tensor product, a unit object, a left unitor, a right unitor and and associator. 
-         
-         A Bimon or Semiring category C is a category with to symmetric monoidal structure for addition and a monoidal structure for multiplication, together with distributivity natural and absorption isomorphisms
-         
-         The cat Category is the category of all small categories having functors as morphisms. The CAT Category is the category of all large objects (such as Set or Mon) having functors as morphisms
-        \end{example}
-
-        
-    \section{Algebraic Preliminaries}
-        \begin{definition}[Equivalence Relation]
-            
-        \end{definition}
-
-        \begin{definition}[Monoid]
-         
-        \end{definition}
-        
-        \begin{definition}[Ring, Semiring]
-         
-        \end{definition}
-        
-        \begin{theorem}[The Ring of Formal Power Series]
-         
-        \end{theorem}
+        \subsection{Category Theory}
         
         \begin{definition}[Coalgebra, F-Coalgebra]
         \end{definition}
-        
- 
         
 
     \section{Probability Theory}\label{\positionnumber}
         \begin{definition}[Sample space, events, $\sigma$-algebra, measurable space]
         Let $\Omega$ be a set, namely the set of possible outcomes of a chance experiment, called \textbf{sample space}.
         
-        Let $\mathcal{F} \subseteq \mathcal{P}(\Omega)$ with $\mathcal{P}$ the powerset, a set of subsets of the sample space, whose elements are called \textbf{events}.
+        Let $\mathcal{F} \subseteq \mathcal{P}(\Omega)$ with $\mathcal{P}$ the power set, a set of subsets of the sample space, whose elements are called \textbf{events}.
         
         Let $\Omega$ be a sample space, $\mathcal{F}$ a set of events.
         $\mathcal{F}$ is called a \textbf{$\sigma$-algebra} over $\Omega$, if and only if
         \begin{itemize}
         \item the sample space is contained in the set of events,
         \[ \Omega \in \mathcal{F} \]
-        \item the set of events is closed under complementation,
+        \item the set of events is closed under complement,
         \[ A \in \mathcal{F} \Rightarrow \Omega \setminus A \in \mathcal F \]
         \item and the set of events is closed under countable union:
         \[ \forall i \geq 0: A_i \in F \Rightarrow (\bigcup_{n \in \mathbb{N} A_n) \in \mathcal{F}} \]
@@ -88,7 +174,7 @@
         
         The pair $\left( \Omega, \mathcal{F} \right)$ is called a \textbf{measurable space}.
 
-        Let $\left( \Omega_1, \mathcal{F}_1 \right), \left( \Omega_2, \mathcal{F}_2 \right)$ measurable spaces. A funtion $f: \Omega_1 \rightarrow \Omega_2$ is called a \textbf{measurable function} if and only if for every $A \in \mathcal{F}_2$ the preimage of A under $f$ is in $\mathcal{F}_1$.
+        Let $\left( \Omega_1, \mathcal{F}_1 \right), \left( \Omega_2, \mathcal{F}_2 \right)$ measurable spaces. A function $f: \Omega_1 \rightarrow \Omega_2$ is called a \textbf{measurable function} if and only if for every $A \in \mathcal{F}_2$ the pre-image of A under $f$ is in $\mathcal{F}_1$.
         \[ \forall A \in \mathcal{F}_2: f^{-1}(A) \in \mathcal{F}_1 \]
         \end{definition}
 
@@ -130,7 +216,7 @@
 
         
         
-    \section{Automata Theory}
+    \section{Automata Theory} 
         \begin{definition}[Transition System]
          
         \end{definition}
@@ -138,6 +224,10 @@
         \begin{definition}[Labelled Transition System]
          
         \end{definition}
+        
+        \begin{example}[DFA]
+        \end{example}
+        
         
         \begin{definition}[Path, Trace, Cylinder Sets, Prefix, Postfix]
             
@@ -147,9 +237,15 @@
             
         \end{definition}
         
+        \begin{example}[DFA \& NFA]
+        \end{example}
+        
         \begin{definition}[Weighted Automata]
             
         \end{definition}
+        
+        \begin{example}[WAs over Boolean Semiring, Rational Semiring, Polynomial Semiring, plus-max Semiring, Probability Semiring]
+        \end{example}
         
         \begin{definition}[Probabilistic Automata, Initial Distribution, transition probability function, stochastic matrix, transition probability matrix]
             
@@ -163,13 +259,16 @@
             
         \end{remark}
 
-        \begin{definition}[Markov Chains, Discrete-Time, Continuous-Time, Labelled, (MDP?, Generalized Stochastic Petri Nets?)]
+        \begin{definition}[Markov Chains, Discrete-Time, Continuous-Time, Labelled, MDP]
             
         \end{definition}
         
-        \begin{definition}[Bisimulation Relations, Strong, weak, exact, ordinary, Prob., Buchholz]
-            
+
+        
+        \begin{definition}[Lumpability, exact, ordinary, weak, finite-horizon, buchholz]
+         
         \end{definition}
+
         
     %\section{Formal Language Theory}
         %\begin{definition}[Abstract Rewriting Systems]
@@ -185,6 +284,29 @@
         %\end{definition}
         
     %\section{Systems of Equations}
+       % \begin{definition}[Algebraic, Recurrence, Difference, Differential]
+         
+        %\end{definition}
+
+        %\begin{definition}[linear, non-linear, polynomial, stochastic]
+         
+        %\end{definition}
+
+    
+        %\begin{definition}[Ordinary, partial, homogeneous, inhomogeneous, order (first, higher)]
+         
+        %\end{definition}
+        
+        %\begin{remark}[Transformation higher order to first order]
+         
+        %\end{remark}
+        
+        %\begin{definition}[initial value problem, boundary value problem, laplace \& fourier transform, phase space]
+         
+        %\end{definition}
+
+
+
 
         
 

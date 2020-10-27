@@ -2,7 +2,7 @@
 kile_livePreviewEnabled=false
 kile_livePreviewStatusUserSpecified=true
 kile_livePreviewTool=LivePreview-XeLaTeX
-lastDocument=04-minimization_complexity.tex
+lastDocument=03-background.tex
 
 [document-settings,item:00-main.tex]
 Bookmarks=
@@ -14,6 +14,15 @@ Mode=LaTeX
 Mode Set By User=false
 
 [document-settings,item:01-abstract.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:02-introduction.tex]
 Bookmarks=
 Encoding=UTF-8
 Highlighting=LaTeX
@@ -49,13 +58,40 @@ Indentation Mode=normal
 Mode=BibTeX
 Mode Set By User=false
 
+[document-settings,item:scratch_pad.tex]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:themeKonstanz.sty]
+Bookmarks=
+Encoding=UTF-8
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
+[document-settings,item:themeKonstanzDBIS.sty]
+Bookmarks=
+Encoding=
+Highlighting=LaTeX
+Highlighting Set By User=false
+Indentation Mode=normal
+Mode=LaTeX
+Mode Set By User=false
+
 [item:00-main.tex]
-open=false
-order=0
+open=true
+order=2
 
 [item:01-abstract.tex]
-open=false
-order=-1
+open=true
+order=3
 
 [item:01-introduction.tex]
 open=false
@@ -66,12 +102,12 @@ open=false
 order=-1
 
 [item:02-introduction.tex]
-open=false
-order=-1
+open=true
+order=4
 
 [item:03-background.tex]
-open=false
-order=-1
+open=true
+order=0
 
 [item:03-clustering_algorithms.tex]
 open=false
@@ -82,8 +118,8 @@ open=false
 order=-1
 
 [item:04-minimization_complexity.tex]
-open=false
-order=0
+open=true
+order=5
 
 [item:05-conclusions.tex]
 open=false
@@ -106,6 +142,14 @@ open=false
 order=-1
 
 [item:resources.bib]
+open=true
+order=1
+
+[item:scratch_pad.tex]
+open=false
+order=-1
+
+[item:themeKonstanz.sty]
 open=false
 order=-1
 
@@ -114,12 +158,12 @@ open=false
 order=-1
 
 [view-settings,view=0,item:00-main.tex]
-CursorColumn=20
-CursorLine=36
+CursorColumn=0
+CursorLine=38
 Dynamic Word Wrap=false
 JumpList=
 TextFolding=[]
-ViMarks=.,41,0,[,41,0,],41,0
+ViMarks=.,36,36,[,36,36,],36,36
 
 [view-settings,view=0,item:01-abstract.tex]
 CursorColumn=0
@@ -129,7 +173,7 @@ JumpList=
 TextFolding=[]
 ViMarks=
 
-[view-settings,view=0,item:03-background.tex]
+[view-settings,view=0,item:02-introduction.tex]
 CursorColumn=0
 CursorLine=0
 Dynamic Word Wrap=false
@@ -137,15 +181,47 @@ JumpList=
 TextFolding=[]
 ViMarks=
 
-[view-settings,view=0,item:04-minimization_complexity.tex]
-CursorColumn=44
-CursorLine=87
+[view-settings,view=0,item:03-background.tex]
+CursorColumn=158
+CursorLine=103
 Dynamic Word Wrap=true
 JumpList=
 TextFolding=[]
-ViMarks=.,87,12,[,86,33,],87,43
+ViMarks=.,103,157,[,103,157,],103,157
+
+[view-settings,view=0,item:04-minimization_complexity.tex]
+CursorColumn=31
+CursorLine=54
+Dynamic Word Wrap=true
+JumpList=
+TextFolding=[]
+ViMarks=.,53,17,[,53,17,],53,17
 
 [view-settings,view=0,item:resources.bib]
+CursorColumn=11
+CursorLine=65
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,65,10,[,65,9,],65,10
+
+[view-settings,view=0,item:scratch_pad.tex]
+CursorColumn=21
+CursorLine=41
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,41,0,[,1,0,],41,20
+
+[view-settings,view=0,item:themeKonstanz.sty]
+CursorColumn=0
+CursorLine=121
+Dynamic Word Wrap=false
+JumpList=
+TextFolding=[]
+ViMarks=.,121,0,[,121,0,],121,0
+
+[view-settings,view=0,item:themeKonstanzDBIS.sty]
 CursorColumn=0
 CursorLine=0
 Dynamic Word Wrap=false
