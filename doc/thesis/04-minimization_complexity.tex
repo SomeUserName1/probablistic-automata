@@ -10,7 +10,11 @@
 
     \section{Semantics}
         \subsection{Parametrization and Initialization}
-    
+            relation to initial value problem \& phase space
+            
+             Connection to Systems of Equations \\         ODEs as central limit of CTMCs \& their SDEs
+        [Prof. Thomas G. Kurtz, wisc] \\
+            
         \subsection{Trace Semantics}
             Execution as Sparse Matrix Multiplication, 
             (constrained) reachability (pr.), path/trace distributions,
@@ -32,10 +36,7 @@
            
         
         
-        \paragraph{Connection to Systems of Equations}
-         ODEs as central limit of CTMCs & their SDEs
-        [Prof. Thomas G. Kurtz, wisc]
-        paragraph{Parametrized Automata as Stochastic Phase Space Approximaters}
+       
         
     \subsection{Languages \& Grammars}
         \paragraph{Threshold Language}
@@ -43,7 +44,7 @@
         \paragraph{Transient/Population Language}
         
         
-    \section{Equivalence \& Tanja's Draft Equivalences}
+    \section{Equivalence }
             \begin{definition}[Bisimulation Relations, Strong, weak, forward, backward Prob., Buchholz]
             
         \end{definition}
@@ -59,7 +60,7 @@
                 Let automata $A_i = \left( S_i, \Sigma_i, M^{(i)}, \pi_i, \eta_i \right)$ for $i \in \{1, 2\}$
                 Equivalence of initialized automata:
                 \[ A_1(\pi_1) ~ A_2(\pi_2) \Leftrightarrow \forall \sigma \in \Sigma: \ \pi_1 \eta_1 = \pi_2 \eta_2 \wedge \pi_1 M^{(1)}_{\sigma} = \pi_2 M^{(2)}_{\sigma}  \]
-                How about uninitialized?  \\
+                How about uninitialized? ``unique minimal realization`` due to \autocite{CT1}, i.e. minimize uninitialized, then compare \\
                 
         \subsection{Transient semantics}
         \begin{definition}
@@ -76,11 +77,11 @@
         
             
      
-    \section{Minimization wrt. Draft Eqs.}
+    \section{Minimization}
         \subsection{Approaches}
             \subsubsection{Partition Refinement - Coalgebraic Approach}
             Proof: PA minimization is in P for uninitialized/strict lumpability \\
-            Deiffel, Wißmann, Paz p.24ff (IntroToProbabilisticAutomata) valmari
+            Deiffel, Wissmann, Paz p.24ff (IntroToProbabilisticAutomata) valmari
             for all in O(n log n) as partition refinement is minimal (see sources above) for uninitialized Automata. \\
             Rubino sericola for initializations \\
             in case ODEs: Tribastones work \& boreale
@@ -96,9 +97,10 @@
             weighted transient semantics? \\
             
             \subsubsection{Complexity}
-            trace semantics: TODO figure out if kiefers reduction is flawed or if the runtime analysis of his algo is flawed. \\
-            Transient semantics? n log m ?\\
-            weighted transient semantics? \\
+            trace semantics: TODO figure out if kiefers reduction is flawed or if the runtime analysis of his algo is flawed. NP from complexity proof, O(sigma $n^3$) in algo rt. check against rubino sericola \\ 
+            n log m for uninitialized/strong\\
+            Transient semantics? n log m, if finite horizon bisim is right\\
+            weighted transient semantics? as above \\
             
     
     %\section{Learning \& Parameter Synthesis}
