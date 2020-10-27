@@ -10,11 +10,10 @@
         
         
             The axiomatic definition of sets by Zermalo-Frenkel~\autocite{ZF} with the extension of the axiom of choice (in short ZFC) or the formally equivalent definition of sets by von Neumann, Bernays and Gödel (NBG)~\autocite{NBG} can be used. While ZFC~\autocite{ZFC} is the standard definition, NBG matches here more closely due to the extension of classes which are defined afterwards. \\
-                % TODO give definition of NGB here
                 
-            The following additional constructions are required~\autocite{CT1}:
+            The following constructions are required~\autocite{CT1}:
             \begin{definition}[Set]
-                \begin{enumerate}
+                \begin{itemize}
                  \item We can form subsets, that have certain properties: \\
                  Let $X$ be a set and $P$ be a formula in first-order logic over one variable called "`property"', then $\forall X \forall P: \left\{ x \in X | P(x) \right\} $
                  
@@ -22,7 +21,7 @@
                 
 
                 \item For a family of sets $\left( X_i\right)_{i \in I}$~\footnote{see \ref{class} with for a definition} we can form the following sets:
-                    \begin{enumerate}
+                    \begin{itemize}
                      \item the set containing two sets: $\left\{ X_1, X_2 \right\}$
                      
                      \item for $n \in \mathbb{N}$ sets $X_1, X_2, \dots, X_n$ the \textbf{ordered $n$-tuple} $(X_1, X_2, \dots, X_n)$
@@ -40,13 +39,37 @@
                      \item the \textbf{relative complement} $X_1 \setminus X_2 = \{ x | x \in X_1 \wedge x \not\in X_2 \}$
                      
                      \item the \textbf{set of all functions}\footnote{\ref{note1}} $X_2^{X_1}$, that is $\{f | f: X \rightarrow Y\}$.
-                    \end{enumerate}
+                    \end{itemize}
                     
                     \item We can also form the following sets: $\mathbb{N}$ of all natural numbers, $\mathbb{Z}$ of all integers, $\mathbb{Q}$ of all rational numbers, $\mathbb{R}$ of all real numbers, $\mathbb{C}$ of all complex numbers.
-             \end{enumerate}
+             \end{itemize}
             \end{definition}
             
-            Every automaton is a set when using this definition. As we want to investigate how to minimize automata and how to check their equivalence, it is useful to define the notions of an equivalence relation, which is tightly related to a category theoretical point of view, as we will see.
+            Every automaton is a set when using this definition. 
+            
+            In order to construct functions between classes of automata we need another level of abstraction to be able to avoid certain problems with sets of sets and functions on these~\autocite{CT2}.
+            \begin{definition}[Class~\autocite{CT1}]\label{class}
+             A \textbf{class} is a "large" collection of sets. It satisfies the following axioms:
+             \begin{itemize}
+                \item the members of a class are sets.
+                \item every set is a class. A class is called \textbf{proper} if it is not a set.
+                \item There is no surjection from a set to a proper class.
+                \item We can form The class of all sets with property $P$: \\
+                    Let $X$ be a set and $P$ be a formula in first-order logic over one set called "`property"', then $\forall P \forall S: \left\{ S | P(S) \} \right\}$.
+                 \item If $X_1, X_2, \dots, X_n$ are classes then then the $n$-tuple $(X_1, X_2, \dots, X_n)$ is a class.
+                 \item classes are closed under countable union, intersection and Cartesian product.
+             \end{itemize}
+            \end{definition}
+            
+            \begin{definition}[Universe, Family, Large Classes, Small Classes, Proper Classes]
+            The class of all sets is called \textbf{universe} $\mathcal{U}$. All classes are sub-collections of $\mathcal{U}$. \\
+            A \textbf{family} of sets $(A_i)_{i \in I}$ is a function $f:I \rightarrow U$. If $I$ is a set, then the family is said to be \textbf{set-indexed}. \\
+            A proper class is also called large, while a set is called a small class.
+            \end{definition}
+            
+            The class of all automata is a proper class. The notion of classes and sets is needed to evade Russell's paradox and the charachterization in~\autocite{CT1} largely coincides with the definition by Gödel~\autocite{NBG} and the more pedagogically oriented restatement by Mendlsson~\autocite{NBG1}. Since we are interested in automata only we do not consider the notion of conglomerates. If interested, the reader is referred to Herrlich \& Strecker~\autocite{CT2}.
+            
+            As we want to investigate how to minimize automata and how to check their equivalence, it is useful to define the notions of an equivalence relation, which is tightly related to a category theoretical point of view, as we will see.
             
             \begin{definition}[Binary Relation]\label{rel}
             A \textbf{binary relation} $R$ over sets $X,Y$ is a subset of the Cartesian product $R \subseteq (X \times Y)$. $R$ is a set of ordered pairs $(x, y)$ with $x \in X, y \in Y$. Thus two elements are related, if the ordered pair of those elements is contained in the set $xRy \Leftrightarrow (x,y) \in R$. $X$ is called the \textbf{domain}, while $Y$ is called the \textbf{co-domain}.
@@ -77,11 +100,11 @@
             
             \begin{definition}[Equivalence Relation, Equivalence Class]\label{eqrel}
             An equivalence relation $~\subseteq X \times X$ is a relation that is for $\forall x, y \in X$
-            \begin{enumerate}
+            \begin{itemize}
              \item reflexive: $ x ~ x$.
              \item symmetric: $x ~ y \Rightarrow y ~ x$
              \item and transitive $x ~ y \wedge y ~ z \Rightarrow x ~ z$
-            \end{enumerate} 
+            \end{itemize} 
             \end{definition}
             
             We will be looking for cannonical surjections between automata defined over special equivalence relations, that we define in the next chapter.
@@ -92,36 +115,14 @@
             \[ X \setminus ~ = \{ [x] | x \in X \} \]
             is called quotient set of $X$ and $~$. The surjective function $q: X \rightarrow X \setminus ~$ is called canonical surjection and is defined by $x \mapsto [x]$ for.
             \end{definition}
-            
-            In order to construct functions between classes of automata we need another level of abstraction to be able to avoid certain problems with sets of sets and functions on these~\autocite{CT2}.
-            \begin{definition}[Class~\autocite{CT1}]\label{class}
-             A \textbf{class} is a "large" collection of sets. It satisfies the following axioms:
-             \begin{enumerate}
-                \item the members of a class are sets.
-                \item every set is a class. A class is called \textbf{proper} if it is not a set.
-                \item There is no surjection from a set to a proper class.
-                \item We can form The class of all sets with property $P$: \\
-                    Let $X$ be a set and $P$ be a formula in first-order logic over one set called "`property"', then $\forall P \forall S: \left\{ S | P(S) \} \right\}$.
-                 \item If $X_1, X_2, \dots, X_n$ are classes then then the $n$-tuple $(X_1, X_2, \dots, X_n)$ is a class.
-                 \item classes are closed under countable union, intersection and Cartesian product.
-             \end{enumerate}
-            \end{definition}
-            
-            \begin{definition}[Universe, Family, Large Classes, Small Classes, Proper Classes]
-            The class of all sets is called \textbf{universe} $\mathcal{U}$. All classes are sub-collections of $\mathcal{U}$. \\
-            A \textbf{family} of sets $(A_i)_{i \in I}$ is a function $f:I \rightarrow U$. If $I$ is a set, then the family is said to be \textbf{set-indexed}. \\
-            A proper class is also called large, while a set is called a small class.
-            \end{definition}
-            
-            The class of all automata is a proper class. The notion of classes and sets is needed to evade Russell's paradox and to be able to abstract sets and relations between those abstract classes in the rest of the thesis. Since we are interested in automata only we do not consider the notion of conglomerates. If interested, the reader is referred to Herrlich \& Strecker~\autocite{CT2}.
                         
             In order to define the word structures of different types of automata, we define the notions of monoid, which M.P. Schützenberger used when he first defined the notion of weighted automata --- also presenting some fundamental theorems for minimization we consider in the next chapter~\autocite{schutz}.            
             \begin{definition}[Monoid]
             A \textbf{Monoid} is a 3-tuple $M = (S, \circ, 0)$ consisting of a set $S$ and a binary relation $\circ$, where $M$ has the following properties, with $\forall x, y, z \in S$:
-            \begin{enumerate}
+            \begin{itemize}
             \item $M$ has a neutral element: $\exists 0 \in S: x \circ 0 = 0 \circ x = x $
              \item $M$ is associative: $(x \circ y) \circ z = x \circ (y \circ z)$ 
-            \end{enumerate}
+            \end{itemize}
             If a monoid is also commutative, that is 
             \[ \forall x,y \in S: x \circ y = y \circ x \]
             we call it a commutative monoid.
@@ -132,21 +133,67 @@
             \begin{definition}[Group]
             A group is a 3-tuple $G = (S, \circ, 0)$ consisting of a set $S$ and a binary relation $\circ$, where $G$ is a monoid and has an inverse for each element:
             \[ \forall x \in S \exists i \in S: x \circ i = i \circ x = 0 \]
+            A group is commutative if $G$ is a commutative monoid.
             \end{definition}
             
-            Many authors in the field of weighted automata considered semirings as the algebraic structure over which a weighted automaton operates~\autocite{HWA, WA}. In order to leverage their results in the next chapter we define:
+            Many authors in the field of weighted automata considered semirings as the algebraic structure over which a weighted automaton operates~\autocite{HWA, WA}. Explicitly the interpretation of labels and weights, as well as the executions, paths, traces and the like, differ depending on the set and operations that are chosen. In order to leverage their results in the next chapter we define:
             \begin{definition}[Semiring]
-            \end{definition}            
+                A \textbf{Semiring} is defined by a 5-tuple $\mathbb{S} = (S, +, \cdot, 0, 1)$ where
+                \begin{itemize}
+                 \item $(S, +, 0)$ is a commutative monoid
+                 \item $(S, \cdot, 1)$ is a monoid
+                 \item the distributive law is valid: $\forall a,b,c \in S: a \cdot (b + c) = (a \cdot b) + (a \cdot c) \wedge (b + c) \cdot a = (b \cdot a) + (c \cdot a)$
+                 \item $0$ is an annihilator: $\forall a \in S: 0 \cdot a = a \cdot 0 = 0$
+                \end{itemize}
+                $\mathbb{S}$ is a \textbf{commutative semiring}, if $(S, \cdot, 1)$ is a commutative monoid. \\
+                
+                A semiring is closed~\autocite{CS}, if
+                \begin{itemize}
+                 \item $+$ is idempotent: $\forall a \in S: a + a = a$
+                 \item the infinitary application of $+$ for every countable sequence $(s_i)_{i \in i}$ (notation $\Sigma_{i \in I} s_i$) is associative, commutative, idempotent and distributive
+                \end{itemize}
+                In a closed semiring one can define $*$ by~\autocite{CS} 
+                \[ b* = \Sigma_{k \leq n} b^k \]
+                such that $ab^* c = \Sigma_n ab^n c$, thus $*$ is the algebraic equivalent to the Kleene star in regular expressions as we will see in an example.
+            \end{definition}
+                
             
             \begin{definition}[Ring]
+            A \textbf{ring} is defined by a 5-tuple $\mathbb{S} = (S, +, \cdot, 0, 1)$ where
+            \begin{itemize}
+             \item $\mathbb{S}$ is a semiring 
+             \item $(S, +, 0)$ is an abelian group
+            \end{itemize}
+                A ring is called commutative if  $(S, \cdot, 1)$ is commutative.
             \end{definition}
             
-            \begin{corollary}
-            A ring is also a semiring.
-            \end{corollary}
+            \begin{note}
+            A ring is also a semiring. This follows immediately from the definition of an abelian group.
+            \end{note}
+            
+            For a more thouroughly treatment of monoids and semirings, the reader is refered to Droste et al. and Kozen~\autocite{HWA, CS}
                         
-            \begin{example}
-            Boolean Semiring, Rational Semiring, Polynomial Semiring, plus-max, min-plus Semiring, Probability Semiring
+            \begin{example}~\autocite{WA}
+                
+                \begin{table}[htp]
+                \centering
+                \begin{tabular}{|l|c|p{6cm}|} 
+                \hline
+                Semiring & Name & Informal Description using automata \\ [0.5ex] 
+                \hline\hline
+                $\text{Lang}_{\Sigma}=(\mathcal{P}(\Sigma*), \cup, \circ, \emptyset, \varepsilon)$ & Languages over $\Sigma$ & closed semiring, represents semantics of NFAs \\ 
+                $\text{Trop}=(\mathbb{N} \cup \infty, \min, +, \infty, 0)$ & Tropical Semiring & Shortest paths in a graph \\ 
+                $\text{Bool}=(\{ \text{false}, \text{true}\}, \vee, \wedge, \text{false}, \text{true})$ & Boolean Semiring & Represents the boolean algebra \\ 
+                $\text{Nat}=(\mathbb{N}, +, \cdot, 0, 1)$ & Ring of Natural Numbers & Unsigned integer arithmetic, replace $\mathbb{N}$ by $\mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$ to get integers, rationals, reals and complex numbers instead \\ 
+                $\text{Poly}=(R[X], +, \cdot, 0, 1)$ & Ring of Polynomials & Polynomial arithmetic over Ring $R$ with variables $X$ \\ 
+                
+                
+                \hline
+                \end{tabular}
+                \caption{Table to test captions and labels}
+                \label{table:1}
+                \end{table}
+Rational Semiring, Polynomial Semiring, plus-max, min-plus Semiring, Probability Semiring
             \end{example}
 
         \subsection{Category Theory}
@@ -270,47 +317,37 @@
         \end{definition}
 
         
-    %\section{Formal Language Theory}
-        %\begin{definition}[Abstract Rewriting Systems]
-        %\end{definition}
+    \section{Formal Language Theory}
+        \begin{definition}[Abstract Rewriting Systems]
+        \end{definition}
         
-        %\begin{definition}[Semi-Thue Systems or String Rewriting Systems]
-        %\end{definition}
+        \begin{definition}[Semi-Thue Systems or String Rewriting Systems]
+        \end{definition}
 
-        %\begin{definition}[Stochastic Rewrite Systems]
-        %\end{definition}
+        \begin{definition}[Stochastic Rewrite Systems]
+        \end{definition}
         
-        %\begin{definition}[Grammar, Chomsky Hierarchy, Weighted, Probabilistic]
-        %\end{definition}
+        \begin{definition}[Grammar, Weighted, Probabilistic]
+        \end{definition}
         
-    %\section{Systems of Equations}
-       % \begin{definition}[Algebraic, Recurrence, Difference, Differential]
+    \section{Systems of Equations}
+        \begin{definition}[Algebraic, Recurrence, Difference, Differential]
          
-        %\end{definition}
+        \end{definition}
 
-        %\begin{definition}[linear, non-linear, polynomial, stochastic]
+        \begin{definition}[linear, non-linear, polynomial, stochastic]
          
-        %\end{definition}
+        \end{definition}
 
-    
-        %\begin{definition}[Ordinary, partial, homogeneous, inhomogeneous, order (first, higher)]
+        \begin{definition}[Ordinary, partial, homogeneous, inhomogeneous, order (first, higher)]
          
-        %\end{definition}
+        \end{definition}
         
-        %\begin{remark}[Transformation higher order to first order]
+        \begin{remark}[Transformation higher order to first order]
          
-        %\end{remark}
+        \end{remark}
         
-        %\begin{definition}[initial value problem, boundary value problem, laplace \& fourier transform, phase space]
+        \begin{definition}[initial value problem, boundary value problem, laplace \& fourier transform, phase space]
          
-        %\end{definition}
-
-
-
-
+        \end{definition}
         
-
-        
-
-
-    

@@ -19,7 +19,6 @@
         
         
         \subsection{Transient Semantics (incl. Reward/weighted semantics)}
-        wrt. probabilities?!
             
             \begin{definition}[Transient probability distribution]
             \end{definition}
@@ -33,21 +32,23 @@
            
         
         
-        %\paragraph{Connection to Systems of Equations}
-        % ODEs as central limit of CTMCs & their SDEs
-        %[Prof. Thomas G. Kurtz, wisc]
-        %paragraph{Parametrized Automata as Stochastic Phase Space Approximaters}
+        \paragraph{Connection to Systems of Equations}
+         ODEs as central limit of CTMCs & their SDEs
+        [Prof. Thomas G. Kurtz, wisc]
+        paragraph{Parametrized Automata as Stochastic Phase Space Approximaters}
         
-    %\section{Languages \& Grammars}
-    %    \paragraph{Threshold Language}
+    \subsection{Languages \& Grammars}
+        \paragraph{Threshold Language}
         
-    %    \paragraph{Transient/Population Language}
+        \paragraph{Transient/Population Language}
         
         
     \section{Equivalence \& Tanja's Draft Equivalences}
             \begin{definition}[Bisimulation Relations, Strong, weak, forward, backward Prob., Buchholz]
             
         \end{definition}
+        
+        Equivalence classes of initial distrs. (rubino sericola)
         
         \subsection{Trace semantics is decidable in P for all}
                 \begin{definition}[trace Equivalence, branching bisim.]
@@ -58,13 +59,11 @@
                 Let automata $A_i = \left( S_i, \Sigma_i, M^{(i)}, \pi_i, \eta_i \right)$ for $i \in \{1, 2\}$
                 Equivalence of initialized automata:
                 \[ A_1(\pi_1) ~ A_2(\pi_2) \Leftrightarrow \forall \sigma \in \Sigma: \ \pi_1 \eta_1 = \pi_2 \eta_2 \wedge \pi_1 M^{(1)}_{\sigma} = \pi_2 M^{(2)}_{\sigma}  \]
-                How about uninitialized? \\
-                
-                Problem with proof in [1]: don't they construct the powerset (sum-sustituting recursively, i.e. for each letter in alphabet replace in last formula), negating this by ``there are only $n_1+n_2$ linear independent formulas with $n_1+n_2$ variables...?
+                How about uninitialized?  \\
                 
         \subsection{Transient semantics}
         \begin{definition}
-         transient equivalence, , finite-horizon bisimulation (bisimulation up to time-step k)
+         transient equivalence, , \textbf{finite-horizon bisimulation (bisimulation up to time-step k)} by katoen
         \end{definition}
 
             Finite horizon bisim.
@@ -77,13 +76,13 @@
         
             
      
-    \section{Minimization + wrt. Draft Eqs.}
+    \section{Minimization wrt. Draft Eqs.}
         \subsection{Approaches}
             \subsubsection{Partition Refinement - Coalgebraic Approach}
             Proof: PA minimization is in P for uninitialized/strict lumpability \\
-            Deiffel, Wißmann, Paz p.24ff (IntroToProbabilisticAutomata)
+            Deiffel, Wißmann, Paz p.24ff (IntroToProbabilisticAutomata) valmari
             for all in O(n log n) as partition refinement is minimal (see sources above) for uninitialized Automata. \\
-            Rubino sericola \\
+            Rubino sericola for initializations \\
             in case ODEs: Tribastones work \& boreale
         
             \subsubsection{Schützenberger's Construction and Arnoldi Iteration with Housholder Reflectors \& }
