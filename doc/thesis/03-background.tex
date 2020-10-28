@@ -115,6 +115,8 @@
             \[ X \setminus ~ = \{ [x] | x \in X \} \]
             is called quotient set of $X$ and $~$. The surjective function $q: X \rightarrow X \setminus ~$ is called canonical surjection and is defined by $x \mapsto [x]$ for.
             \end{definition}
+            
+            Introduce matrix notations for sparse MM in next chapter
                         
             In order to define the word structures of different types of automata, we define the notions of monoid, which M.P. Schützenberger used when he first defined the notion of weighted automata --- also presenting some fundamental theorems for minimization we consider in the next chapter~\autocite{schutz}.            
             \begin{definition}[Monoid]
@@ -167,9 +169,9 @@
                 A ring is called commutative if  $(S, \cdot, 1)$ is commutative.
             \end{definition}
             
-            \begin{note}
-            A ring is also a semiring. This follows immediately from the definition of an abelian group.
-            \end{note}
+            \begin{remark}
+                A ring is also a semiring. This follows immediately from the definition of an abelian group.
+            \end{remark}
             
             For a more thouroughly treatment of monoids and semirings, the reader is refered to Droste et al. and Kozen~\autocite{HWA, CS}
                         
@@ -177,26 +179,47 @@
                 
                 \begin{table}[htp]
                 \centering
-                \begin{tabular}{|l|c|p{6cm}|} 
+                \begin{tabular}{|p{5cm}|p{4cm}|p{4cm}|} 
                 \hline
                 Semiring & Name & Informal Description using automata \\ [0.5ex] 
                 \hline\hline
-                $\text{Lang}_{\Sigma}=(\mathcal{P}(\Sigma*), \cup, \circ, \emptyset, \varepsilon)$ & Languages over $\Sigma$ & closed semiring, represents semantics of NFAs \\ 
-                $\text{Trop}=(\mathbb{N} \cup \infty, \min, +, \infty, 0)$ & Tropical Semiring & Shortest paths in a graph \\ 
-                $\text{Bool}=(\{ \text{false}, \text{true}\}, \vee, \wedge, \text{false}, \text{true})$ & Boolean Semiring & Represents the boolean algebra \\ 
-                $\text{Nat}=(\mathbb{N}, +, \cdot, 0, 1)$ & Ring of Natural Numbers & Unsigned integer arithmetic, replace $\mathbb{N}$ by $\mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$ to get integers, rationals, reals and complex numbers instead \\ 
-                $\text{Poly}=(R[X], +, \cdot, 0, 1)$ & Ring of Polynomials & Polynomial arithmetic over Ring $R$ with variables $X$ \\ 
-                
-                
+                $\text{Bool}=(\{ 0, 1\}, \vee, \wedge, 0, 1)$ & Boolean Semiring & Represents the boolean algebra \\ \hline
+                $\text{Nat}=$ $(\mathbb{N}, +, \cdot, 0, 1)$ & Ring of Natural Numbers & Unsigned integer arithmetic \\ \hline
+                $\text{FPS}=$ $(R[X], +, \cdot, 0, 1)$ & Ring of Formal Power Series & Formal Power Series over Ring $R$ with variables $X$ \\ \hline
+                $\text{Lang}_{\Sigma} =$ $(\mathcal{P}(\Sigma*), \cup, \circ, \emptyset, \varepsilon)$ & Languages over $\Sigma$ & closed semiring, represents semantics of NFAs \\ \hline
+                $\text{Trop}=(\mathbb{N} \cup \{\infty\}, \min, +, \infty, 0)$ & Tropical Semiring & e.g. Shortest paths in a graph \\ \hline
+                $\text{Arct}=(\mathbb{N} \cup \{-\infty\}, \max, +, -\infty, 0)$ & Arctic Semiring & e.g. analysis of synchronized systems \\ \hline
+                 $\text{NonDetProb}=(\mathbb{R_{\geq 0}}, +, \cdot, 0, 1)$ & Non-deterministic Probabilistic Semiring & used when non-determinism is required \\ \hline
+                 $\text{Vit}=([0, 1], \max, \cdot, 0, 1)$ & Viterbi Semiring & e.g. used for modelling RNA\\ \hline
+                 $\text{Fuzzy}=([0, 1], \min, \max, 0, 1)$ & Fuzzy Semiring & used in fuzzy logic \\ \hline
+                 
                 \hline
                 \end{tabular}
-                \caption{Table to test captions and labels}
+                \caption{Examples of different semirings}
                 \label{table:1}
                 \end{table}
-Rational Semiring, Polynomial Semiring, plus-max, min-plus Semiring, Probability Semiring, 
+                Several examples of semirings are given in \ref{table:1}.
+                One can replace $\mathbb{N}$ by $\mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$ to get integer, rational, real or complex instead of the natural semiring. Further $\mathbb{N}$ can replaced by $\mathbb{R^+}$ in the arctic and tropical semiring. Note that the Viterbi semiring defines also defines a semirings over probabilities, but neglects addition and is thus not able to model non-determinism.
             \end{example}
             
-            Introduce matrix notations for sparse MM in next chapter
+            \begin{example}~\autocite{HWA}
+             Given the closed Semiring Lang.
+             Kleene iteration is defined as $L* =  \bigcup_{n \geq 0} L^n$ for all $L \subseteq \Sigma^*$ 
+            \end{example}
+
+            
+            needed for schützenbergers theorems
+            \begin{definition}[Semimodule]
+             
+            \end{definition}
+            
+            \begin{theorem}[Semiring of Matrices \& Vectors]
+             
+            \end{theorem}
+
+            
+  
+
             
             
     \section{Category Theory}

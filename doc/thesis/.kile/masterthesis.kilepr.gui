@@ -191,12 +191,12 @@ TextFolding=[]
 ViMarks=
 
 [view-settings,view=0,item:03-background.tex]
-CursorColumn=35
-CursorLine=14
+CursorColumn=73
+CursorLine=200
 Dynamic Word Wrap=true
 JumpList=
 TextFolding=[]
-ViMarks=.,8,182,[,8,178,],8,182
+ViMarks=.,200,72,[,200,72,],200,72
 
 [view-settings,view=0,item:04-minimization_complexity.tex]
 CursorColumn=122
